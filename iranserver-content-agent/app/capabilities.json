@@ -1,0 +1,34 @@
+{
+  "db": {},
+  "user": {
+    "scopes": [
+      "profile"
+    ]
+  },
+  "sample": {
+    "images": true
+  },
+  "assets": {
+    "upload": "interact"
+  },
+  "downloads": true,
+  "mcp": {
+    "servers": [
+      {
+        "server": "Figma",
+        "tools": [
+          "create_session",
+          "get_metadata",
+          "get_design_context",
+          "get_screenshot"
+        ]
+      },
+      {
+        "server": "Google Drive",
+        "tools": [
+          "create_file"
+        ]
+      }
+    ]
+  }
+}
