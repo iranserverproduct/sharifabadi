@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>یاندکس کلود در ایران سرور</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..800&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #E4E1D8; font-family: 'Vazirmatn', Tahoma, sans-serif; padding: 24px 16px 64px; }
+  .slide-wrap { max-width: 1280px; margin: 0 auto 40px; }
+  .frame { position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 12px; box-shadow: 0 4px 24px rgba(23,32,51,.18); }
+  .scaler { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; transform-origin: top left; }
+  .scaler > section { position: relative; width: 1920px; height: 1080px; overflow: hidden; direction: ltr; }
+  section h1, section h2, section h3, section p { margin: 0; }
+  section table { width: 100%; border-collapse: collapse; }
+  section th, section td { padding: 18px 24px; border-bottom: 1px solid #DDD9CF; }
+  section th { font-weight: 700; }
+  x-shape { display: block; flex: none; }
+  x-shape[kind="arrow-left"] { clip-path: polygon(0 50%, 40% 0, 40% 30%, 100% 30%, 100% 70%, 40% 70%, 40% 100%); }
+  .meta { padding: 12px 4px 0; color: #475166; font-size: 15px; line-height: 1.8; }
+  .num { font-weight: 700; color: #C2410C; }
+  .notes { margin: 4px 0 0; }
+</style>
+</head>
+<body>
+<div class="slide-wrap"><div class="frame"><div class="scaler"><section id="cover" data-transition="fade" style="background:#172033;color:#F7F6F2;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<div style="position:absolute;right:128px;top:128px;width:160px;height:10px;background:#F59E5B;border-radius:5px"></div>
+<p style="font-size:30px;font-weight:600;color:#F59E5B;text-align:right">&#8235;پیشنهاد به مدیرعامل · آبان ۱۴۰۵&#8236;</p>
+<h1 style="font-size:104px;font-weight:800;line-height:1.3;text-align:right;color:#F7F6F2">&#8235;یاندکس کلود، پرووایدر جدید ایران سرور&#8236;</h1>
+<p style="font-size:40px;line-height:1.6;text-align:right;color:#C9D1E0">&#8235;بررسی امکان ارائه‌ی هفت محصول ابری یاندکس در سایت ایران سرور، از طریق برنامه‌ی شراکت و وب‌سرویس‌های یاندکس&#8236;</p>
+<p style="position:absolute;right:128px;bottom:96px;width:1664px;font-size:30px;font-weight:600;color:#F59E5B;text-align:right;border-top:1px solid #3A4865;padding:24px 0 0 0">&#8235;تهیه و بررسی: واحد محصول ایران سرور&#8236;</p>
+
+</section>
+</div></div><div class="meta"><span class="num">1 / 18</span><p class="notes">هدف این ارائه: تصمیم درباره‌ی شروع همکاری با یاندکس کلود به‌عنوان پرووایدر جدید، و این‌که کدام محصولات را و با چه ترتیبی در سایت ایران سرور عرضه کنیم.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="summary" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;جمع‌بندی&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;جمع‌بندی برای تصمیم&#8236;</h2>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:40px;border:1px solid #DDD9CF;border-radius:20px">
+<p style="font-size:64px;font-weight:800;color:#C2410C;text-align:right;line-height:1.2">&#8235;۱&#8236;</p>
+<h3 style="font-size:40px;font-weight:700;line-height:1.4;text-align:right">&#8235;API کامل برای هر هفت محصول&#8236;</h3>
+<p style="font-size:30px;line-height:1.6;color:#475166;text-align:right">&#8235;ساخت سرویس، اکشن‌ها و حذف، برای همه‌ی محصولات پیشنهادی وب‌سرویس دارد.&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:40px;border:1px solid #DDD9CF;border-radius:20px">
+<p style="font-size:64px;font-weight:800;color:#C2410C;text-align:right;line-height:1.2">&#8235;۲&#8236;</p>
+<h3 style="font-size:40px;font-weight:700;line-height:1.4;text-align:right">&#8235;هر مشتری، کوتای جدا&#8236;</h3>
+<p style="font-size:30px;line-height:1.6;color:#475166;text-align:right">&#8235;برای هر مشتری زیرحساب، سازمان و Cloud جدا ساخته می‌شود و سقف منابع خودش را دارد.&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:40px;border:1px solid #DDD9CF;border-radius:20px">
+<p style="font-size:64px;font-weight:800;color:#C2410C;text-align:right;line-height:1.2">&#8235;۳&#8236;</p>
+<h3 style="font-size:40px;font-weight:700;line-height:1.4;text-align:right">&#8235;پلن، فاکتور و تمدید با ما&#8236;</h3>
+<p style="font-size:30px;line-height:1.6;color:#475166;text-align:right">&#8235;یاندکس ساعتی حساب می‌کند؛ پلن ثابت، فاکتور مشتری و تمدید را در ایران سرور می‌سازیم.&#8236;</p>
+</div>
+</div>
+<p style="font-size:32px;font-weight:600;line-height:1.5;text-align:right;color:#F7F6F2;background:#172033;padding:28px 40px;border-radius:16px">&#8235;پیشنهاد: پایلوت با Compute Cloud، Block Storage و Object Storage شروع شود.&#8236;</p>
+
+</section>
+</div></div><div class="meta"><span class="num">2 / 18</span><p class="notes">از نظر فنی مانعی نیست. سه نکته‌ی کلیدی: وب‌سرویس کامل برای هر هفت محصول، مدل حساب جدا برای هر مشتری، و این‌که لایه‌ی فروش (پلن، فاکتور و تمدید) را باید خودمان بسازیم.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="partner" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;مدل همکاری&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;یاندکس به ما می‌فروشد، ما به مشتری&#8236;</h2>
+</div>
+<div style="display:flex;flex-direction:row-reverse;align-items:center;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#172033;padding:32px;border-radius:20px">
+<h3 style="font-size:40px;font-weight:700;text-align:center;color:#F7F6F2">Yandex Cloud</h3>
+<p style="font-size:26px;text-align:center;color:#C9D1E0">&#8235;زیرساخت و وب‌سرویس&#8236;</p>
+</div>
+<x-shape kind="arrow-left" style="background:#C2410C;width:96px;height:48px"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#C2410C;padding:32px;border-radius:20px">
+<h3 style="font-size:40px;font-weight:700;text-align:center;color:#FDFCF9">&#8235;ایران سرور&#8236;</h3>
+<p style="font-size:26px;text-align:center;color:#FDFCF9">&#8235;شریک (Partner)&#8236;</p>
+</div>
+<x-shape kind="arrow-left" style="background:#C2410C;width:96px;height:48px"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FDFCF9;padding:32px;border:1px solid #DDD9CF;border-radius:20px">
+<h3 style="font-size:40px;font-weight:700;text-align:center">&#8235;مشتری&#8236;</h3>
+<p style="font-size:26px;text-align:center;color:#475166">&#8235;خرید از سایت ایران سرور&#8236;</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;border-top:4px solid #C2410C;padding:24px 0 0 0">
+<h3 style="font-size:36px;font-weight:700;text-align:right">&#8235;۲۰٪ پاداش پایه&#8236;</h3>
+<p style="font-size:28px;line-height:1.6;color:#475166;text-align:right">&#8235;تخفیف روی فاکتور ایران سرور برای مصرف مشتری‌ها&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;border-top:4px solid #C2410C;padding:24px 0 0 0">
+<h3 style="font-size:36px;font-weight:700;text-align:right">&#8235;تا ۱۵٪ اضافه&#8236;</h3>
+<p style="font-size:28px;line-height:1.6;color:#475166;text-align:right">&#8235;با ثبت معامله (Deal registration) برای هر مشتری جدید&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;border-top:4px solid #C2410C;padding:24px 0 0 0">
+<h3 style="font-size:36px;font-weight:700;text-align:right">&#8235;یک فاکتور تجمیعی&#8236;</h3>
+<p style="font-size:28px;line-height:1.6;color:#475166;text-align:right">&#8235;پیش‌پرداخت یا پس‌پرداخت، برای مصرف همه‌ی مشتری‌ها&#8236;</p>
+</div>
+</div>
+<p style="position:absolute;right:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7385;text-align:right">&#8235;منبع: مستندات برنامه‌ی شراکت Yandex Cloud. شرایط نهایی طبق قرارداد شریک.&#8236;</p>
+
+</section>
+</div></div><div class="meta"><span class="num">3 / 18</span><p class="notes">پاداش پایه شامل مصرف خود ایران سرور، Marketplace، StoreDoc، Interconnect و گرنت‌ها نمی‌شود. درصدهای اضافه به ثبت معامله و ثبت پروژه بستگی دارد.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="structure" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;پاسخ سؤال: حساب واحد یا جدا؟&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;هر مشتری، فضای جدا با کوتای جدا&#8236;</h2>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:64px">
+<div style="width:760px;display:flex;flex-direction:column;align-items:stretch;gap:8px">
+<div style="background:#172033;padding:16px 28px;border-radius:14px"><p style="font-size:28px;font-weight:600;text-align:right;color:#F7F6F2">&#8235;حساب شریک ایران سرور&#8236;</p></div>
+<p style="font-size:24px;text-align:center;color:#C2410C">▼</p>
+<div style="background:#FDFCF9;padding:16px 28px;border:1px solid #DDD9CF;border-radius:14px"><p style="font-size:28px;text-align:right">&#8235;زیرحساب مشتری · CreateResellerServed&#8236;</p></div>
+<p style="font-size:24px;text-align:center;color:#C2410C">▼</p>
+<div style="background:#FDFCF9;padding:16px 28px;border:1px solid #DDD9CF;border-radius:14px"><p style="font-size:28px;text-align:right">&#8235;سازمان اختصاصی مشتری (Organization)&#8236;</p></div>
+<p style="font-size:24px;text-align:center;color:#C2410C">▼</p>
+<div style="background:#FBE7DC;padding:16px 28px;border:2px solid #C2410C;border-radius:14px"><p style="font-size:28px;font-weight:700;text-align:right">&#8235;Cloud مشتری · کوتا این‌جا اعمال می‌شود&#8236;</p></div>
+<p style="font-size:24px;text-align:center;color:#C2410C">▼</p>
+<div style="background:#FDFCF9;padding:16px 28px;border:1px solid #DDD9CF;border-radius:14px"><p style="font-size:28px;text-align:right">&#8235;Folder ها و منابع: سرور، دیسک، باکت&#8236;</p></div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:30px;line-height:1.6;text-align:right">&#8235;همه‌ی فروش‌ها در یک اکانت جمع نمی‌شود؛ هر مشتری زیرحساب خودش را دارد.&#8236;</p>
+<p style="font-size:30px;line-height:1.6;text-align:right">&#8235;کوتا روی Cloud است، نه Folder. پس «پروژه»ی هر مشتری یعنی یک Cloud جدا.&#8236;</p>
+<p style="font-size:30px;line-height:1.6;text-align:right">&#8235;فاکتور همه‌ی مشتری‌ها یک‌جا برای ایران سرور صادر می‌شود.&#8236;</p>
+<p style="font-size:26px;line-height:1.6;text-align:right;color:#475166;background:#EDEBE4;padding:20px 24px;border-radius:12px">&#8235;ساخت زیرحساب با API ممکن است. ساخت Cloud و تنظیم کوتا در مستندات از پورتال شریک آمده؛ خودکارسازی کامل را از یاندکس تأیید بگیریم.&#8236;</p>
+</div>
+</div>
+
+</section>
+</div></div><div class="meta"><span class="num">4 / 18</span><p class="notes">وقتی زیرحساب ساخته و تأیید شود، یاندکس برای آن یک سازمان جدا با نام For 'Customer_name' subaccount می‌سازد. Cloud مشتری داخل همین سازمان ساخته می‌شود و کوتاهای پیش‌فرض خودش را دارد.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="quota" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;کوتای هر مشتری&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;سقف پیش‌فرض منابع در Cloud هر مشتری&#8236;</h2>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:4px;background:#FDFCF9;padding:28px;border:1px solid #DDD9CF;border-radius:16px">
+<p style="font-size:64px;font-weight:800;color:#172033;text-align:right;line-height:1.2">&#8235;۱۲&#8236;</p>
+<p style="font-size:28px;color:#475166;text-align:right">&#8235;ماشین مجازی&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:4px;background:#FDFCF9;padding:28px;border:1px solid #DDD9CF;border-radius:16px">
+<p style="font-size:64px;font-weight:800;color:#172033;text-align:right;line-height:1.2">&#8235;۳۲&#8236;</p>
+<p style="font-size:28px;color:#475166;text-align:right">&#8235;هسته‌ی vCPU&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:4px;background:#FDFCF9;padding:28px;border:1px solid #DDD9CF;border-radius:16px">
+<p style="font-size:64px;font-weight:800;color:#172033;text-align:right;line-height:1.2">&#8235;۱۲۸ GB&#8236;</p>
+<p style="font-size:28px;color:#475166;text-align:right">&#8235;مجموع RAM&#8236;</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:4px;background:#FDFCF9;padding:28px;border:1px solid #DDD9CF;border-radius:16px">
+<p style="font-size:64px;font-weight:800;color:#172033;text-align:right;line-height:1.2">&#8235;۲۰۰ GB&#8236;</p>
+<p style="font-size:28px;color:#475166;text-align:right">&#8235;دیسک SSD&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:4px;background:#FDFCF9;padding:28px;border:1px solid #DDD9CF;border-radius:16px">
+<p style="font-size:64px;font-weight:800;color:#172033;text-align:right;line-height:1.2">&#8235;۵۰۰ GB&#8236;</p>
+<p style="font-size:28px;color:#475166;text-align:right">&#8235;دیسک HDD&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:4px;background:#FDFCF9;padding:28px;border:1px solid #DDD9CF;border-radius:16px">
+<p style="font-size:64px;font-weight:800;color:#172033;text-align:right;line-height:1.2">&#8235;۸&#8236;</p>
+<p style="font-size:28px;color:#475166;text-align:right">&#8235;IP عمومی (۲ تای ثابت)&#8236;</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:32px">
+<p style="flex:1;font-size:28px;line-height:1.6;text-align:right"><b>&#8235;کاهش کوتا:&#8236;</b> &#8235;خود ایران سرور، از پورتال شریک&#8236;</p>
+<p style="flex:1;font-size:28px;line-height:1.6;text-align:right"><b>&#8235;افزایش کوتا:&#8236;</b> &#8235;خودکار تیکت پشتیبانی ساخته می‌شود&#8236;</p>
+<p style="flex:1;font-size:28px;line-height:1.6;text-align:right"><b>GPU:</b> &#8235;به‌طور پیش‌فرض صفر؛ با درخواست&#8236;</p>
+</div>
+<p style="position:absolute;right:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7385;text-align:right">&#8235;منبع: مستندات کوتای Compute Cloud و VPC و راهنمای مدیریت کوتا در پورتال شریک&#8236;</p>
+
+</section>
+</div></div><div class="meta"><span class="num">5 / 18</span><p class="notes">این سقف‌ها برای هر Cloud جداگانه است، پس هر مشتری مستقل از بقیه همین مقدار را دارد. برای مشتری معمولی که یک تا سه سرور می‌خرد کافی است. پیشنهاد: از یاندکس بخواهیم کوتای پیش‌فرض Cloudهای مشتریان ما را بالاتر تنظیم کند.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="products" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;محصولات پیشنهادی&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;هفت محصول برای سایت ایران سرور&#8236;</h2>
+</div>
+<table style="font-family:'Vazirmatn', Tahoma, sans-serif;font-size:26px;color:#172033">
+<tr style="background:#172033">
+<th style="width:18%;text-align:right;color:#F7F6F2">&#8235;وضعیت&#8236;</th>
+<th style="width:22%;text-align:right;color:#F7F6F2">&#8235;وب‌سرویس&#8236;</th>
+<th style="width:38%;text-align:right;color:#F7F6F2">&#8235;چه به مشتری می‌فروشیم&#8236;</th>
+<th style="width:22%;text-align:right;color:#F7F6F2">&#8235;محصول&#8236;</th>
+</tr>
+<tr><td style="text-align:right">&#8235;آماده&#8236;</td><td style="text-align:right">Compute API</td><td style="text-align:right">&#8235;سرور ابری با همه‌ی اکشن‌ها&#8236;</td><td style="text-align:right">Compute Cloud</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right;color:#C2410C">&#8235;API آلفا&#8236;</td><td style="text-align:right">BareMetal API</td><td style="text-align:right">&#8235;سرور اختصاصی فیزیکی، اجاره‌ی دوره‌ای&#8236;</td><td style="text-align:right">BareMetal</td></tr>
+<tr><td style="text-align:right">&#8235;آماده&#8236;</td><td style="text-align:right">S3 + Bucket API</td><td style="text-align:right">&#8235;فضای ذخیره‌ی فایل سازگار با S3&#8236;</td><td style="text-align:right">Object Storage</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">&#8235;آماده&#8236;</td><td style="text-align:right">Compute Disk API</td><td style="text-align:right">&#8235;دیسک اضافه و اسنپ‌شات&#8236;</td><td style="text-align:right">Block Storage</td></tr>
+<tr><td style="text-align:right">&#8235;آماده&#8236;</td><td style="text-align:right">Backup API</td><td style="text-align:right">&#8235;پشتیبان‌گیری خودکار سرور&#8236;</td><td style="text-align:right">Cloud Backup</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right;color:#C2410C">&#8235;بخشی Preview&#8236;</td><td style="text-align:right">SWS API</td><td style="text-align:right">&#8235;WAF، ضد ربات، محدودیت درخواست&#8236;</td><td style="text-align:right">Smart Web Security</td></tr>
+<tr><td style="text-align:right">&#8235;آماده&#8236;</td><td style="text-align:right">Kubernetes API</td><td style="text-align:right">&#8235;کلاستر Kubernetes مدیریت‌شده&#8236;</td><td style="text-align:right">Managed Kubernetes</td></tr>
+</table>
+
+</section>
+</div></div><div class="meta"><span class="num">6 / 18</span><p class="notes">«آماده» یعنی وب‌سرویس عمومی برای ساخت، مدیریت و حذف وجود دارد. API سرویس BareMetal نسخه‌ی v1alpha است. در Smart Web Security، قابلیت حفاظت دامنه (پروکسی) هنوز Preview است.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="compute" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;محصول ۱&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;Compute Cloud: سرور ابری با همه‌ی اکشن‌ها&#8236;</h2>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:48px">
+<div style="width:560px;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFCF9;padding:32px;border:1px solid #DDD9CF;border-radius:16px">
+<h3 style="font-size:34px;font-weight:700;text-align:right">&#8235;کاتالوگ و قیمت&#8236;</h3>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;پلن‌ها را از ترکیب vCPU، RAM، دیسک و IP می‌سازیم؛ قیمت لحظه‌ای از Billing SKU API.&#8236;</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFCF9;padding:32px;border:1px solid #DDD9CF;border-radius:16px">
+<h3 style="font-size:34px;font-weight:700;text-align:right">&#8235;عملیات غیرهم‌زمان&#8236;</h3>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;هر اکشن یک Operation برمی‌گرداند و پنل ما وضعیتش را پیگیری می‌کند.&#8236;</p>
+</div>
+</div>
+<table style="flex:1;font-family:'Vazirmatn', Tahoma, sans-serif;font-size:26px;color:#172033">
+<tr style="background:#172033">
+<th style="width:46%;text-align:right;color:#F7F6F2">&#8235;متد API&#8236;</th>
+<th style="width:54%;text-align:right;color:#F7F6F2">&#8235;اکشن در پنل مشتری&#8236;</th>
+</tr>
+<tr><td style="text-align:right">Instance.Create</td><td style="text-align:right">&#8235;ساخت سرور&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">Start / Stop / Restart</td><td style="text-align:right">&#8235;روشن، خاموش، ری‌استارت&#8236;</td></tr>
+<tr><td style="text-align:right">Update</td><td style="text-align:right">&#8235;تغییر منابع (CPU و RAM)&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">AttachDisk / DetachDisk</td><td style="text-align:right">&#8235;افزودن و جدا کردن دیسک&#8236;</td></tr>
+<tr><td style="text-align:right">AddOneToOneNat</td><td style="text-align:right">&#8235;IP عمومی&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">GetSerialPortOutput</td><td style="text-align:right">&#8235;کنسول سریال و لاگ بوت&#8236;</td></tr>
+<tr><td style="text-align:right">Relocate</td><td style="text-align:right">&#8235;انتقال به zone دیگر&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">Instance.Delete</td><td style="text-align:right">&#8235;حذف سرور&#8236;</td></tr>
+</table>
+</div>
+
+</section>
+</div></div><div class="meta"><span class="num">7 / 18</span><p class="notes">سرویس Instance در مجموع ۲۶ متد دارد؛ این جدول مهم‌ترین اکشن‌های پنل مشتری را نشان می‌دهد. سایر موارد: کارت شبکه‌ی اضافه، فایل‌سیستم مشترک، متادیتا و سطح دسترسی.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="baremetal" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;محصول ۲&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;BareMetal: سرور اختصاصی با اجاره‌ی دوره‌ای&#8236;</h2>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:48px">
+<div style="width:560px;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#FDFCF9;padding:32px;border:1px solid #DDD9CF;border-radius:16px">
+<h3 style="font-size:34px;font-weight:700;text-align:right">&#8235;نزدیک به مدل فعلی ما&#8236;</h3>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;تنها محصولی که خود یاندکس دوره‌ی اجاره و تمدید دارد.&#8236;</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#FBE7DC;padding:32px;border:2px solid #C2410C;border-radius:16px">
+<h3 style="font-size:34px;font-weight:700;text-align:right">&#8235;هشدار: API آلفا&#8236;</h3>
+<p style="font-size:26px;line-height:1.6;color:#172033;text-align:right">&#8235;نسخه‌ی v1alpha است و ممکن است تغییر کند. نمایش موجودی واقعی سرورها هم باید تأیید شود.&#8236;</p>
+</div>
+</div>
+<table style="flex:1;font-family:'Vazirmatn', Tahoma, sans-serif;font-size:26px;color:#172033">
+<tr style="background:#172033">
+<th style="width:50%;text-align:right;color:#F7F6F2">&#8235;متد API&#8236;</th>
+<th style="width:50%;text-align:right;color:#F7F6F2">&#8235;اکشن در پنل مشتری&#8236;</th>
+</tr>
+<tr><td style="text-align:right">Configuration / RentalPeriod</td><td style="text-align:right">&#8235;کاتالوگ کانفیگ‌ها و دوره‌ها&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">CreateServer</td><td style="text-align:right">&#8235;اجاره‌ی سرور&#8236;</td></tr>
+<tr><td style="text-align:right">BatchCreateServers</td><td style="text-align:right">&#8235;اجاره‌ی چند سرور با هم&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">PowerOn / PowerOff / Reboot</td><td style="text-align:right">&#8235;روشن، خاموش، ری‌بوت&#8236;</td></tr>
+<tr><td style="text-align:right">ReinstallServer</td><td style="text-align:right">&#8235;نصب مجدد سیستم‌عامل&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">RenewServerRental</td><td style="text-align:right">&#8235;فعال کردن تمدید اجاره&#8236;</td></tr>
+<tr><td style="text-align:right">DeleteServer</td><td style="text-align:right">&#8235;حذف سرور&#8236;</td></tr>
+</table>
+</div>
+
+</section>
+</div></div><div class="meta"><span class="num">8 / 18</span><p class="notes">سرویس‌های دیگر BareMetal API: HardwarePool، Image و BootImage، زیرشبکه‌ی عمومی و خصوصی، VRF و Zone. پیشنهاد می‌شود BareMetal در فاز سوم و بعد از پایدار شدن API عرضه شود.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="storage" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;محصول ۳ و ۴&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;Object Storage و Block Storage&#8236;</h2>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:40px;border:1px solid #DDD9CF;border-radius:20px">
+<h3 style="font-size:40px;font-weight:700;text-align:right">Object Storage</h3>
+<p style="font-size:28px;line-height:1.6;color:#475166;text-align:right">&#8235;فضای فایل برای بکاپ، عکس، ویدیو و فایل‌های سایت&#8236;</p>
+<p style="font-size:28px;line-height:1.7;text-align:right">&#8235;• سازگار با S3؛ مشتری با ابزارهای رایج S3 کار می‌کند&#8236;</p>
+<p style="font-size:28px;line-height:1.7;text-align:right">&#8235;• ساخت و مدیریت باکت با Bucket API&#8236;</p>
+<p style="font-size:28px;line-height:1.7;text-align:right">&#8235;• هزینه بر اساس حجم، تعداد درخواست و ترافیک&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:40px;border:1px solid #DDD9CF;border-radius:20px">
+<h3 style="font-size:40px;font-weight:700;text-align:right">Block Storage</h3>
+<p style="font-size:28px;line-height:1.6;color:#475166;text-align:right">&#8235;دیسک شبکه‌ای که به سرور وصل می‌شود؛ بخشی از Compute Cloud&#8236;</p>
+<p style="font-size:28px;line-height:1.7;text-align:right">&#8235;• انواع: HDD، SSD، SSD غیرتکراری، SSD پرسرعت&#8236;</p>
+<p style="font-size:28px;line-height:1.7;text-align:right">&#8235;• ساخت، افزایش حجم، اتصال و حذف با Disk API&#8236;</p>
+<p style="font-size:28px;line-height:1.7;text-align:right">&#8235;• اسنپ‌شات و زمان‌بندی خودکار اسنپ‌شات&#8236;</p>
+</div>
+</div>
+
+</section>
+</div></div><div class="meta"><span class="num">9 / 18</span><p class="notes">در یاندکس، Block Storage محصول جدایی نیست و دیسک‌ها با Compute Cloud مدیریت می‌شوند. در سایت ایران سرور می‌توانیم آن را به‌عنوان «دیسک اضافه» جدا بفروشیم. حداکثر اندازه‌ی یک دیسک ۲۵۶ ترابایت است.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="backup-sws" data-transition="fade" style="display:flex; flex-direction:column; gap:40px; padding:128px; background:#f7f6f2">
+  <div style="display:flex; flex-direction:column; gap:12px">
+    <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:24px; font-weight:600; text-align:right; color:#c2410c">‫محصول ۵ و ۶‬</p>
+    <h2 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:64px; font-weight:700; line-height:1.3; text-align:right; color:#172033">‫Cloud Backup و Smart Web Security‬</h2>
+  </div>
+  <div style="display:flex; flex-direction:row; gap:32px">
+    <div style="display:flex; flex-direction:column; gap:14px; flex:1; padding:40px; background:#fdfcf9; border:1px solid #ddd9cf; border-radius:20px">
+      <h3 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:40px; font-weight:700; text-align:right; color:#172033">Smart Web Security</h3>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#172033">‫• فایروال وب (WAF)، ضد ربات و محدودیت نرخ درخواست‬</p>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#172033">‫• حفاظت دامنه با پروکسی یاندکس، برای سایت‌های خارج از یاندکس هم (Preview)‬</p>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#475166">‫• API: SecurityProfile، WAF، ARL‬</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:14px; flex:1; padding:40px; background:#fdfcf9; border:1px solid #ddd9cf; border-radius:20px">
+      <h3 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:40px; font-weight:700; text-align:right; color:#172033">Cloud Backup</h3>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#172033">‫• بکاپ کامل و افزایشی با زمان‌بندی روزانه، هفتگی، ماهانه‬</p>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#172033">‫• برای Compute، BareMetal و حتی سرورهای بیرون از یاندکس‬</p>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#172033">‫• بازیابی کل سرور یا تک‌فایل‬</p>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#475166">‫• API: Policy، Resource، Backup‬</p>
+    </div>
+  </div>
+  <p style="padding:24px 40px; font-family:Vazirmatn, Tahoma, sans-serif; font-size:30px; font-weight:600; line-height:1.5; text-align:right; color:#f7f6f2; background:#172033; border-radius:16px">‫فرصت: هر دو محصول را می‌توان به مشتری‌های فعلی ایران سرور هم فروخت برای سرورهایی که مستقیم از خود یاندکس گرفته میشود.‬</p>
+  
+</section>
+</div></div><div class="meta"><span class="num">10 / 18</span><p class="notes">Cloud Backup روی ماشین‌ها ایجنت نصب می‌کند (روی Compute خودکار است) و ارائه‌دهنده‌ی فنی آن Cyberprotect است. حفاظت دامنه‌ی Smart Web Security هنوز Preview است و سرور مقصد باید IP عمومی داشته باشد. تأخیر شبکه از ایران تا پروکسی یاندکس باید تست شود.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="k8s" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;محصول ۷&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;Managed Kubernetes: کلاستر آماده برای تیم‌های توسعه&#8236;</h2>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:40px;border:1px solid #DDD9CF;border-radius:20px">
+<h3 style="font-size:36px;font-weight:700;text-align:right">&#8235;چه می‌فروشیم&#8236;</h3>
+<p style="font-size:28px;line-height:1.6;color:#475166;text-align:right">&#8235;یاندکس control plane را مدیریت می‌کند؛ مشتری فقط گروه نودها را انتخاب می‌کند.&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:40px;border:1px solid #DDD9CF;border-radius:20px">
+<h3 style="font-size:36px;font-weight:700;text-align:right">&#8235;وب‌سرویس&#8236;</h3>
+<p style="font-size:28px;line-height:1.6;color:#475166;text-align:right">&#8235;Cluster، NodeGroup، Version و ResourcePreset برای ساخت، مقیاس و حذف&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#FDFCF9;padding:40px;border:1px solid #DDD9CF;border-radius:20px">
+<h3 style="font-size:36px;font-weight:700;text-align:right">&#8235;وابستگی&#8236;</h3>
+<p style="font-size:28px;line-height:1.6;color:#475166;text-align:right">&#8235;نودها ماشین مجازی‌اند و از کوتای Compute همان مشتری مصرف می‌کنند.&#8236;</p>
+</div>
+</div>
+<p style="font-size:32px;font-weight:600;line-height:1.5;text-align:right;color:#172033;border-right:6px solid #C2410C;padding:8px 32px 8px 0">&#8235;مشتری هدف: استارتاپ‌ها و تیم‌هایی که میکروسرویس اجرا می‌کنند و نیروی DevOps کافی ندارند.&#8236;</p>
+
+</section>
+</div></div><div class="meta"><span class="num">11 / 18</span><p class="notes">هزینه‌ی Kubernetes دو بخش دارد: مدیریت کلاستر (master) و ماشین‌های نودها. برای مشتری‌های Kubernetes احتمالاً باید کوتای Compute بالاتری درخواست کنیم.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="price-shared" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;مقایسه‌ی قیمت · ۱ از ۳&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;سرور ابری اشتراکی: یاندکس گران‌تر است&#8236;</h2>
+</div>
+<table style="font-family:'Vazirmatn', Tahoma, sans-serif;font-size:26px;color:#172033">
+<tr style="background:#172033">
+<th style="width:21%;text-align:right;color:#F7F6F2">&#8235;ishosting *&#8236;</th>
+<th style="width:16%;text-align:right;color:#F7F6F2">Hetzner</th>
+<th style="width:21%;text-align:right;color:#F7F6F2">&#8235;یاندکس با تخفیف شریک&#8236;</th>
+<th style="width:19%;text-align:right;color:#F7F6F2">&#8235;یاندکس، قیمت رسمی&#8236;</th>
+<th style="width:23%;text-align:right;color:#F7F6F2">&#8235;کانفیگ&#8236;</th>
+</tr>
+<tr><td style="text-align:right">&#8235;$21.24 + IPv4 (۳/۴/۴۰)&#8236;</td><td style="text-align:right">&#8235;€19.99 (CPX22)&#8236;</td><td style="text-align:right">&#8235;$19.90 تا $26.70&#8236;</td><td style="text-align:right">&#8235;$24.88 تا $33.38&#8236;</td><td style="text-align:right">&#8235;۲ هسته / ۴ گیگ / ۸۰ گیگ&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">&#8235;$33.99 + IPv4 (۴/۸/۵۰)&#8236;</td><td style="text-align:right">&#8235;€35.99 (CPX32)&#8236;</td><td style="text-align:right">&#8235;$42.90 تا $52.16&#8236;</td><td style="text-align:right">&#8235;$53.63 تا $65.20&#8236;</td><td style="text-align:right">&#8235;۴ هسته / ۸ گیگ / ۱۶۰ گیگ&#8236;</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;بازه‌ی یاندکس: کارایی vCPU از ۲۰٪ (یا ۵۰٪) تا ۱۰۰٪. تخفیف شریک ۲۰٪ پاداش پایه‌ی برنامه‌ی شراکت است.&#8236;</p>
+<p style="font-size:32px;font-weight:600;line-height:1.5;text-align:right;color:#F7F6F2;background:#172033;padding:24px 40px;border-radius:16px">&#8235;در پلن‌های اشتراکی، Hetzner و ishosting حتی بعد از تخفیف شریک ارزان‌ترند.&#8236;</p>
+<p style="position:absolute;right:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7385;text-align:right">&#8235;قیمت‌ها ماهانه و بدون مالیات؛ یاندکس شامل یک IPv4. * ishosting پرووایدر پیشنهادی است و همکاری با آن هنوز اجرایی نشده.&#8236;</p>
+
+</section>
+</div></div><div class="meta"><span class="num">12 / 18</span><p class="notes">Hetzner امسال دو بار گران شده؛ CPX22 از ۷٫۹۹ به ۱۹٫۴۹ یورو رسیده و فاصله با یاندکس کمتر شده است. قیمت‌ها به دلار و یورو هستند و تبدیل نشده‌اند.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="price-dedicated" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;مقایسه‌ی قیمت · ۲ از ۳&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;CPU تضمینی: یاندکس با تخفیف شریک ارزان‌تر است&#8236;</h2>
+</div>
+<table style="font-family:'Vazirmatn', Tahoma, sans-serif;font-size:26px;color:#172033">
+<tr style="background:#172033">
+<th style="width:19%;text-align:right;color:#F7F6F2">OVH (b3)</th>
+<th style="width:21%;text-align:right;color:#F7F6F2">Hetzner (CCX)</th>
+<th style="width:18%;text-align:right;color:#F7F6F2">&#8235;یاندکس با تخفیف شریک&#8236;</th>
+<th style="width:17%;text-align:right;color:#F7F6F2">&#8235;یاندکس، قیمت رسمی&#8236;</th>
+<th style="width:25%;text-align:right;color:#F7F6F2">&#8235;کانفیگ&#8236;</th>
+</tr>
+<tr><td style="text-align:right">&#8235;€45 (b3-8، ۵۰ گیگ)&#8236;</td><td style="text-align:right">&#8235;€43.49 (CCX13)&#8236;</td><td style="text-align:right;color:#C2410C"><b>$32.94</b></td><td style="text-align:right">$41.17</td><td style="text-align:right">&#8235;۲ هسته / ۸ گیگ / ۸۰ گیگ&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">&#8235;€87 (b3-16)&#8236;</td><td style="text-align:right">&#8235;€86.49 (CCX23، ۱۶۰ گیگ)&#8236;</td><td style="text-align:right;color:#C2410C"><b>$58.98</b></td><td style="text-align:right">$73.73</td><td style="text-align:right">&#8235;۴ هسته / ۱۶ گیگ / ۱۰۰ گیگ&#8236;</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;vCPU یاندکس با کارایی ۱۰۰٪ تضمینی است و با سرورهای CPU اختصاصی رقبا مقایسه شده. ishosting در این دسته پلنی ندارد.&#8236;</p>
+<p style="font-size:32px;font-weight:600;line-height:1.5;text-align:right;color:#F7F6F2;background:#C2410C;padding:24px 40px;border-radius:16px">&#8235;حتی با فرض هر یورو برابر یک دلار، یاندکس با تخفیف شریک ۲۴ تا ۳۲ درصد ارزان‌تر است.&#8236;</p>
+<p style="position:absolute;right:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7385;text-align:right">&#8235;قیمت‌ها ماهانه و بدون مالیات، با یک IPv4. قیمت OVH از ۱ اکتبر ۲۰۲۶.&#8236;</p>
+
+</section>
+</div></div><div class="meta"><span class="num">13 / 18</span><p class="notes">چون ارزش یورو از دلار بیشتر است، فاصله‌ی واقعی از این عدد هم بیشتر است. این‌جا بهترین جایگاه یاندکس در ایران سرور است: سرور ابری حرفه‌ای با منابع تضمینی.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="price-storage" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;مقایسه‌ی قیمت · ۳ از ۳&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;ذخیره‌سازی و ترافیک&#8236;</h2>
+</div>
+<table style="font-family:'Vazirmatn', Tahoma, sans-serif;font-size:25px;color:#172033">
+<tr style="background:#172033">
+<th style="width:18%;text-align:right;color:#F7F6F2">&#8235;ishosting *&#8236;</th>
+<th style="width:19%;text-align:right;color:#F7F6F2">OVH</th>
+<th style="width:21%;text-align:right;color:#F7F6F2">Hetzner</th>
+<th style="width:20%;text-align:right;color:#F7F6F2">&#8235;یاندکس&#8236;</th>
+<th style="width:22%;text-align:right;color:#F7F6F2">&#8235;مورد&#8236;</th>
+</tr>
+<tr><td style="text-align:right">—</td><td style="text-align:right">$0.096</td><td style="text-align:right">€0.057</td><td style="text-align:right">$0.117</td><td style="text-align:right">&#8235;دیسک SSD (هر گیگ در ماه)&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">—</td><td style="text-align:right">$0.048</td><td style="text-align:right">—</td><td style="text-align:right">$0.028</td><td style="text-align:right">&#8235;دیسک HDD / پایه&#8236;</td></tr>
+<tr><td style="text-align:right">—</td><td style="text-align:right">&#8235;بدون هزینه‌ی ترافیک و API&#8236;</td><td style="text-align:right">&#8235;€6.49 پایه + €0.0087 هر گیگ&#8236;</td><td style="text-align:right">&#8235;$0.0195 هر گیگ&#8236;</td><td style="text-align:right">Object Storage</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">&#8235;نامحدود (از Medium)&#8236;</td><td style="text-align:right">&#8235;در قیمت سرور&#8236;</td><td style="text-align:right">&#8235;۲۰ ترابایت هر سرور&#8236;</td><td style="text-align:right;color:#C2410C">&#8235;۱۰۰ گیگ برای کل حساب&#8236;</td><td style="text-align:right">&#8235;ترافیک رایگان ماهانه&#8236;</td></tr>
+<tr><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right">—</td><td style="text-align:right;color:#C2410C">&#8235;$0.0116 هر گیگ&#8236;</td><td style="text-align:right">&#8235;اضافه‌مصرف ترافیک&#8236;</td></tr>
+</table>
+<p style="font-size:32px;font-weight:600;line-height:1.5;text-align:right;color:#F7F6F2;background:#172033;padding:24px 40px;border-radius:16px">&#8235;ترافیک بزرگ‌ترین ضعف یاندکس است: هر ترابایت اضافه حدود ۱۲ دلار.&#8236;</p>
+<p style="position:absolute;right:128px;bottom:64px;width:1664px;font-size:24px;color:#6B7385;text-align:right">&#8235;قیمت دیسک OVH از صفحه‌ی آمریکا (دلار). * ishosting پرووایدر پیشنهادی است و همکاری با آن هنوز اجرایی نشده.&#8236;</p>
+
+</section>
+</div></div><div class="meta"><span class="num">14 / 18</span><p class="notes">قیمت هر گیگ Object Storage در OVH از سایتشان قابل استخراج نبود. ishosting در بررسی ما Block یا Object Storage جدا نداشت. خروجی Object Storage یاندکس بعد از ۱۰۰ گیگ رایگان حدود ۰٫۰۱۴ دلار برای هر گیگ است.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="price-summary" data-transition="fade" style="display:flex; flex-direction:column; gap:40px; padding:128px 128px 160px; background:#edebe4">
+  <div style="display:flex; flex-direction:column; gap:12px">
+    <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:24px; font-weight:600; text-align:right; color:#c2410c">‫جمع‌بندی قیمت‬</p>
+    <h2 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:64px; font-weight:700; line-height:1.3; text-align:right; color:#172033">‫جایگاه قیمتی یاندکس در ایران سرور‬</h2>
+  </div>
+  <div style="display:flex; flex-direction:row; gap:24px">
+    <div style="display:flex; flex-direction:column; gap:12px; flex:1; padding:36px; background:#fdfcf9; border-top:6px solid #475166; border-radius:16px">
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:24px; font-weight:700; text-align:right; color:#475166">‫ریسک‬</p>
+      <h3 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:36px; font-weight:700; line-height:1.4; text-align:right; color:#172033">‫هزینه‌ی ترافیک‬</h3>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#475166">‫پلن‌ها سقف ترافیک داشته باشند و اضافه‌مصرف جدا فروخته شود‬</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:12px; flex:1; padding:36px; background:#fdfcf9; border-top:6px solid #475166; border-radius:16px">
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:24px; font-weight:700; text-align:right; color:#475166">‫ضعف‬</p>
+      <h3 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:36px; font-weight:700; line-height:1.4; text-align:right; color:#172033">‫پلن‌های اشتراکی ارزان‬</h3>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#475166">‫رقابت با Hetzner و ishosting سخت است؛‬</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:12px; flex:1; padding:36px; background:#fdfcf9; border-top:6px solid #c2410c; border-radius:16px">
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:24px; font-weight:700; text-align:right; color:#c2410c">‫مزیت‬</p>
+      <h3 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:36px; font-weight:700; line-height:1.4; text-align:right; color:#172033">‫سرور با CPU تضمینی‬</h3>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#475166">‫با تخفیف شریک ۲۴ تا ۳۲ درصد ارزان‌تر از Hetzner CCX و OVH b3‬</p>
+    </div>
+  </div>
+  <p style="padding:20px 32px; font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#172033; background:#fbe7dc; border:2px solid #c2410c; border-radius:14px">‫ishosting پرووایدر پیشنهادی است و همکاری با آن هنوز اجرایی نشده؛ قیمت‌هایش فقط برای مقایسه آمده است.‬</p>
+  <p style="position:absolute; right:128px; bottom:64px; width:1664px; font-family:Vazirmatn, Tahoma, sans-serif; font-size:24px; text-align:right; color:#6b7385">‫منابع: لیست قیمت رسمی یاندکس؛ وبلاگ رسمی OVHcloud؛ قیمت Hetzner از منابع ثانویه پس از ۱۵ ژوئن ۲۰۲۶؛ سایت ishosting‬</p>
+  
+</section>
+</div></div><div class="meta"><span class="num">15 / 18</span><p class="notes">تخفیف ۲۰٪ شریک طبق مستندات برنامه‌ی شراکت است و عدد نهایی را قرارداد تعیین می‌کند. پیش از قیمت‌گذاری نهایی در سایت، قیمت‌ها را با نرخ روز ارز تبدیل کنید.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="build" data-transition="fade" style="background:#EDEBE4;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;اجرا&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;آنچه ایران سرور باید بسازد&#8236;</h2>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FDFCF9;padding:32px;border-radius:16px">
+<h3 style="font-size:34px;font-weight:700;text-align:right">&#8235;۱. کاتالوگ پلن‌ها&#8236;</h3>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;ترکیب SKU ها در پلن‌های ثابت و تبدیل قیمت ارزی به قیمت فروش&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FDFCF9;padding:32px;border-radius:16px">
+<h3 style="font-size:34px;font-weight:700;text-align:right">&#8235;۲. بررسی ظرفیت&#8236;</h3>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;پیش از فروش، منابع پلن با کوتای باقی‌مانده‌ی مشتری مقایسه شود&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FDFCF9;padding:32px;border-radius:16px">
+<h3 style="font-size:34px;font-weight:700;text-align:right">&#8235;۳. فاکتور و تمدید&#8236;</h3>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;یاندکس ساعتی حساب می‌کند؛ دوره‌ی ماهانه و سررسید در سیستم ما&#8236;</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row-reverse;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FDFCF9;padding:32px;border-radius:16px">
+<h3 style="font-size:34px;font-weight:700;text-align:right">&#8235;۴. قطع و حذف خودکار&#8236;</h3>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;عدم پرداخت: Suspend زیرحساب، سپس حذف منابع پس از مهلت&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FDFCF9;padding:32px;border-radius:16px">
+<h3 style="font-size:34px;font-weight:700;text-align:right">&#8235;۵. صف عملیات&#8236;</h3>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;پیگیری Operation ها؛ سقف ۱۵ عملیات هم‌زمان در هر Folder&#8236;</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FDFCF9;padding:32px;border-radius:16px">
+<h3 style="font-size:34px;font-weight:700;text-align:right">&#8235;۶. مصرف هر مشتری&#8236;</h3>
+<p style="font-size:26px;line-height:1.6;color:#475166;text-align:right">&#8235;تطبیق فاکتور تجمیعی یاندکس با مصرف هر زیرحساب&#8236;</p>
+</div>
+</div>
+
+</section>
+</div></div><div class="meta"><span class="num">16 / 18</span><p class="notes">وب‌سرویس‌های یاندکس زیرساخت را می‌سازند و مدیریت می‌کنند، اما مدل فروش مثل پلن ماهانه، تمدید و قطع سرویس را ندارند. این شش بخش، ماژول پرووایدر یاندکس در ایران سرور را تشکیل می‌دهد.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="risks" data-transition="fade" style="background:#F7F6F2;color:#172033;font-family:'Vazirmatn', Tahoma, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;font-weight:600;color:#C2410C;text-align:right">&#8235;ریسک‌ها و سؤال‌های باز&#8236;</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.3;text-align:right;color:#172033">&#8235;مواردی که پیش از قرارداد باید روشن شود&#8236;</h2>
+</div>
+<table style="font-family:'Vazirmatn', Tahoma, sans-serif;font-size:25px;color:#172033">
+<tr style="background:#172033">
+<th style="width:36%;text-align:right;color:#F7F6F2">&#8235;اقدام&#8236;</th>
+<th style="width:34%;text-align:right;color:#F7F6F2">&#8235;چرا مهم است&#8236;</th>
+<th style="width:30%;text-align:right;color:#F7F6F2">&#8235;موضوع&#8236;</th>
+</tr>
+<tr><td style="text-align:right">&#8235;برنامه‌ی نسخه‌ی پایدار را بپرسیم&#8236;</td><td style="text-align:right">&#8235;ممکن است تغییر کند&#8236;</td><td style="text-align:right">&#8235;BareMetal API آلفا است&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">&#8235;زمان پایدار شدن را بپرسیم&#8236;</td><td style="text-align:right">&#8235;قابلیت هنوز Preview است&#8236;</td><td style="text-align:right">&#8235;حفاظت دامنه‌ی SWS&#8236;</td></tr>
+<tr><td style="text-align:right">&#8235;کوتای پیش‌فرض بالاتر بخواهیم&#8236;</td><td style="text-align:right">&#8235;فروش سریع را کند می‌کند&#8236;</td><td style="text-align:right">&#8235;افزایش کوتا با تیکت&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">&#8235;امکان API را تأیید بگیریم&#8236;</td><td style="text-align:right">&#8235;مستندات از پورتال شریک است&#8236;</td><td style="text-align:right">&#8235;ساخت Cloud و کوتا با API&#8236;</td></tr>
+<tr><td style="text-align:right">&#8235;تست ping و سرعت از ایران&#8236;</td><td style="text-align:right">&#8235;دیتاسنترها در روسیه و قزاقستان&#8236;</td><td style="text-align:right">&#8235;تأخیر شبکه&#8236;</td></tr>
+<tr style="background:#EDEBE4"><td style="text-align:right">&#8235;مسیر پرداخت و ریسک نرخ ارز&#8236;</td><td style="text-align:right">&#8235;فاکتور به RUB، USD یا KZT&#8236;</td><td style="text-align:right">&#8235;ارز و روش پرداخت&#8236;</td></tr>
+</table>
+
+</section>
+</div></div><div class="meta"><span class="num">17 / 18</span><p class="notes">این موارد را می‌توان در یک جلسه با تیم شراکت یاندکس پرسید. مهم‌ترین آن‌ها برای مدل کسب‌وکار ما: خودکارسازی کامل ساخت Cloud و کوتا با API، و کوتای پیش‌فرض بالاتر برای مشتریان ایران سرور.</p></div></div><div class="slide-wrap"><div class="frame"><div class="scaler"><section id="roadmap" data-transition="fade" style="display:flex; flex-direction:column; gap:48px; padding:128px; background:#172033">
+  <div style="display:flex; flex-direction:column; gap:12px">
+    <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:24px; font-weight:600; text-align:right; color:#f59e5b">‫پیشنهاد‬</p>
+    <h2 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:64px; font-weight:700; line-height:1.3; text-align:right; color:#f7f6f2">‫ورود مرحله‌ای در سه فاز‬</h2>
+  </div>
+  <div style="display:flex; flex-direction:row; gap:32px">
+    <div style="display:flex; flex-direction:column; gap:14px; flex:1; padding:28px 0 0; border-top:6px solid #8a93a6">
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; font-weight:700; text-align:right; color:#c9d1e0">‫فاز ۳‬</p>
+      <h3 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:36px; font-weight:700; line-height:1.4; text-align:right; color:#f7f6f2">BareMetal · Managed Kubernetes</h3>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#c9d1e0">‫پس از پایدار شدن BareMetal API و تجربه‌ی فاز ۱‬</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:14px; flex:1; padding:28px 0 0; border-top:6px solid #8a93a6">
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; font-weight:700; text-align:right; color:#c9d1e0">‫فاز ۲‬</p>
+      <h3 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:36px; font-weight:700; line-height:1.4; text-align:right; color:#f7f6f2">Cloud Backup · Smart Web Security</h3>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#c9d1e0">‫خدمات افزودنی روی سرورها، قابل فروش به مشتری‌های فعلی‬</p>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:14px; flex:1; padding:28px 0 0; border-top:6px solid #f59e5b">
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; font-weight:700; text-align:right; color:#f59e5b">‫فاز ۱‬</p>
+      <h3 style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:36px; font-weight:700; line-height:1.4; text-align:right; color:#f7f6f2">Compute Cloud · Block Storage · Object Storage</h3>
+      <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#c9d1e0">‫پرتقاضاترین و ساده‌ترین برای اتصال‬</p>
+    </div>
+  </div>
+  <div style="display:flex; flex-direction:column; gap:12px; padding:32px 40px; background:#22304a; border-radius:16px">
+    <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; font-weight:700; text-align:right; color:#f59e5b">‫گام‌های بعدی‬</p>
+    <p style="font-family:Vazirmatn, Tahoma, sans-serif; font-size:28px; line-height:1.6; text-align:right; color:#f7f6f2">‫ 1. حساب آزمایشی و نمونه‌ی اتصال با API · 2. تست شبکه از ایران‬</p>
+  </div>
+  
+</section>
+</div></div><div class="meta"><span class="num">18 / 18</span><p class="notes">زمان‌بندی هر فاز به نتیجه‌ی جلسه با یاندکس و نمونه‌ی اتصال بستگی دارد و این‌جا عددی برای آن فرض نشده است.</p></div></div>
+<script>
+  function fit() {
+    document.querySelectorAll('.frame').forEach(f => {
+      f.querySelector('.scaler').style.transform = 'scale(' + (f.clientWidth / 1920) + ')';
+    });
+  }
+  addEventListener('resize', fit); fit();
+</script>
+</body>
+</html>
