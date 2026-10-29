@@ -1,0 +1,19 @@
+{
+  "v": 4,
+  "createdOnFiles": {"v": 1, "at": "2026-10-28T09:00:00Z"},
+  "lists": "css",
+  "title": "یاندکس کلود در ایران سرور",
+  "cover": "cover",
+  "order": ["cover", "summary", "partner", "structure", "quota", "products", "compute", "baremetal", "storage", "backup-sws", "k8s", "price-shared", "price-dedicated", "price-storage", "price-summary", "build", "risks", "roadmap"],
+  "sections": {
+    "s1": {"description": "مقدمه و جمع‌بندی برای تصمیم", "start": "cover"},
+    "s2": {"description": "مدل همکاری، ساختار حساب مشتری و کوتا", "start": "partner"},
+    "s3": {"description": "هفت محصول پیشنهادی و وب‌سرویس‌های هر کدام", "start": "products"},
+    "s5": {"description": "مقایسه‌ی قیمت فاز اول با پرووایدرهای فعلی و پیشنهادی", "start": "price-shared"},
+    "s4": {"description": "کارهای اجرایی، ریسک‌ها و نقشه‌ی راه", "start": "build"}
+  },
+  "faces": {
+    "vazirmatn": {"family": "Vazirmatn", "href": "https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300..800&display=swap"}
+  },
+  "designSystems": []
+}
