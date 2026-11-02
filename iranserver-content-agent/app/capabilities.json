@@ -24,9 +24,11 @@
         ]
       },
       {
-        "server": "Google Drive",
+        "server": "host:claude_browser",
         "tools": [
-          "create_file"
+          "preview_start",
+          "navigate",
+          "get_page_text"
         ]
       }
     ]
