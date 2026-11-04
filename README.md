@@ -6,3 +6,4 @@
 - [راهنمای ساخت ارائه دمو اسپرینت](sprint-demo-presentation-guide.md)
 - [یاندکس کلود](yandex-cloud)
 - [ایجنت محتوای ایران‌سرور](iranserver-content-agent)
+- [برنامه‌های آماده (Managed Apps): الگوها و اسکیل‌ها](managedapp/README.md)
