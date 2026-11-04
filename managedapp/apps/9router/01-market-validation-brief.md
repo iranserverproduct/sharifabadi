@@ -10,9 +10,9 @@ Document details:
 | Author | تیم Product ایران‌سرور |
 | Reviewers | Product، Marketing |
 | Date | 2026-11-04 |
-| Status | In review |
+| Status | Approved |
 | Decision | Beta |
-| Related documents | DevOps Technical Specification: بعد از Gate A؛ Landing Page Content Brief: بعد از Gate B |
+| Related documents | [02-devops-technical-spec.md](02-devops-technical-spec.md)؛ Landing Page Content Brief: بعد از Gate B |
 
 ## Executive summary
 
@@ -266,7 +266,7 @@ Technical facts per candidate:
 | Documented memory need | سبک؛ تخمین ۵۱۲MB تا ۱GB (اندازه‌گیری نشده) | طبق README حداقل ۲GB؛ با یک ایجنت کدنویسی حدود ۱۰GB | خیلی سبک | سبک |
 | Image size | حدود ۳۰۰MB | حدود ۴۴۰MB (نسخه‌ی web حدود ۸۷۰MB) | کوچک | کوچک |
 | Runs as non-root | ❌ نیاز به override | ✅ پیش‌فرض | Unknown | Unknown |
-| Secure defaults | `REQUIRE_API_KEY=false` پیش‌فرض؛ باید روشن شود | `REQUIRE_API_KEY=true` پیش‌فرض | Unknown | Unknown |
+| Secure defaults | در نسخه‌ی `0.5.112` اجبار کلید API تنظیم دیتابیس است و پیش‌فرض روشن است (`requireApiKey: true`)؛ رمز و secretها مقدار پیش‌فرض ثابت دارند و باید برای هر مشتری ساخته شوند (سند فنی) | `REQUIRE_API_KEY=true` پیش‌فرض | Unknown | Unknown |
 | Persian interface | ✅ `fa.json` و README فارسی | ⚠️ مستندات و CLI فارسی دارد؛ داشبورد فارسی تأیید نشد | ❌ | ❌ |
 | Security advisories (count, worst severity) | ۱۹ مورد در حدود ۵ ماه؛ چند critical | ۱ مورد، critical؛ سطح حمله بزرگ‌تر | Unknown | Unknown |
 | Release cadence | هفتگی | هفتگی | Unknown | Unknown |
@@ -363,7 +363,7 @@ Sign-off:
 
 | Role | Name | Decision | Date |
 |---|---|---|---|
-| Product |   |   |   |
+| Product | مالک محصول managedapp (تأیید در گفتگو با تیم Product) | Approved (Gate A)، تصمیم Beta | 2026-11-04 |
 | Marketing |   |   |   |
 | DevOps lead |   |   |   |
 | Legal and compliance |   |   |   |
