@@ -4,3 +4,4 @@
 
 | App slug | دسته | نرم‌افزار انتخاب‌شده | منطقه | 01 بازار | 02 فنی | 03 لندینگ | تصمیم |
 |---|---|---|---|---|---|---|---|
+| [9router](9router/01-market-validation-brief.md) | AI gateway | 9Router (پلن پایه)، OmniRoute (پلن تیمی، آزمایشی) | خارج | In review | – | – | Beta (پیشنهادی) |
