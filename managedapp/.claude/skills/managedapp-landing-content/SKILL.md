@@ -26,6 +26,7 @@ If either is not approved, stop and tell the user (Gates A and B).
 
 ## Writing rules
 
+- App documents (everything under `apps/<app-slug>/`, including `research/`) are written entirely in Persian: section headings, table header cells, row labels, captions and narrative. Translate each template heading into Persian when you copy it; well-known framework names (SWOT, PESTLE) may stay in parentheses. Keep in English only: software and product names, environment variables, commands, code, file paths, URLs, and the `Status` row label with its values (Draft, In review, Approved, Rejected), which the repository check reads. Write the tags in Persian: Verified → تأییدشده, Assumed → فرضی, Unknown → نامشخص, Estimate → تخمینی. Templates and skills stay in English.
 - Plain Persian in the customer's words; no exaggeration.
 - No "free", "unlimited" or guaranteed-access claims unless Legal approved them in writing.
 - Do not describe competitors negatively; get Legal review before naming one.
