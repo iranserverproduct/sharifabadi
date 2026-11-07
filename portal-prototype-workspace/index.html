@@ -1,0 +1,233 @@
+<!doctype html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فضای کار پروتوتایپ</title>
+<link rel="stylesheet" id="css-new" href="new.css">
+<link rel="stylesheet" id="css-legacy" href="legacy.css">
+<link rel="stylesheet" href="fonts.css">
+</head>
+<body>
+<div id="root"></div>
+<script src="pages0.js"></script>
+<script src="pages1.js"></script>
+<script src="pages2.js"></script>
+<script src="pages3.js"></script>
+<script src="extra.js"></script>
+<script src="ws.js"></script>
+<script>
+// Static copies of the live portal pages (fake data), served on the portal's own routes.
+// New-portal pages live under /my/...; old-portal (WHMCS) pages keep their own URL as the route.
+const PAGES = window.PAGES_DATA;
+const ALIASES = EXTRA.ALIASES;   // menu routes the portal redirects to an old-portal page
+const MENUS = EXTRA.MENUS;       // header dropdowns, by menu label
+const SHADOWS = EXTRA.SHADOWS;   // the old portal's header web component (shadow DOM)
+const ROWS = EXTRA.ROWS;         // [table header starts with, row text contains, target route]
+const DRAWER = EXTRA.DRAWER;     // mobile side menu, opened by the header's first button
+const POPUPS = EXTRA.POPUPS;     // header button popups (notifications, account, new purchase), by layout and button position
+const HEADER_NAV = EXTRA.HEADER_NAV; // header buttons that open a page (cart), by layout and button position
+// The portal renders a separate mobile layout below 992px.
+const MOBILE = matchMedia('(max-width: 991px)');
+const HOME = '/my/panel';
+
+// A hash may end in @<proposal id> to open that proposal of the route (see ws.js).
+function current() {
+  let h = decodeURI(location.hash.slice(1)).split('@')[0] || HOME;
+  if (ALIASES[h]) { history.replaceState(null, '', '#' + ALIASES[h]); h = ALIASES[h]; }
+  const key = h.startsWith('/my/') ? h.split('?')[0].replace(/\/$/, '') : h;
+  return PAGES[key] || WS.route(key) ? key : null;
+}
+
+function go(route) { location.hash = route; }
+
+// Appends markup to an element or a shadow root (which has no insertAdjacentHTML) and returns it.
+function append(host, html) {
+  const t = document.createElement('template');
+  t.innerHTML = html;
+  host.appendChild(t.content);
+  return host.lastElementChild;
+}
+
+function render() {
+  let key = current();
+  if (!key) { history.replaceState(null, '', '#' + HOME); key = HOME; }
+  // routes added by product managers start from an existing page (ws.js)
+  const added = !PAGES[key] && WS.route(key);
+  const page = added ? { ...PAGES[added.base], title: added.title } : PAGES[key];
+  const which = (MOBILE.matches && page.m) ? 'm' : page.d ? 'd' : 'm';
+  const v = page[which];
+  document.getElementById('css-new').disabled = v.legacy;
+  document.getElementById('css-legacy').disabled = !v.legacy;
+  document.body.className = v.body || '';
+  const root = document.getElementById('root');
+  root.innerHTML = WS.transform(key, which, v.html);
+  root.querySelectorAll('template[data-shadow]').forEach(t => {
+    const host = t.parentElement;
+    t.remove();
+    (host.shadowRoot || host.attachShadow({ mode: 'open' })).innerHTML = SHADOWS[+t.dataset.shadow];
+  });
+  document.title = page.title;
+  window.scrollTo(0, 0);
+  closeDrawer(); closePopups();
+  // the old portal's header is a web component: bind its menus inside its shadow root too
+  const roots = [document, ...[...root.querySelectorAll('*')].filter(e => e.shadowRoot).map(e => e.shadowRoot)];
+  roots.forEach(r => { bindMenus(r); bindDrawer(r); bindHeaderLinks(r); bindHeaderButtons(r); });
+  bindTabs(); bindRouteTabs(); bindRows();
+  WS.rendered(key);
+}
+
+// Header buttons: notifications, cart, account and new-purchase popups.
+function bindHeaderButtons(r) {
+  const v = MOBILE.matches ? 'm' : 'd';
+  const btns = [...r.querySelectorAll('header button')].filter(b => !b.closest('li.nav-parent'));
+  btns.forEach((b, i) => {
+    const html = POPUPS[v]?.[i], route = HEADER_NAV[v]?.[i];
+    if (route) b.addEventListener('click', () => go(route));
+    if (!html) return;
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      const open = document.querySelector('[data-popup="' + i + '"]') || r.querySelector?.('[data-popup="' + i + '"]');
+      closePopups();
+      if (open) return;
+      const pop = append(r === document ? document.body : r, html);
+      pop.dataset.popup = i;
+      pop.addEventListener('click', ev => { ev.stopPropagation(); if (ev.target === pop && pop.classList.contains('p-overlay-mask')) closePopups(); });
+      pop.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', closePopups));
+    });
+  });
+}
+function closePopups() {
+  document.querySelectorAll('[data-popup]').forEach(p => p.remove());
+  document.querySelectorAll('#root *').forEach(e => e.shadowRoot?.querySelectorAll('[data-popup]').forEach(p => p.remove()));
+}
+document.addEventListener('click', closePopups);
+
+// Header links that the old portal's header component handles in script (no href).
+const HEADER_LINKS = { 'نمای کلی': '/my/panel', 'همکاری در فروش': '/my/panel/affiliates' };
+function bindHeaderLinks(r) {
+  if (r === document) return;
+  r.querySelectorAll('li.nav-parent > a:not([href])').forEach(a => {
+    const route = HEADER_LINKS[a.innerText.trim()];
+    if (route) { a.href = '#' + route; }
+  });
+  const logo = r.querySelector('header a:not([href])');
+  if (logo && !logo.innerText.trim()) logo.href = '#' + HOME;
+}
+
+// Mobile: the hamburger opens the side menu; its sections expand like the portal's panel menu.
+function bindDrawer(r) {
+  const btn = MOBILE.matches && r.querySelector(r === document ? '#root header button' : 'header button');
+  if (!btn || !DRAWER) return;
+  btn.addEventListener('click', () => {
+    const mask = append(r === document ? document.body : r, DRAWER);
+    mask.addEventListener('click', e => { if (e.target === mask) closeDrawer(); });
+    mask.querySelectorAll('.p-drawer-header button, .p-drawer-close-button').forEach(b => b.addEventListener('click', closeDrawer));
+    mask.querySelectorAll('.p-panelmenu-panel').forEach(p => {
+      const head = p.querySelector('.p-panelmenu-header');
+      const body = p.querySelector('.p-panelmenu-content-container');
+      head.addEventListener('click', () => {
+        const open = !head.classList.contains('p-panelmenu-header-active');
+        head.classList.toggle('p-panelmenu-header-active', open);
+        if (body) body.style.display = open ? '' : 'none';
+      });
+    });
+  });
+}
+function closeDrawer() {
+  document.querySelectorAll('body > .p-drawer-mask').forEach(m => m.remove());
+  document.querySelectorAll('#root *').forEach(e => e.shadowRoot?.querySelectorAll(':scope > .p-drawer-mask').forEach(m => m.remove()));
+}
+
+// Header: the services/domains/finance/support dropdowns.
+function bindMenus(r) {
+  r.querySelectorAll('li.nav-parent > button').forEach(b => {
+    const label = b.innerText.trim();
+    if (!MENUS[label]) return;
+    b.addEventListener('click', e => {
+      e.stopPropagation();
+      const open = b.classList.contains('is-open');
+      closeMenus();
+      if (open) return;
+      b.classList.add('is-open');
+      b.querySelector('span')?.classList.add('text-primary-500');
+      b.querySelector('svg')?.classList.add('text-primary-500', 'rotate-180');
+      b.closest('ul').insertAdjacentHTML('afterend', MENUS[label]);
+    });
+  });
+}
+function closeMenus() {
+  const roots = [document, ...[...document.querySelectorAll('#root *')].filter(e => e.shadowRoot).map(e => e.shadowRoot)];
+  roots.forEach(r => r.querySelectorAll('.nav-items').forEach(m => m.remove()));
+  roots.forEach(r => r.querySelectorAll('li.nav-parent > button.is-open').forEach(b => {
+    b.classList.remove('is-open');
+    b.querySelector('span')?.classList.remove('text-primary-500');
+    b.querySelector('svg')?.classList.remove('text-primary-500', 'rotate-180');
+  }));
+}
+document.addEventListener('click', closeMenus);
+
+// Overview: the renewal/services/domains tabs switch panels in place, as on the portal.
+function bindTabs() {
+  const bar = document.querySelector('.p-tablist-active-bar');
+  const tabs = [...document.querySelectorAll('button.p-tab[id$="_tab_dueDate"], button.p-tab[id$="_tab_products"], button.p-tab[id$="_tab_domains"]')];
+  if (!tabs.length) return;
+  const select = tab => {
+    tabs.forEach(t => {
+      const on = t === tab;
+      t.classList.toggle('p-tab-active', on);
+      const panel = document.getElementById(t.id.replace('_tab_', '_tabpanel_'));
+      if (panel) panel.style.display = on ? '' : 'none';
+    });
+    if (bar) {
+      const list = tab.closest('.p-tablist-tab-list').getBoundingClientRect();
+      const r = tab.getBoundingClientRect();
+      bar.style.width = r.width + 'px';
+      bar.style.left = (r.left - list.left) + 'px';
+    }
+  };
+  tabs.forEach(t => t.addEventListener('click', () => select(t)));
+  const active = tabs.find(t => t.classList.contains('p-tab-active'));
+  if (active) requestAnimationFrame(() => select(active));
+}
+
+// Detail pages: tabs whose id carries a route (e.g. ..._tab_/panel/service/101/server/tickets) navigate.
+function bindRouteTabs() {
+  document.querySelectorAll('button.p-tab[id*="_tab_/panel/"]').forEach(t => {
+    const route = '/my' + t.id.slice(t.id.indexOf('_tab_') + 5);
+    if (PAGES[route]) t.addEventListener('click', () => go(route));
+  });
+}
+
+// List pages: rows open their detail page.
+function bindRows() {
+  document.querySelectorAll('.p-datatable').forEach(dt => {
+    // textContent, not innerText: tables in hidden tab panels must match too
+    const head = (dt.querySelector('thead')?.textContent || '').replace(/\s+/g, '');
+    dt.querySelectorAll('.p-datatable-tbody > tr').forEach(tr => {
+      const text = tr.textContent;
+      const rule = ROWS.find(([h, t]) => head.startsWith(h.replace(/\s+/g, '')) && (!t || text.includes(t)));
+      if (!rule || !PAGES[rule[2].startsWith('/my/') ? rule[2].split('?')[0] : rule[2]]) return;
+      const el = tr.querySelector('.cursor-pointer') || tr;
+      el.addEventListener('click', () => go(rule[2]));
+    });
+  });
+}
+
+// Proposals can link to routes (data-ws-go) and open or close parts of the page, such as a modal (data-ws-toggle).
+document.addEventListener('click', e => {
+  const go_ = e.target.closest('#root [data-ws-go]');
+  if (go_) { e.preventDefault(); go(go_.dataset.wsGo); return; }
+  const t = e.target.closest('#root [data-ws-toggle]');
+  if (t) {
+    e.preventDefault();
+    document.querySelectorAll('#root ' + t.dataset.wsToggle).forEach(el => { el.hidden = !el.hidden; });
+  }
+});
+
+window.addEventListener('hashchange', render);
+MOBILE.addEventListener('change', render);
+render();
+</script>
+</body>
+</html>

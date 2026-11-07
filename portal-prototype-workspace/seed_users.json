@@ -1,0 +1,82 @@
+{
+ "u-asharifabadi": {
+  "name": "علیرضا شریف‌آبادی",
+  "email": "a.sharifabadi@greenweb.ir",
+  "role": "admin",
+  "routes": [],
+  "hash": "",
+  "salt": ""
+ },
+ "u-ssharifi": {
+  "name": "سپیده شریفی",
+  "email": "s.sharifi@greenweb.ir",
+  "role": "design",
+  "routes": [],
+  "hash": "",
+  "salt": ""
+ },
+ "u-mnoorpeyma": {
+  "name": "محمد نورپیما",
+  "email": "m.noorpeyma@iranserver.com",
+  "role": "design",
+  "routes": [],
+  "hash": "",
+  "salt": ""
+ },
+ "u-aseydabadi": {
+  "name": "امین سیدآبادی",
+  "email": "a.seydabadi@iranserver.com",
+  "role": "pm",
+  "routes": [
+   "/my/panel/service/*/host/**",
+   "/my/panel/service/*/ssl/**",
+   "/my/panel/service/*/cdn/**",
+   "/my/panel/hosts/**",
+   "/my/panel/ssl/**",
+   "/my/panel/cdn/**"
+  ],
+  "hash": "",
+  "salt": ""
+ },
+ "u-fansari": {
+  "name": "فاطمه انصاری",
+  "email": "f.ansari@iranserver.com",
+  "role": "pm",
+  "routes": [
+   "/my/panel/domains/**",
+   "/my/panel/domain/**",
+   "/cart.php?a=add&domain=register&systpl=is-theme",
+   "/cart.php?a=add&domain=transfer&systpl=is-theme",
+   "/index.php?rp=/cart/domain/renew",
+   "/index.php?m=is_transfer&action=domain/getcode&systpl=is-theme"
+  ],
+  "hash": "",
+  "salt": ""
+ },
+ "u-vmozdabadi": {
+  "name": "وحید سیدآبادی",
+  "email": "v.mozdabadi@iranserver.com",
+  "role": "pm",
+  "routes": [
+   "/my/panel",
+   "/my/panel/services",
+   "/my/panel/affiliates/**",
+   "/my/panel/invoices/**",
+   "/my/panel/support/**",
+   "/my/panel/profile/**",
+   "/my/panel/account/**",
+   "/my/panel/notifications/**",
+   "/my/panel/settings/**",
+   "/cart.php?a=view&systpl=is-theme",
+   "/clientarea.php?action=details&systpl=is-theme",
+   "/index.php?rp=/account/contacts&contactid=",
+   "/index.php?rp=/user/password",
+   "/index.php?m=is_security&action=apitokens",
+   "/index.php?m=accounting&action=refund/index&systpl=is-theme",
+   "/index.php?m=is_service&action=renewService/index&systpl=is-theme",
+   "/index.php?m=is_transfer&action=service/getcode&systpl=is-theme"
+  ],
+  "hash": "",
+  "salt": ""
+ }
+}
