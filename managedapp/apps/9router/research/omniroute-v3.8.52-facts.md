@@ -1,196 +1,196 @@
-# OmniRoute — upstream facts for a K8s/ArgoCD managed-app spec
+# OmniRoute: یافته‌های upstream برای مشخصات استقرار روی Kubernetes
 
-Collected 2026-11-04. Source = release tag **v3.8.52** tarball (read/grep only, nothing executed or built),
-GitHub REST API, Docker Hub API + registry manifest/config (metadata only).
-`S/` below = `https://github.com/cheaper-inference/OmniRoute/blob/v3.8.52/`.
-"Unknown" = not read from an upstream file/API.
+گردآوری‌شده در 2026-11-04. منبع = tarball تگ انتشار **v3.8.52** (فقط خواندن و grep؛ هیچ چیزی اجرا یا build نشد)،
+GitHub REST API، و Docker Hub API به‌همراه manifest و config رجیستری (فقط متادیتا).
+در ادامه، `S/` یعنی `https://github.com/cheaper-inference/OmniRoute/blob/v3.8.52/`.
+«نامشخص» = از هیچ فایل یا API در upstream خوانده نشده است.
 
-## 0. Identity
-- Repo: `cheaper-inference/OmniRoute` (repo id 1157102282, created 2026-02-13). `api.github.com/repos/diegosouzapw/OmniRoute` returns **301 Moved Permanently** to the same repo id, so the repo moved. Source: GitHub API.
-- Upstream files still point at the old name: image label `org.opencontainers.image.source=https://github.com/diegosouzapw/OmniRoute`, issue links in docs, and `docker-publish.yml` gates scheduled runs on `github.repository == 'diegosouzapw/OmniRoute'`. Source: `S/Dockerfile` L242-246, `S/.github/workflows/docker-publish.yml` L56.
-- License: **MIT** (GitHub API; `S/LICENSE`; image label). Stars: **84,535**, forks 12,700, open issues 561 (GitHub API, 2026-11-04).
-- Default branch: `release/v3.8.53`. It holds unreleased work; there is no v3.8.53 tag.
+## 0. هویت
+- مخزن: `cheaper-inference/OmniRoute` (شناسهٔ مخزن 1157102282، ساخته‌شده در 2026-02-13). `api.github.com/repos/diegosouzapw/OmniRoute` پاسخ **301 Moved Permanently** را به همان شناسهٔ مخزن برمی‌گرداند، پس مخزن جابه‌جا شده است. منبع: GitHub API.
+- فایل‌های upstream هنوز به نام قدیمی اشاره می‌کنند: برچسب ایمیج `org.opencontainers.image.source=https://github.com/diegosouzapw/OmniRoute`، لینک‌های issue در مستندات، و `docker-publish.yml` که اجراهای زمان‌بندی‌شده را مشروط به `github.repository == 'diegosouzapw/OmniRoute'` کرده است. منبع: `S/Dockerfile` L242-246، `S/.github/workflows/docker-publish.yml` L56.
+- مجوز: **MIT** (GitHub API؛ `S/LICENSE`؛ برچسب ایمیج). ستاره‌ها: **84,535**، فورک‌ها 12,700، issueهای باز 561 (GitHub API، 2026-11-04).
+- شاخهٔ پیش‌فرض: `release/v3.8.53`. این شاخه کارهای منتشرنشده را در خود دارد؛ تگ v3.8.53 وجود ندارد.
 
-## 1. Release / cadence
-- Latest stable: **v3.8.52**. It is `releases/latest`. Annotated tag object `cac024bcf3999e46092a763a18eefced77e36acf` (tagger date 2026-10-19T20:02:28Z, `verified: false`) points to commit **`ad6f33f66bda34eba98645d3bfdabbde294bc843`** (committed 2026-10-19T15:22:25Z, "Release v3.8.52"). Release published 2026-10-19T20:02:45Z. `S/package.json` version = 3.8.52.
-- Last 8 releases (published_at): v3.8.52 2026-10-19 · v3.8.51 2026-09-30 · v3.8.50 2026-08-26 · v3.8.49 2026-07-30 · v3.8.48 2026-07-13 · v3.8.47 2026-07-13 · v3.8.46 2026-07-07 · v3.8.45 2026-07-06. A non-version release `radar-export-latest` (2026-08-20) also exists. Cadence: multiple releases per week in early July, then about one release every 3–5 weeks. (GitHub API releases)
-- Supported versions: 3.8.x Active, 3.7.x Security only, 3.9.x planned LTS (`stable/v3`). Source: `S/SECURITY.md` L19-26.
+## 1. انتشار / آهنگ انتشار
+- آخرین نسخهٔ پایدار: **v3.8.52**. همین نسخه `releases/latest` است. شیء تگ annotated با شناسهٔ `cac024bcf3999e46092a763a18eefced77e36acf` (تاریخ tagger 2026-10-19T20:02:28Z، `verified: false`) به کامیت **`ad6f33f66bda34eba98645d3bfdabbde294bc843`** اشاره می‌کند (کامیت‌شده در 2026-10-19T15:22:25Z، با پیام "Release v3.8.52"). انتشار در 2026-10-19T20:02:45Z منتشر شد. نسخه در `S/package.json` = 3.8.52.
+- ۸ انتشار آخر (published_at): v3.8.52 2026-10-19 · v3.8.51 2026-09-30 · v3.8.50 2026-08-26 · v3.8.49 2026-07-30 · v3.8.48 2026-07-13 · v3.8.47 2026-07-13 · v3.8.46 2026-07-07 · v3.8.45 2026-07-06. یک انتشار غیرنسخه‌ای به نام `radar-export-latest` (2026-08-20) هم وجود دارد. آهنگ انتشار: در اوایل ژوئیه چند انتشار در هفته، و پس از آن تقریباً هر 3–5 هفته یک انتشار. (انتشارهای GitHub API)
+- نسخه‌های پشتیبانی‌شده: 3.8.x فعال، 3.7.x فقط وصله‌های امنیتی، 3.9.x به‌عنوان LTS برنامه‌ریزی‌شده (`stable/v3`). منبع: `S/SECURITY.md` L19-26.
 
-## 2. Image
-- Registry: Docker Hub `docker.io/diegosouzapw/omniroute` (still under the old namespace; 1.67M pulls). The workflow also pushes `ghcr.io/diegosouzapw/omniroute` (`docker-publish.yml` L223). GHCR digests: **Unknown** (not queried).
-- Tag **`3.8.52`** (pushed 2026-10-20T02:54Z; `latest` has the same digest):
-  - index digest `sha256:b08a12e876baa8a5ccadd1ebbe346fe7267dba3b1c9f4fd6bb02070fae41ab6c`
-  - linux/amd64 `sha256:90f903d7e9245973dc23f7f0a3afc0c63502c9bd25961097843361689df6474b`, compressed **442,855,586 B (~422 MiB)**, 13 layers (sum verified from the manifest)
-  - linux/arm64 `sha256:fb7f91836fd95f382a5a04af740d859e2e9731804b5c0ba43f5d2e7f9ad64794`, 442,240,532 B
-  - Variants: `3.8.52-web` (index `sha256:d0d63c53…c779147`, amd64 `sha256:69a1b16c…2fd2980` 873 MB, adds Playwright, Chromium and Xvfb). `3.8.52-bun` and `-web-bun` are amd64-only and "best-effort".
-  - Channels: `:X.Y.Z` immutable; `:latest` = highest stable; `:next` = release branch (pushed 2026-11-04); `:main` = dev. Source: `S/docs/guides/DOCKER_GUIDE.md` L506-515.
-  - The image has no `org.opencontainers.image.revision` label, so digest→commit linkage is **Unknown**. Image signing/cosign: **Unknown**.
-- Base: `node:26-trixie-slim` (tag only, not digest-pinned). The published config shows NODE_VERSION=26.12.0. Source: `S/Dockerfile` L2; registry config blob.
-- Stages: `runner-base` → `:X.Y.Z`; `runner-web` → `-web`; `runner-cli` (the **last** stage, so a bare `docker build .` produces it) installs git, **docker.io and docker-compose**, plus global codex, claude-code, droid, openclaw and qodercli. docker-publish builds `runner-base`/`runner-web` only. Source: `S/Dockerfile` L363-403, workflow L261/281.
-- Published amd64 config (registry, matches `S/Dockerfile` L248-316):
-  - `User=node`. The Dockerfile comment says UID/GID **1000** (L298-299); `/etc/passwd` was not inspected, so the numeric UID is from the comment only.
-  - `WorkingDir=/app`, `Entrypoint=["/app/check-permissions.sh"]`, `Cmd=["node","dev/run-standalone.mjs"]`
-  - `ExposedPorts=20128/tcp` only
+## 2. ایمیج
+- رجیستری: Docker Hub `docker.io/diegosouzapw/omniroute` (هنوز زیر namespace قدیمی؛ 1.67M pull). workflow همچنین `ghcr.io/diegosouzapw/omniroute` را push می‌کند (`docker-publish.yml` L223). digestهای GHCR: **نامشخص** (پرس‌وجو نشد).
+- تگ **`3.8.52`** (push‌شده در 2026-10-20T02:54Z؛ `latest` همان digest را دارد):
+  - digest ایندکس `sha256:b08a12e876baa8a5ccadd1ebbe346fe7267dba3b1c9f4fd6bb02070fae41ab6c`
+  - linux/amd64 `sha256:90f903d7e9245973dc23f7f0a3afc0c63502c9bd25961097843361689df6474b`، حجم فشرده **442,855,586 B (~422 MiB)**، 13 لایه (مجموع از روی manifest بررسی شد)
+  - linux/arm64 `sha256:fb7f91836fd95f382a5a04af740d859e2e9731804b5c0ba43f5d2e7f9ad64794`، 442,240,532 B
+  - گونه‌ها: `3.8.52-web` (ایندکس `sha256:d0d63c53…c779147`، amd64 `sha256:69a1b16c…2fd2980` با حجم 873 MB، که Playwright، Chromium و Xvfb را اضافه می‌کند). `3.8.52-bun` و `-web-bun` فقط amd64 هستند و "best-effort" (بدون تضمین).
+  - کانال‌ها: `:X.Y.Z` تغییرناپذیر؛ `:latest` = بالاترین نسخهٔ پایدار؛ `:next` = شاخهٔ انتشار (push‌شده در 2026-11-04)؛ `:main` = توسعه. منبع: `S/docs/guides/DOCKER_GUIDE.md` L506-515.
+  - ایمیج برچسب `org.opencontainers.image.revision` ندارد، پس ارتباط digest→commit **نامشخص** است. امضای ایمیج/cosign: **نامشخص**.
+- پایه: `node:26-trixie-slim` (فقط با تگ، بدون pin کردن digest). config منتشرشده NODE_VERSION=26.12.0 را نشان می‌دهد. منبع: `S/Dockerfile` L2؛ blob کانفیگ رجیستری.
+- مرحله‌ها (stages): `runner-base` → `:X.Y.Z`؛ `runner-web` → `-web`؛ `runner-cli` (مرحلهٔ **آخر**، پس یک `docker build .` ساده همین را می‌سازد) که git، **docker.io و docker-compose**، و نیز codex، claude-code، droid، openclaw و qodercli را به‌صورت سراسری نصب می‌کند. docker-publish فقط `runner-base`/`runner-web` را build می‌کند. منبع: `S/Dockerfile` L363-403، workflow L261/281.
+- config منتشرشدهٔ amd64 (رجیستری، منطبق با `S/Dockerfile` L248-316):
+  - `User=node`. کامنت Dockerfile مقدار UID/GID را **1000** می‌گوید (L298-299)؛ `/etc/passwd` بررسی نشد، پس UID عددی فقط از روی همین کامنت است.
+  - `WorkingDir=/app`، `Entrypoint=["/app/check-permissions.sh"]`، `Cmd=["node","dev/run-standalone.mjs"]`
+  - فقط `ExposedPorts=20128/tcp`
   - `Healthcheck: node healthcheck.mjs` (30s/5s/15s/3)
-  - Env: `NODE_ENV=production PORT=20128 HOSTNAME=0.0.0.0 OMNIROUTE_MEMORY_MB=1024 NODE_OPTIONS=--max-old-space-size=1024 DATA_DIR=/app/data REQUIRE_API_KEY=true OMNIROUTE_MIGRATIONS_DIR=/app/migrations`
-- Non-root by default: **yes** (USER node). `/app` and `/app/data` are chowned to node:node. The entrypoint only *warns* if DATA_DIR is not writable, then `exec`s the CMD. It also runs `docker/ensure-docker-base-path.mjs`, which patches the bundle at start when `OMNIROUTE_BASE_PATH` is set. Source: `S/scripts/check-permissions.sh`, `S/docs/guides/DOCKER_GUIDE.md` L400-401.
-- `run-standalone.mjs` spawns `server-ws.mjs` as a child process, a wrapper that adds WS, peer-IP stamping and WebDAV. Optional native TLS: `OMNIROUTE_TLS_CERT`/`OMNIROUTE_TLS_KEY`. Source: `S/scripts/dev/run-standalone.mjs` L31-38, `S/scripts/dev/standalone-server-ws.mjs` L107-118.
-- readOnlyRootFilesystem compatibility: **Unknown** (no upstream statement).
+  - متغیرهای محیطی: `NODE_ENV=production PORT=20128 HOSTNAME=0.0.0.0 OMNIROUTE_MEMORY_MB=1024 NODE_OPTIONS=--max-old-space-size=1024 DATA_DIR=/app/data REQUIRE_API_KEY=true OMNIROUTE_MIGRATIONS_DIR=/app/migrations`
+- اجرا به‌صورت غیر root به‌طور پیش‌فرض: **بله** (USER node). مالکیت `/app` و `/app/data` به node:node داده شده است. entrypoint اگر DATA_DIR قابل نوشتن نباشد فقط *هشدار* می‌دهد و سپس CMD را `exec` می‌کند. همچنین `docker/ensure-docker-base-path.mjs` را اجرا می‌کند که وقتی `OMNIROUTE_BASE_PATH` تنظیم شده باشد، bundle را هنگام شروع وصله می‌کند. منبع: `S/scripts/check-permissions.sh`، `S/docs/guides/DOCKER_GUIDE.md` L400-401.
+- `run-standalone.mjs` فایل `server-ws.mjs` را به‌صورت پروسس فرزند اجرا می‌کند؛ این یک wrapper است که WS، مهر زدن IP همتا (peer-IP stamping) و WebDAV را اضافه می‌کند. TLS بومی اختیاری: `OMNIROUTE_TLS_CERT`/`OMNIROUTE_TLS_KEY`. منبع: `S/scripts/dev/run-standalone.mjs` L31-38، `S/scripts/dev/standalone-server-ws.mjs` L107-118.
+- سازگاری با readOnlyRootFilesystem: **نامشخص** (هیچ اظهارنظری در upstream نیست).
 
-## 3. Helm chart
-- **None in v3.8.52.** No `Chart.yaml` or helm directory exists anywhere in the tree. Upstream K8s guidance is a doc snippet only. Source: `S/docs/guides/DOCKER_GUIDE.md` L650-700, `S/docs/ops/MONITORING_GUIDE.md` §"Kubernetes probe recommendations":
-  - `replicas: 1`, `strategy: Recreate` (required: "do not raise replicas against one SQLite file", since multiple writers corrupt the DB); HA is not supported
-  - `terminationGracePeriodSeconds: 90`, `preStop: sleep 15`; SSE drain `SHUTDOWN_TIMEOUT_MS` default 30s
-  - startupProbe `GET /healthz` (failureThreshold 30, period 5); readinessProbe `GET /healthz` (period 5, timeout 2, failureThreshold 6); livenessProbe `GET /livez` or **TCP 20128** (period 10–20, timeout 3, failureThreshold 6). Do **not** use `/api/monitoring/health` for liveness.
-  - Scale-out = N independent pods, each with its own DATA_DIR/volume; optional `QUOTA_STORE_DRIVER=redis` for shared quota counters
-- securityContext / PVC templates: Unknown (none upstream).
+## 3. چارت Helm
+- **در v3.8.52 وجود ندارد.** هیچ `Chart.yaml` یا پوشهٔ helm در هیچ جای درخت پروژه نیست. راهنمای upstream برای K8s فقط یک تکه در مستندات است. منبع: `S/docs/guides/DOCKER_GUIDE.md` L650-700، `S/docs/ops/MONITORING_GUIDE.md` بخش «Kubernetes probe recommendations»:
+  - `replicas: 1`، `strategy: Recreate` (الزامی: "do not raise replicas against one SQLite file" (تعداد replica را روی یک فایل SQLite بالا نبرید)، چون چند نویسنده DB را خراب می‌کنند)؛ HA پشتیبانی نمی‌شود
+  - `terminationGracePeriodSeconds: 90`، `preStop: sleep 15`؛ تخلیهٔ SSE با `SHUTDOWN_TIMEOUT_MS` که پیش‌فرض آن 30s است
+  - startupProbe `GET /healthz` (failureThreshold 30، period 5)؛ readinessProbe `GET /healthz` (period 5، timeout 2، failureThreshold 6)؛ livenessProbe `GET /livez` یا **TCP 20128** (period 10–20، timeout 3، failureThreshold 6). برای liveness از `/api/monitoring/health` استفاده **نکنید**.
+  - مقیاس‌دهی افقی = N پاد مستقل، هر کدام با DATA_DIR/volume خودش؛ `QUOTA_STORE_DRIVER=redis` به‌صورت اختیاری برای شمارنده‌های سهمیهٔ مشترک
+- securityContext / قالب‌های PVC: نامشخص (در upstream وجود ندارد).
 
-## 4. docker-compose files
-- `S/docker-compose.yml` uses profiles: base, web, cli, host, memory, bifrost, cliproxyapi, codex-app-server.
-  - `redis:8.6.5-alpine` (no requirepass, loopback-published) is in every profile, but the app does not `depends_on` it.
-  - Optional services: `chatgpt-web-codex-browser` (web), `qdrant` (memory), `bifrost`, `cliproxyapi`, `codex-app-server`.
-  - The `cli` profile mounts **/var/run/docker.sock**.
-  - The `host` profile mounts host `~/.codex`, `~/.claude` and others read-write.
-  - Ports bind to `APP_BIND_HOST:-127.0.0.1`: 20128 dashboard, 20129 API, 20132 live WS. Compose sets `NODE_OPTIONS=--max-old-space-size=2048`.
-- `S/docker-compose.selfhost.yml`: redis + `omniroute:latest` (`depends_on redis healthy`, `REDIS_URL=redis://redis:6379`).
-- `S/docker-compose.prod.yml`: redis + a `runner-cli` build + chatgpt-web-codex-browser.
-- `S/docker-compose.ollama-local.yml`: single omniroute container, no redis.
-- **Redis is optional**: "optional, soft dependency … degrades gracefully (in-memory fallbacks)" (`S/docs/ops/REDIS_PRODUCTION_CONFIG.md` L10). `.env.example` L114-120 marks REDIS_URL "OPT-IN". Without it, production logs a warning and rate limiting is in-memory (`S/src/shared/utils/rateLimiter.ts` L3-11). Pointing REDIS_URL at a dead host floods logs (#4878).
-- **Nothing else is required.** SQLite is embedded (better-sqlite3).
+## 4. فایل‌های docker-compose
+- `S/docker-compose.yml` از profileها استفاده می‌کند: base، web، cli، host، memory، bifrost، cliproxyapi، codex-app-server.
+  - `redis:8.6.5-alpine` (بدون requirepass، publish‌شده روی loopback) در همهٔ profileها هست، اما اپ به آن `depends_on` ندارد.
+  - سرویس‌های اختیاری: `chatgpt-web-codex-browser` (web)، `qdrant` (memory)، `bifrost`، `cliproxyapi`، `codex-app-server`.
+  - profile `cli` فایل **/var/run/docker.sock** را mount می‌کند.
+  - profile `host` مسیرهای `~/.codex`، `~/.claude` و چند مسیر دیگر میزبان را به‌صورت read-write mount می‌کند.
+  - پورت‌ها به `APP_BIND_HOST:-127.0.0.1` bind می‌شوند: 20128 داشبورد، 20129 API، 20132 live WS. compose مقدار `NODE_OPTIONS=--max-old-space-size=2048` را تنظیم می‌کند.
+- `S/docker-compose.selfhost.yml`: redis + `omniroute:latest` (`depends_on redis healthy`، `REDIS_URL=redis://redis:6379`).
+- `S/docker-compose.prod.yml`: redis + یک build از `runner-cli` + chatgpt-web-codex-browser.
+- `S/docker-compose.ollama-local.yml`: یک کانتینر omniroute تنها، بدون redis.
+- **Redis اختیاری است**: "optional, soft dependency … degrades gracefully (in-memory fallbacks)" (وابستگی نرم و اختیاری؛ در نبودش با جایگزین‌های درون‌حافظه‌ای کار می‌کند) (`S/docs/ops/REDIS_PRODUCTION_CONFIG.md` L10). `.env.example` L114-120 متغیر REDIS_URL را "OPT-IN" (اختیاری با فعال‌سازی دستی) علامت زده است. بدون آن، محیط production یک هشدار لاگ می‌کند و rate limiting درون‌حافظه‌ای انجام می‌شود (`S/src/shared/utils/rateLimiter.ts` L3-11). اگر REDIS_URL به میزبانی از کار افتاده اشاره کند، لاگ‌ها پر می‌شوند (#4878).
+- **چیز دیگری لازم نیست.** SQLite به‌صورت embedded است (better-sqlite3).
 
-## 5. Data / disk
-- DB: SQLite with WAL at **`$DATA_DIR/storage.sqlite`** (+ `-wal`, `-shm`). Docker `/app/data`. Source: `S/src/lib/db/core.ts` L120, `S/docs/ops/DATABASE_GUIDE.md` L60-74.
-- `DATA_DIR` (image default `/app/data`); alias `OMNIROUTE_DATA_DIR` (PromptQL only). Default without DATA_DIR = `~/.omniroute` (or `$XDG_CONFIG_HOME/omniroute`). Source: `S/src/lib/dataPaths.ts`.
-- **Silent fallback**: if the configured DATA_DIR is not writable (EACCES/EPERM), the app *warns and falls back to `~/.omniroute`* (= `/home/node/.omniroute`, ephemeral in a pod), so a PVC permission error does not fail startup. Source: `S/src/lib/dataPaths.ts` `resolveWritableDataDir` L174-190.
-- Auto-generated secrets: `JWT_SECRET`, `STORAGE_ENCRYPTION_KEY`, `API_KEY_SECRET` and `STORAGE_ENCRYPTION_KEY_VERSION` are generated on first boot when unset and persisted to **`$DATA_DIR/server.env`**. Losing that file means losing the encryption key; the app refuses to regenerate the key if encrypted credentials exist. Load order: generated < `server.env` < `$DATA_DIR/.env` (then `~/.omniroute/.env`, `./.env`) < process.env (empty values ignored). Source: `S/scripts/build/bootstrap-env.mjs` L5-18, L247-320.
-- HOME-based paths outside DATA_DIR (HOME=/home/node):
-  - plugin dir `<HOME>/.omniroute/plugins` unless `OMNIROUTE_PLUGINS_DIR` is set (`S/src/lib/plugins/scanner.ts` L46-56)
-  - compression rule/filter dirs fall back to `~/.omniroute` (`open-sse/services/compression/ruleLoader.ts` L75, `engines/rtk/filterLoader.ts` L66)
-  - CLI-tool configs `~/.codex`, `~/.claude`, `~/.cline`, `~/.continue`, `~/.hermes`, `~/.config/*`, `~/.aws/sso/cache`, `~/.local/share/kiro-cli`, etc. (about 66 files use `homedir()`)
+## 5. داده / دیسک
+- DB: SQLite با WAL در **`$DATA_DIR/storage.sqlite`** (+ `-wal`، `-shm`). در Docker مسیر `/app/data`. منبع: `S/src/lib/db/core.ts` L120، `S/docs/ops/DATABASE_GUIDE.md` L60-74.
+- `DATA_DIR` (پیش‌فرض ایمیج `/app/data`)؛ نام مستعار `OMNIROUTE_DATA_DIR` (فقط برای PromptQL). پیش‌فرض در نبود DATA_DIR = `~/.omniroute` (یا `$XDG_CONFIG_HOME/omniroute`). منبع: `S/src/lib/dataPaths.ts`.
+- **بازگشت بی‌صدا**: اگر DATA_DIR پیکربندی‌شده قابل نوشتن نباشد (EACCES/EPERM)، اپ *هشدار می‌دهد و به `~/.omniroute` برمی‌گردد* (= `/home/node/.omniroute`، که در پاد ناپایدار است)، پس خطای دسترسی PVC باعث شکست راه‌اندازی نمی‌شود. منبع: `S/src/lib/dataPaths.ts` `resolveWritableDataDir` L174-190.
+- رازهای خودکار تولیدشده: `JWT_SECRET`، `STORAGE_ENCRYPTION_KEY`، `API_KEY_SECRET` و `STORAGE_ENCRYPTION_KEY_VERSION` اگر تنظیم نشده باشند در اولین بوت تولید و در **`$DATA_DIR/server.env`** ذخیره می‌شوند. از دست رفتن این فایل یعنی از دست رفتن کلید رمزنگاری؛ اگر اعتبارنامه‌های رمزشده وجود داشته باشند، اپ از تولید دوبارهٔ کلید خودداری می‌کند. ترتیب بارگذاری: تولیدشده < `server.env` < `$DATA_DIR/.env` (سپس `~/.omniroute/.env`، `./.env`) < process.env (مقدارهای خالی نادیده گرفته می‌شوند). منبع: `S/scripts/build/bootstrap-env.mjs` L5-18، L247-320.
+- مسیرهای مبتنی بر HOME بیرون از DATA_DIR (HOME=/home/node):
+  - پوشهٔ پلاگین `<HOME>/.omniroute/plugins` مگر اینکه `OMNIROUTE_PLUGINS_DIR` تنظیم شده باشد (`S/src/lib/plugins/scanner.ts` L46-56)
+  - پوشه‌های قواعد/فیلترهای فشرده‌سازی به `~/.omniroute` برمی‌گردند (`open-sse/services/compression/ruleLoader.ts` L75، `engines/rtk/filterLoader.ts` L66)
+  - کانفیگ‌های ابزارهای CLI: `~/.codex`، `~/.claude`، `~/.cline`، `~/.continue`، `~/.hermes`، `~/.config/*`، `~/.aws/sso/cache`، `~/.local/share/kiro-cli` و غیره (حدود 66 فایل از `homedir()` استفاده می‌کنند)
   - `-web`: `PLAYWRIGHT_BROWSERS_PATH=/home/node/.cache/ms-playwright`
-  - `os.tmpdir()` is used for plugin installs and test dirs
-  - Most other DATA_DIR users fall back to `~/.omniroute` only when DATA_DIR is unset.
-- What grows in DATA_DIR:
-  - `storage.sqlite` + WAL (WAL guard `OMNIROUTE_WAL_GUARD_MAX_MB=256`)
-  - `db_backups/` (`DB_BACKUP_MAX_FILES=20`, `DB_BACKUP_RETENTION_DAYS=0`; routine backups on unless `DISABLE_SQLITE_AUTO_BACKUP=true`)
-  - `logs/application/app.log` (`APP_LOG_TO_FILE` defaults **true**; 50M × up to 20 files, 7 days)
-  - `call_logs` table/artifacts (`CALL_LOG_RETENTION_DAYS=7`, `CALL_LOGS_TABLE_MAX_ROWS=100000`, bodies up to 1 MB each)
-  - `models/llmlingua` (HuggingFace model download) and memory embedding model downloads (`HF_HUB_ENDPOINT` default huggingface.co)
-  - `cache/`, `runtime/mcp-heartbeat.json`, `server.env`
-  - Version-manager binaries (CLIProxyAPI) under DATA_DIR
-  - Sources: `S/.env.example` L96-112, L2148-2230, L3276-3279; `S/src/lib/db/backup.ts` L65; `open-sse/services/compression/engines/llmlingua/modelStore.ts` L31-44; `S/src/lib/memory/embedding/staticPotion.ts` L19-71.
-- Expected PVC size: Unknown (no upstream figure).
+  - `os.tmpdir()` برای نصب پلاگین‌ها و پوشه‌های تست استفاده می‌شود
+  - بیشتر کاربران دیگر DATA_DIR فقط وقتی DATA_DIR تنظیم نشده باشد به `~/.omniroute` برمی‌گردند.
+- آنچه در DATA_DIR رشد می‌کند:
+  - `storage.sqlite` + WAL (محافظ WAL `OMNIROUTE_WAL_GUARD_MAX_MB=256`)
+  - `db_backups/` (`DB_BACKUP_MAX_FILES=20`، `DB_BACKUP_RETENTION_DAYS=0`؛ پشتیبان‌گیری روتین روشن است مگر `DISABLE_SQLITE_AUTO_BACKUP=true`)
+  - `logs/application/app.log` (پیش‌فرض `APP_LOG_TO_FILE` برابر **true** است؛ 50M × حداکثر 20 فایل، 7 روز)
+  - جدول/آرتیفکت‌های `call_logs` (`CALL_LOG_RETENTION_DAYS=7`، `CALL_LOGS_TABLE_MAX_ROWS=100000`، بدنهٔ هر کدام تا 1 MB)
+  - `models/llmlingua` (دانلود مدل از HuggingFace) و دانلود مدل‌های embedding حافظه (`HF_HUB_ENDPOINT` با پیش‌فرض huggingface.co)
+  - `cache/`، `runtime/mcp-heartbeat.json`، `server.env`
+  - باینری‌های version-manager (CLIProxyAPI) زیر DATA_DIR
+  - منابع: `S/.env.example` L96-112، L2148-2230، L3276-3279؛ `S/src/lib/db/backup.ts` L65؛ `open-sse/services/compression/engines/llmlingua/modelStore.ts` L31-44؛ `S/src/lib/memory/embedding/staticPotion.ts` L19-71.
+- اندازهٔ مورد انتظار PVC: نامشخص (هیچ عددی در upstream نیست).
 
-## 6. Env vars (from `S/.env.example`, 3,865 lines; full reference `S/docs/reference/ENVIRONMENT.md`)
-Deployment-relevant vars with their defaults:
+## 6. متغیرهای محیطی (از `S/.env.example`، 3,865 خط؛ مرجع کامل `S/docs/reference/ENVIRONMENT.md`)
+متغیرهای مرتبط با استقرار همراه با پیش‌فرض‌هایشان:
 
-| Var | Default | Note |
+| متغیر | پیش‌فرض | توضیح |
 |---|---|---|
-| JWT_SECRET / API_KEY_SECRET / STORAGE_ENCRYPTION_KEY | empty, auto-generated → `server.env` | Supply your own per customer via a Secret, or the PVC holds them |
-| INITIAL_PASSWORD | `.env.example`: **`CHANGEME`**; image: unset | **Insecure default.** `CHANGEME` is accepted with a warning and refused only for non-loopback logins (`S/src/lib/auth/managementPassword.ts` L7-9, L48-53, L84-90) |
-| REQUIRE_API_KEY | code default **false** (`featureFlagDefinitions.ts` L17-22); `.env.example` false; **image ENV true** | **Priority: DB (dashboard toggle) > env > default** (`S/src/shared/utils/featureFlags.ts` L10), so a dashboard admin can switch it off |
-| requireLogin (DB setting) | true (`S/src/lib/db/settings.ts` L176) | Skipping the password step in onboarding sets requireLogin=false, which turns auth off install-wide (`S/.env.selfhost.example`, `apiAuth.ts` L533-537) |
-| AUTH_COOKIE_SECURE | **false** | Must be true behind TLS |
-| MACHINE_ID_SALT | `endpoint-proxy-salt` | Static public default; "change per-deployment" |
+| JWT_SECRET / API_KEY_SECRET / STORAGE_ENCRYPTION_KEY | خالی، تولید خودکار → `server.env` | برای هر مشتری مقدار خودتان را از طریق یک Secret بدهید، وگرنه PVC نگه‌دارندهٔ آن‌ها خواهد بود |
+| INITIAL_PASSWORD | در `.env.example`: **`CHANGEME`**؛ در ایمیج: تنظیم‌نشده | **پیش‌فرض ناامن.** `CHANGEME` با یک هشدار پذیرفته می‌شود و فقط برای ورودهای غیر loopback رد می‌شود (`S/src/lib/auth/managementPassword.ts` L7-9، L48-53، L84-90) |
+| REQUIRE_API_KEY | پیش‌فرض کد **false** (`featureFlagDefinitions.ts` L17-22)؛ `.env.example` false؛ **ENV ایمیج true** | **اولویت: DB (کلید داشبورد) > env > پیش‌فرض** (`S/src/shared/utils/featureFlags.ts` L10)، پس یک ادمین داشبورد می‌تواند آن را خاموش کند |
+| requireLogin (تنظیم DB) | true (`S/src/lib/db/settings.ts` L176) | رد کردن مرحلهٔ رمز عبور در onboarding مقدار requireLogin=false را تنظیم می‌کند که احراز هویت را در کل نصب خاموش می‌کند (`S/.env.selfhost.example`، `apiAuth.ts` L533-537) |
+| AUTH_COOKIE_SECURE | **false** | پشت TLS باید true باشد |
+| MACHINE_ID_SALT | `endpoint-proxy-salt` | پیش‌فرض ثابت و عمومی؛ "change per-deployment" (برای هر استقرار تغییر دهید) |
 | ALLOW_API_KEY_REVEAL | false | |
-| OMNIROUTE_WS_BRIDGE_SECRET | auto `randomUUID()` per process in `server-ws.mjs` L118 | DOCKER_GUIDE L354 says "required in production", which conflicts with the code that auto-generates it |
-| OMNIROUTE_PEER_STAMP_TOKEN | auto per boot | Leave unset |
-| PORT / DASHBOARD_PORT / API_PORT | 20128 / =PORT / =PORT | Single-port unless API_PORT is set (`S/src/lib/runtime/ports.ts` L22-28) |
-| LIVE_WS_PORT / LIVE_WS_HOST | 20132 / 127.0.0.1 | Proxied in-process on the main port at `/live-ws` |
-| LIVE_WS_ALLOWED_ORIGINS | loopback origins | Add your public origin |
-| NEXT_PUBLIC_BASE_URL / BASE_URL | `http://localhost:20128` | Set the public https origin; keep BASE_URL internal |
-| OMNIROUTE_BASE_PATH | "" | Build-time; runtime patch on start |
-| OMNIROUTE_TRUST_PROXY | unset | `true`/`loopback`, `private`/`lan` |
-| OMNIROUTE_TRUSTED_PROXIES | unset | Extra (public) proxy IPs/CIDRs |
-| CORS_ALLOWED_ORIGINS / CORS_ALLOW_ALL | unset / false | |
-| OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS | **true** | Provider URLs may target LAN/loopback; only 169.254/metadata blocked |
-| OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS | false | DB toggle wins over env |
-| REDIS_URL / REDIS_KEY_PREFIX / QUOTA_STORE_DRIVER | unset / `omniroute:` / sqlite | |
-| OMNIROUTE_MEMORY_MB | 1024 (image) | |
+| OMNIROUTE_WS_BRIDGE_SECRET | خودکار با `randomUUID()` برای هر پروسس در `server-ws.mjs` L118 | DOCKER_GUIDE L354 می‌گوید "required in production" (در production الزامی است)، که با کدی که آن را خودکار تولید می‌کند تناقض دارد |
+| OMNIROUTE_PEER_STAMP_TOKEN | خودکار در هر بوت | تنظیم نکنید |
+| PORT / DASHBOARD_PORT / API_PORT | 20128 / =PORT / =PORT | تک‌پورتی است مگر اینکه API_PORT تنظیم شود (`S/src/lib/runtime/ports.ts` L22-28) |
+| LIVE_WS_PORT / LIVE_WS_HOST | 20132 / 127.0.0.1 | درون همان پروسس روی پورت اصلی در مسیر `/live-ws` پروکسی می‌شود |
+| LIVE_WS_ALLOWED_ORIGINS | originهای loopback | origin عمومی خودتان را اضافه کنید |
+| NEXT_PUBLIC_BASE_URL / BASE_URL | `http://localhost:20128` | origin عمومی https را تنظیم کنید؛ BASE_URL را داخلی نگه دارید |
+| OMNIROUTE_BASE_PATH | "" | زمان build؛ وصلهٔ زمان اجرا هنگام شروع |
+| OMNIROUTE_TRUST_PROXY | تنظیم‌نشده | `true`/`loopback`، `private`/`lan` |
+| OMNIROUTE_TRUSTED_PROXIES | تنظیم‌نشده | IP/CIDRهای اضافی پروکسی (عمومی) |
+| CORS_ALLOWED_ORIGINS / CORS_ALLOW_ALL | تنظیم‌نشده / false | |
+| OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS | **true** | URLهای provider می‌توانند LAN/loopback را هدف بگیرند؛ فقط 169.254/metadata مسدود است |
+| OMNIROUTE_ALLOW_PRIVATE_PROVIDER_URLS | false | کلید DB بر env اولویت دارد |
+| REDIS_URL / REDIS_KEY_PREFIX / QUOTA_STORE_DRIVER | تنظیم‌نشده / `omniroute:` / sqlite | |
+| OMNIROUTE_MEMORY_MB | 1024 (ایمیج) | |
 | APP_LOG_LEVEL / APP_LOG_FORMAT / APP_LOG_TO_FILE | info / text / true | |
 | SHUTDOWN_TIMEOUT_MS | 30000 | |
 | ENABLE_SOCKS5_PROXY | true | |
-| CLOUD_URL | empty | Cloud sync off |
+| CLOUD_URL | خالی | همگام‌سازی ابری خاموش |
 | DISABLE_SQLITE_AUTO_BACKUP | false | |
 | SKILLS_SANDBOX_NETWORK_ENABLED / SKILLS_SANDBOX_RUNTIME | 0 / auto | |
 
-- Provider OAuth client IDs are shipped in `.env.example` (Claude, Codex, GitHub, Kimi). These are public client IDs, not secrets.
-- API-key auth required by default? In the **published image, yes** (`REQUIRE_API_KEY=true`). In npm/source/.env.example, **no**. A startup guard warns when the app binds non-loopback with it off (`S/src/lib/startup/nonLoopbackApiKeyGuard.ts`).
+- شناسه‌های کلاینت OAuth برای providerها در `.env.example` آمده‌اند (Claude، Codex، GitHub، Kimi). این‌ها شناسه‌های کلاینت عمومی هستند، نه راز.
+- آیا احراز هویت با کلید API به‌طور پیش‌فرض الزامی است؟ در **ایمیج منتشرشده، بله** (`REQUIRE_API_KEY=true`). در npm/سورس/.env.example، **نه**. یک محافظ راه‌اندازی وقتی اپ روی آدرس غیر loopback bind شود و این گزینه خاموش باشد هشدار می‌دهد (`S/src/lib/startup/nonLoopbackApiKeyGuard.ts`).
 
-## 7. Memory
-- Image heap 1024 MB, described as "a dashboard/light-chat floor, not a production size". From the `S/docs/guides/DOCKER_GUIDE.md` L327-340 table and `S/README.md` L1096-1108:
+## 7. حافظه
+- heap ایمیج 1024 MB است و این‌طور توصیف شده: "a dashboard/light-chat floor, not a production size" (کف لازم برای داشبورد/چت سبک، نه اندازهٔ production). از جدول `S/docs/guides/DOCKER_GUIDE.md` L327-340 و `S/README.md` L1096-1108:
 
-  | Workload | Heap | Container |
+  | بار کاری | هیپ | کانتینر |
   |---|---|---|
-  | Dashboard / light chat | 1024 | ≥2 GiB |
-  | One coding agent | **8192** | **≥10 GiB** |
-  | Two concurrent long `/v1/responses` | 10240–12288 | ≥12–16 GiB |
-  | Three or more | not on one process | — |
+  | داشبورد / چت سبک | 1024 | ≥2 GiB |
+  | یک عامل کدنویسی (coding agent) | **8192** | **≥10 GiB** |
+  | دو `/v1/responses` طولانی هم‌زمان | 10240–12288 | ≥12–16 GiB |
+  | سه یا بیشتر | نه روی یک پروسس | — |
 
-  A V8 abort was measured at about 12 GiB heap (#7849). Native memory sits outside the heap.
-- The docs conflict: `S/docs/getting-started/SELF_HOST_GUIDE.md` L185 and `.env.selfhost.example` use `OMNIROUTE_MEMORY_MB=2048` as "a safe default for a single user who runs Claude Code / Codex". VM guide: min 1 GB, recommended 2 GB RAM (`S/docs/ops/VM_DEPLOYMENT_GUIDE.md` L17-20).
-- Heap is set via `OMNIROUTE_MEMORY_MB`, which the entrypoint and launcher append as `--max-old-space-size` (last flag wins). Bare-metal auto-calibration (35% of RAM, clamped 512–4096) never runs in Docker. Admission is controlled by `OMNIROUTE_CHAT_MAX_INFLIGHT_BYTES` (auto-derived), `OMNIROUTE_CHAT_ADMISSION_HEAP_SHED_RATIO=0.75` and `OMNIROUTE_CHAT_MAX_HEAVY_IN_FLIGHT` (legacy). Optional compression workers: `OMNI_COMPRESSION_WORKER_MAX_OLD_MB=1024`.
+  یک abort در V8 در حدود 12 GiB heap اندازه‌گیری شد (#7849). حافظهٔ native بیرون از heap است.
+- مستندات با هم تناقض دارند: `S/docs/getting-started/SELF_HOST_GUIDE.md` L185 و `.env.selfhost.example` از `OMNIROUTE_MEMORY_MB=2048` به‌عنوان "a safe default for a single user who runs Claude Code / Codex" (پیش‌فرضی امن برای یک کاربر که Claude Code / Codex اجرا می‌کند) استفاده می‌کنند. راهنمای VM: حداقل 1 GB، پیشنهادی 2 GB RAM (`S/docs/ops/VM_DEPLOYMENT_GUIDE.md` L17-20).
+- heap از طریق `OMNIROUTE_MEMORY_MB` تنظیم می‌شود که entrypoint و launcher آن را به‌صورت `--max-old-space-size` اضافه می‌کنند (آخرین flag برنده است). کالیبراسیون خودکار bare-metal (35% از RAM، محدودشده بین 512–4096) هرگز در Docker اجرا نمی‌شود. پذیرش درخواست‌ها با `OMNIROUTE_CHAT_MAX_INFLIGHT_BYTES` (به‌صورت خودکار محاسبه می‌شود)، `OMNIROUTE_CHAT_ADMISSION_HEAP_SHED_RATIO=0.75` و `OMNIROUTE_CHAT_MAX_HEAVY_IN_FLIGHT` (قدیمی) کنترل می‌شود. workerهای اختیاری فشرده‌سازی: `OMNI_COMPRESSION_WORKER_MAX_OLD_MB=1024`.
 
-## 8. Health / metrics / logs
-- `GET|HEAD /healthz`: 200 `ok`, or 503 `starting`/`stopping`; no DB access (`S/src/app/healthz/route.ts`). `GET /livez`: process alive (`S/src/app/livez/route.ts`). `GET /api/monitoring/health`: deep check (DB, heap, providers), heavy. The container HEALTHCHECK probes `/healthz` on 127.0.0.1, localhost, ::1 and the bridge IP (`S/scripts/dev/healthcheck.mjs`). Health paths are prefixed by OMNIROUTE_BASE_PATH.
-- Metrics: **no Prometheus endpoint**. "Prometheus/OpenTelemetry export is planned for v3.9 … scrape `/api/monitoring/health` with … blackbox exporter" (`S/docs/ops/MONITORING_GUIDE.md` L495-501).
-- Logs: stdout plus file (`$DATA_DIR/logs/application/app.log`, on by default). `APP_LOG_FORMAT=text|json` (default text, used by `open-sse/utils/logger.ts` L53). The main server logger is pino with ISO timestamps and a redaction hook (`S/src/shared/utils/logger.ts`). The exact stdout shape is **Unknown**: whether pino output is pretty or JSON, and the mix with `console.*` lines.
+## 8. سلامت / متریک‌ها / لاگ‌ها
+- `GET|HEAD /healthz`: پاسخ 200 `ok`، یا 503 `starting`/`stopping`؛ بدون دسترسی به DB (`S/src/app/healthz/route.ts`). `GET /livez`: زنده بودن پروسس (`S/src/app/livez/route.ts`). `GET /api/monitoring/health`: بررسی عمیق (DB، heap، providerها)، سنگین. HEALTHCHECK کانتینر مسیر `/healthz` را روی 127.0.0.1، localhost، ::1 و IP شبکهٔ bridge بررسی می‌کند (`S/scripts/dev/healthcheck.mjs`). مسیرهای سلامت با OMNIROUTE_BASE_PATH پیشوند می‌گیرند.
+- متریک‌ها: **هیچ endpoint برای Prometheus وجود ندارد**. "Prometheus/OpenTelemetry export is planned for v3.9 … scrape `/api/monitoring/health` with … blackbox exporter" (خروجی Prometheus/OpenTelemetry برای v3.9 برنامه‌ریزی شده؛ فعلاً `/api/monitoring/health` را با blackbox exporter بخوانید) (`S/docs/ops/MONITORING_GUIDE.md` L495-501).
+- لاگ‌ها: stdout به‌علاوهٔ فایل (`$DATA_DIR/logs/application/app.log`، به‌طور پیش‌فرض روشن). `APP_LOG_FORMAT=text|json` (پیش‌فرض text، که `open-sse/utils/logger.ts` L53 از آن استفاده می‌کند). لاگر اصلی سرور pino است با timestampهای ISO و یک hook برای حذف اطلاعات حساس (`S/src/shared/utils/logger.ts`). شکل دقیق خروجی stdout **نامشخص** است: اینکه خروجی pino به‌صورت pretty است یا JSON، و نحوهٔ آمیختگی آن با خطوط `console.*`.
 
-## 9. Auth model and locality trust
-- Dashboard: password (bcrypt) or OIDC. JWT session cookie. `requireLogin` defaults to true. Management API also accepts API keys with `manage`/`admin` scope, `oma_` CLI access tokens, and a loopback-only machine CLI token. The /v1 proxy uses API keys when REQUIRE_API_KEY is on. Source: `S/src/server/authz/policies/management.ts`.
-- First boot with no password and no INITIAL_PASSWORD:
-  - **loopback** callers skip auth until `setupComplete`; non-loopback callers need auth
-  - `/dashboard/onboarding` is open
-  - the first-password / `POST /api/settings/require-login` write needs loopback **or** a one-shot bootstrap token printed to the log ("docker logs … | grep BOOTSTRAP")
-  - Source: `S/src/shared/utils/apiAuth.ts` L99-142, L493-555.
-- Locality comes from the **real TCP peer**, not Host/XFF: `server-ws.mjs` stamps `x-omniroute-peer-ip: <token>|<ip>` and strips client copies. Source: `S/scripts/dev/peer-stamp.mjs`, `S/src/server/authz/peerContext.ts`.
-  - If the peer is loopback, RFC1918, CGNAT 100.64/10, ULA/link-local, Cloudflare or in OMNIROUTE_TRUSTED_PROXIES, **and** the request carries any `x-forwarded-*`, `x-real-ip`, `forwarded` or `via` header, the request is marked `via-proxy` and treated as **remote**.
-  - Otherwise a loopback peer counts as **loopback** and a private-IP peer counts as **private LAN**.
-- `LOCAL_ONLY` routes (spawn/exec surfaces, about 60 prefixes in `S/src/server/authz/routeGuard.ts` L34-103) are allowed when the peer is **loopback OR private LAN**. They still need normal auth afterwards unless requireLogin=false.
-- K8s implications (inferred from the code above, not stated upstream):
-  - (a) ingress-nginx adds XFF, so ingress traffic is "remote".
-  - (b) **any in-cluster pod** (10.x/172.16/100.64) calling the Service directly without forwarding headers is "private LAN" and passes the LOCAL_ONLY gate.
-  - (c) a **sidecar or `kubectl port-forward`** reaching 127.0.0.1 without forwarding headers is "**loopback**": during the fresh-install window it gets unauthenticated management access and the require-login bootstrap write, and it can use the machine CLI token path.
-  - (d) a sidecar proxy that *adds* XFF makes everything "remote", so loopback-only features break. That breaks nothing core, since the dashboard and /v1 still work with session or key.
-  - Whether a given mesh sidecar (Istio/Envoy) adds XFF: **Unknown**.
-- Client IP for the IP allow/deny list: the right-most untrusted XFF hop when the peer is a trusted proxy (`peer-stamp.mjs` `resolveClientIp`).
+## 9. مدل احراز هویت و اعتماد بر پایهٔ محلی بودن
+- داشبورد: رمز عبور (bcrypt) یا OIDC. کوکی نشست JWT. پیش‌فرض `requireLogin` برابر true است. API مدیریتی همچنین کلیدهای API با scope `manage`/`admin`، توکن‌های دسترسی CLI با پیشوند `oma_`، و یک توکن CLI ماشین که فقط از loopback کار می‌کند را می‌پذیرد. پروکسی /v1 وقتی REQUIRE_API_KEY روشن باشد از کلیدهای API استفاده می‌کند. منبع: `S/src/server/authz/policies/management.ts`.
+- اولین بوت بدون رمز عبور و بدون INITIAL_PASSWORD:
+  - فراخواننده‌های **loopback** تا `setupComplete` از احراز هویت عبور می‌کنند؛ فراخواننده‌های غیر loopback به احراز هویت نیاز دارند
+  - `/dashboard/onboarding` باز است
+  - نوشتن اولین رمز عبور / `POST /api/settings/require-login` به loopback **یا** یک توکن bootstrap یک‌بارمصرف نیاز دارد که در لاگ چاپ می‌شود ("docker logs … | grep BOOTSTRAP")
+  - منبع: `S/src/shared/utils/apiAuth.ts` L99-142، L493-555.
+- محلی بودن از **همتای واقعی TCP** تعیین می‌شود، نه از Host/XFF: `server-ws.mjs` هدر `x-omniroute-peer-ip: <token>|<ip>` را مهر می‌زند و نسخه‌های ارسالی کلاینت را حذف می‌کند. منبع: `S/scripts/dev/peer-stamp.mjs`، `S/src/server/authz/peerContext.ts`.
+  - اگر همتا loopback، RFC1918، CGNAT 100.64/10، ULA/link-local، Cloudflare یا داخل OMNIROUTE_TRUSTED_PROXIES باشد، **و** درخواست هر کدام از هدرهای `x-forwarded-*`، `x-real-ip`، `forwarded` یا `via` را داشته باشد، درخواست به‌عنوان `via-proxy` علامت می‌خورد و **راه دور** (remote) در نظر گرفته می‌شود.
+  - در غیر این صورت همتای loopback به‌عنوان **loopback** و همتای با IP خصوصی به‌عنوان **LAN خصوصی** شمرده می‌شود.
+- مسیرهای `LOCAL_ONLY` (سطوح spawn/exec، حدود 60 پیشوند در `S/src/server/authz/routeGuard.ts` L34-103) وقتی همتا **loopback یا LAN خصوصی** باشد مجازند. پس از آن همچنان به احراز هویت عادی نیاز دارند، مگر اینکه requireLogin=false باشد.
+- پیامدها برای K8s (برداشت ما از کد بالا، نه گفتهٔ upstream):
+  - (a) ingress-nginx هدر XFF را اضافه می‌کند، پس ترافیک ingress «راه دور» است.
+  - (b) **هر پاد درون کلاستر** (10.x/172.16/100.64) که مستقیماً و بدون هدرهای forwarding سرویس را صدا بزند «LAN خصوصی» است و از دروازهٔ LOCAL_ONLY عبور می‌کند.
+  - (c) یک **sidecar یا `kubectl port-forward`** که بدون هدرهای forwarding به 127.0.0.1 برسد «**loopback**» است: در بازهٔ نصب تازه، دسترسی مدیریتی بدون احراز هویت و امکان نوشتن bootstrap برای require-login را می‌گیرد، و می‌تواند از مسیر توکن CLI ماشین استفاده کند.
+  - (d) یک پروکسی sidecar که XFF را *اضافه* کند همه چیز را «راه دور» می‌کند، پس قابلیت‌هایی که فقط با loopback کار می‌کنند از کار می‌افتند. این هیچ بخش اصلی را خراب نمی‌کند، چون داشبورد و /v1 همچنان با نشست یا کلید کار می‌کنند.
+  - اینکه یک sidecar مش مشخص (Istio/Envoy) XFF اضافه می‌کند یا نه: **نامشخص**.
+- IP کلاینت برای فهرست مجاز/ممنوع IP: وقتی همتا یک پروکسی مورد اعتماد باشد، راست‌ترین hop غیرمورداعتماد در XFF (`peer-stamp.mjs` `resolveClientIp`).
 
-## 10. Risky features (all present in the v3.8.52 code)
-- **child_process** in about 66 src/open-sse files:
-  - CLI tool detection and execution (codex, claude, cursor-agent, qodercli, devin, auggie, zcode…)
-  - ACP agents (`src/lib/acp/*`, `execFileSync`)
-  - plugins (spawned Node host + worker_threads, `src/lib/plugins/loader.ts` L248)
-  - middleware hooks run JS via `vm.Script` (routeGuard L82)
-  - skills sandbox runs **docker/podman** containers (`src/lib/skills/sandbox.ts`)
-  - VNC sessions spawn Docker (`src/lib/vncSession/service.ts`)
-  - auto-update `git checkout` + `npm install` (`/api/system/version`; the Dockerfile says the runtime shells out to npm)
-  - embedded service installers via npm (`src/lib/services/installers/utils.ts`)
-  - headroom python CLI, ffmpeg (video bridge), tar export, MITM/CA-trust plus `/etc/hosts` edits (`src/mitm/*`, stubbed in Docker via `OMNIROUTE_MITM_STUB=1`), Redis launcher via podman/docker (`/api/local/`)
-- **Binary/model downloads**: version manager downloads and runs the CLIProxyAPI release binary (`src/lib/versionManager/binaryManager.ts`). Tailscale install, cloudflared install/start. HuggingFace model downloads. Plugin marketplace archive download (custom registry URL is SSRF-guarded, public-only).
-- **Tunnels**: cloudflared, tailscale funnel, ngrok (`NGROK_AUTHTOKEN`), routes under `/api/tunnels/*`.
-- **MCP**: built-in MCP server at `/api/mcp/*` (scopes `mcp:connect`/`manage`; LOCAL_ONLY with manage-scope or dashboard-session bypass for remote). `OMNIROUTE_MCP_ENFORCE_SCOPES=false` by default. No stdio MCP client transport was found.
-- **SSRF surface**: user-set provider base URLs, model discovery, rerank nodes, webhooks, remote image/media fetch. Default `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=true` allows loopback and LAN targets (blocks only 169.254/16 and metadata hostnames). Dashboard toggles override env. Proxy pools/SOCKS5 enabled. Source: `S/.env.example` L583-614, `S/src/shared/network/outboundUrlGuardPolicy.ts`.
-- **OAuth callback servers**: `startLocalServer` binds **0.0.0.0** on a fixed or random port (`S/src/lib/oauth/utils/server.ts` L72). Fixed loopback redirect ports are codex 1455, xai-oauth 56121, grok-cli 56122 (`src/lib/oauth/utils/pkceLoopbackWarning.ts`), and command-code 5959-5968. These flows only work when the browser runs on the same host. Adobe Firefly login binds 127.0.0.1:random.
-- Codex app-server WS sidecar (`ws://codex-app-server:1456`), ChatGPT-web Chromium CDP sidecar (port 9223, token).
+## 10. قابلیت‌های پرخطر (همه در کد v3.8.52 وجود دارند)
+- **child_process** در حدود 66 فایل src/open-sse:
+  - شناسایی و اجرای ابزارهای CLI (codex، claude، cursor-agent، qodercli، devin، auggie، zcode…)
+  - عامل‌های ACP (`src/lib/acp/*`، `execFileSync`)
+  - پلاگین‌ها (میزبان Node که spawn می‌شود + worker_threads، `src/lib/plugins/loader.ts` L248)
+  - hookهای middleware کد JS را از طریق `vm.Script` اجرا می‌کنند (routeGuard L82)
+  - sandbox مهارت‌ها (skills) کانتینرهای **docker/podman** اجرا می‌کند (`src/lib/skills/sandbox.ts`)
+  - نشست‌های VNC، Docker را spawn می‌کنند (`src/lib/vncSession/service.ts`)
+  - به‌روزرسانی خودکار با `git checkout` + `npm install` (`/api/system/version`؛ Dockerfile می‌گوید runtime برای npm به shell فرمان می‌دهد)
+  - نصب‌کننده‌های سرویس‌های embedded از طریق npm (`src/lib/services/installers/utils.ts`)
+  - CLI پایتونی headroom، ffmpeg (پل ویدیو)، خروجی tar، MITM/اعتماد به CA به‌علاوهٔ ویرایش `/etc/hosts` (`src/mitm/*`، که در Docker با `OMNIROUTE_MITM_STUB=1` غیرفعال‌نما (stub) شده است)، اجراکنندهٔ Redis از طریق podman/docker (`/api/local/`)
+- **دانلود باینری/مدل**: version manager باینری انتشار CLIProxyAPI را دانلود و اجرا می‌کند (`src/lib/versionManager/binaryManager.ts`). نصب Tailscale، نصب و راه‌اندازی cloudflared. دانلود مدل‌های HuggingFace. دانلود آرشیو از marketplace پلاگین (URL رجیستری سفارشی در برابر SSRF محافظت می‌شود و فقط آدرس‌های عمومی مجازند).
+- **تونل‌ها**: cloudflared، tailscale funnel، ngrok (`NGROK_AUTHTOKEN`)، مسیرها زیر `/api/tunnels/*`.
+- **MCP**: سرور MCP داخلی در `/api/mcp/*` (scopeهای `mcp:connect`/`manage`؛ LOCAL_ONLY، با امکان دور زدن برای درخواست‌های راه دور از طریق scope مدیریت یا نشست داشبورد). `OMNIROUTE_MCP_ENFORCE_SCOPES=false` به‌طور پیش‌فرض. هیچ transport کلاینت MCP از نوع stdio پیدا نشد.
+- **سطح حملهٔ SSRF**: URLهای پایهٔ provider که کاربر تنظیم می‌کند، کشف مدل، نودهای rerank، webhookها، دریافت تصویر/رسانه از راه دور. پیش‌فرض `OMNIROUTE_ALLOW_LOCAL_PROVIDER_URLS=true` اجازهٔ هدف‌های loopback و LAN را می‌دهد (فقط 169.254/16 و نام‌های میزبان metadata را مسدود می‌کند). کلیدهای داشبورد بر env اولویت دارند. استخرهای پروکسی/SOCKS5 فعال‌اند. منبع: `S/.env.example` L583-614، `S/src/shared/network/outboundUrlGuardPolicy.ts`.
+- **سرورهای callback برای OAuth**: `startLocalServer` روی **0.0.0.0** با یک پورت ثابت یا تصادفی bind می‌شود (`S/src/lib/oauth/utils/server.ts` L72). پورت‌های ثابت redirect روی loopback عبارت‌اند از codex 1455، xai-oauth 56121، grok-cli 56122 (`src/lib/oauth/utils/pkceLoopbackWarning.ts`)، و command-code 5959-5968. این جریان‌ها فقط وقتی کار می‌کنند که مرورگر روی همان میزبان اجرا شود. ورود Adobe Firefly روی 127.0.0.1 با پورت تصادفی bind می‌شود.
+- sidecar از نوع WS برای Codex app-server (`ws://codex-app-server:1456`)، sidecar از نوع CDP برای Chromium مربوط به ChatGPT-web (پورت 9223، با توکن).
 
-## 11. Streaming / ingress
-- SSE on `/v1/*` (chat/completions, responses). WebSockets: Responses-over-WS proxy on the main port, and `/live-ws` dashboard live feed (main port proxies to 127.0.0.1:20132). Source: `S/scripts/dev/standalone-server-ws.mjs` L144-215.
-- Upstream nginx example (`S/docs/ops/VM_DEPLOYMENT_GUIDE.md` L201-230): `client_max_body_size 100M`, `proxy_http_version 1.1`, `Upgrade`/`Connection "upgrade"`, `proxy_buffering off`, `proxy_cache off`, `proxy_read_timeout 600s`, `proxy_send_timeout 600s`, and forwarded headers `Host`, `X-Forwarded-Host`, `X-Real-IP`, `X-Forwarded-For`, `X-Forwarded-Proto`. Raise the timeouts with `STREAM_IDLE_TIMEOUT_MS`.
-- App body limits: `MAX_BODY_SIZE_BYTES` (example 10 MiB), `OMNIROUTE_CHAT_HARD_MAX_BODY_BYTES` (example 50 MiB).
-- ingress-nginx annotation set: Unknown upstream. Translate from the nginx block above.
-- Set `AUTH_COOKIE_SECURE=true`, `NEXT_PUBLIC_BASE_URL=https://<host>` and `LIVE_WS_ALLOWED_ORIGINS=https://<host>`. Source: `DOCKER_GUIDE.md` Caddy section L444-460.
+## 11. استریمینگ / ingress
+- SSE روی `/v1/*` (chat/completions، responses). WebSocketها: پروکسی Responses-over-WS روی پورت اصلی، و فید زندهٔ داشبورد در `/live-ws` (پورت اصلی به 127.0.0.1:20132 پروکسی می‌کند). منبع: `S/scripts/dev/standalone-server-ws.mjs` L144-215.
+- نمونهٔ nginx در upstream (`S/docs/ops/VM_DEPLOYMENT_GUIDE.md` L201-230): `client_max_body_size 100M`، `proxy_http_version 1.1`، `Upgrade`/`Connection "upgrade"`، `proxy_buffering off`، `proxy_cache off`، `proxy_read_timeout 600s`، `proxy_send_timeout 600s`، و هدرهای forward‌شدهٔ `Host`، `X-Forwarded-Host`، `X-Real-IP`، `X-Forwarded-For`، `X-Forwarded-Proto`. timeoutها را با `STREAM_IDLE_TIMEOUT_MS` بالا ببرید.
+- محدودیت‌های اندازهٔ بدنه در اپ: `MAX_BODY_SIZE_BYTES` (نمونه 10 MiB)، `OMNIROUTE_CHAT_HARD_MAX_BODY_BYTES` (نمونه 50 MiB).
+- مجموعهٔ annotationهای ingress-nginx: در upstream نامشخص. از روی بلوک nginx بالا ترجمه کنید.
+- `AUTH_COOKIE_SECURE=true`، `NEXT_PUBLIC_BASE_URL=https://<host>` و `LIVE_WS_ALLOWED_ORIGINS=https://<host>` را تنظیم کنید. منبع: بخش Caddy در `DOCKER_GUIDE.md` L444-460.
 
-## 12. Security advisories
-`GET /repos/cheaper-inference/OmniRoute/security-advisories?state=published&per_page=100` returns **1**:
+## 12. هشدارهای امنیتی
+`GET /repos/cheaper-inference/OmniRoute/security-advisories?state=published&per_page=100` تعداد **1** مورد برمی‌گرداند:
 
-| GHSA | CVE | Sev | Published | Vulnerable | Patched | Summary |
+| GHSA | CVE | شدت | تاریخ انتشار | نسخه‌های آسیب‌پذیر | نسخهٔ وصله‌شده | خلاصه |
 |---|---|---|---|---|---|---|
-| GHSA-hf57-cqmx-p4gr | CVE-2026-88062 | critical (CWE-94, CWE-306) | 2026-09-03 | omniroute `< 3.8.49` | 3.8.49 | ACP custom-agent RCE: `POST /api/acp/agents` with attacker `binary`/`versionCommand` → `execFileSync`. Unauthenticated when requireLogin=false. |
+| GHSA-hf57-cqmx-p4gr | CVE-2026-88062 | بحرانی (CWE-94, CWE-306) | 2026-09-03 | omniroute `< 3.8.49` | 3.8.49 | RCE از طریق عامل سفارشی ACP: `POST /api/acp/agents` با `binary`/`versionCommand` دلخواه مهاجم → `execFileSync`. وقتی requireLogin=false باشد بدون احراز هویت. |
 
-- Discrepancy: the global advisory DB (`/advisories?ecosystem=npm&affects=omniroute`) lists the same GHSA, published 2026-09-10, as `<= 3.8.50`, patched **none**.
-- Affects v3.8.52? Not per the repo advisory. In the v3.8.52 code, `/api/acp/agents` is LOCAL_ONLY (routeGuard L98) and `resolveVersionProbe` allows only the bare binary or a single version flag (`S/src/lib/acp/registry.ts` L191-228). That is my reading of the code, not an upstream statement. LOCAL_ONLY still admits private-LAN peers (see §9).
-- The source references about 40 other GHSA IDs in comments, for example GHSA-35fw-cv32-2373, GHSA-7pq4-8pvv-rx7r, GHSA-x7vm-hp44-9p79, GHSA-jx89-f37j-pq89 and GHSA-fhh6-4qxv-rpqj. None of them appear in the published repo-advisory list, so their status is **Unknown**.
+- ناهمخوانی: پایگاه دادهٔ سراسری هشدارها (`/advisories?ecosystem=npm&affects=omniroute`) همین GHSA را با تاریخ انتشار 2026-09-10، با بازهٔ `<= 3.8.50` و نسخهٔ وصله‌شدهٔ **هیچ** فهرست کرده است.
+- آیا v3.8.52 را تحت تأثیر قرار می‌دهد؟ طبق هشدار مخزن، نه. در کد v3.8.52، `/api/acp/agents` از نوع LOCAL_ONLY است (routeGuard L98) و `resolveVersionProbe` فقط باینری خالی یا یک flag نسخهٔ تکی را مجاز می‌داند (`S/src/lib/acp/registry.ts` L191-228). این برداشت من از کد است، نه اظهارنظر upstream. LOCAL_ONLY همچنان همتاهای LAN خصوصی را می‌پذیرد (بخش §9 را ببینید).
+- سورس در کامنت‌ها به حدود 40 شناسهٔ GHSA دیگر ارجاع می‌دهد، برای مثال GHSA-35fw-cv32-2373، GHSA-7pq4-8pvv-rx7r، GHSA-x7vm-hp44-9p79، GHSA-jx89-f37j-pq89 و GHSA-fhh6-4qxv-rpqj. هیچ‌کدام در فهرست هشدارهای منتشرشدهٔ مخزن نیستند، پس وضعیتشان **نامشخص** است.
 
-## 13. Persian (fa)
-- **Present.** `S/src/i18n/messages/fa.json` has 13,935 keys, matching en.json key for key, with 437 values identical to English. `fa` is in `config/i18n.json` locales (name "فارسی") and in `rtl: [ar, fa, he, ur]`. Also present: `src/i18n/global-error-messages/fa.json`, `bin/cli/locales/fa.json` and `docs/i18n/fa/`.
-- Translation quality: Unknown (not reviewed beyond sampled keys such as save→ذخیره).
+## 13. فارسی (fa)
+- **وجود دارد.** `S/src/i18n/messages/fa.json` دارای 13,935 کلید است که کلید به کلید با en.json منطبق است، و 437 مقدار آن عیناً همان متن انگلیسی است. `fa` در localeهای `config/i18n.json` (با نام "فارسی") و در `rtl: [ar, fa, he, ur]` حضور دارد. همچنین موجود: `src/i18n/global-error-messages/fa.json`، `bin/cli/locales/fa.json` و `docs/i18n/fa/`.
+- کیفیت ترجمه: نامشخص (فراتر از کلیدهای نمونه‌برداری‌شده مانند save→ذخیره بررسی نشد).
