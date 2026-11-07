@@ -37,7 +37,7 @@ You are writing the handoff from Product to DevOps. The template is `templates/0
 
 ## Writing rules
 
-- Narrative in Persian; names, variables, YAML keys and commands in English.
+- App documents (everything under `apps/<app-slug>/`, including `research/`) are written entirely in Persian: section headings, table header cells, row labels, captions and narrative. Translate each template heading into Persian when you copy it; well-known framework names (SWOT, PESTLE) may stay in parentheses. Keep in English only: software and product names, environment variables, commands, code, file paths, URLs, and the `Status` row label with its values (Draft, In review, Approved, Rejected), which the repository check reads. Write the tags in Persian: Verified → تأییدشده, Assumed → فرضی, Unknown → نامشخص, Estimate → تخمینی. Templates and skills stay in English. YAML keys stay in English.
 - Never paste real secrets. Use placeholders such as `<generated: 32 bytes hex>`.
 
 ## Done when
