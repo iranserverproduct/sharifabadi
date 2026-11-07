@@ -24,5 +24,6 @@ This skill coordinates the three document skills and the Git workflow. Read `CON
 
 - One pull request per app or per update. Do not mix two apps in one pull request.
 - Never set a document's Status to Approved yourself; only the named reviewers do.
+- Every document in the app folder, including `research/`, is written in Persian; see the language rule in `templates/00-how-to-use.md`.
 - Do not push directly to `main`.
 - Keep raw research under `apps/<app-slug>/research/`; do not commit credentials or tokens.

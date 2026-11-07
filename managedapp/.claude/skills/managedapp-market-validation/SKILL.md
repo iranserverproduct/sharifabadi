@@ -45,9 +45,9 @@ Work in this order. Do not name specific software before step 6.
 
 ## Writing rules
 
-- Narrative text in Persian; software names, variables, commands and code in English.
-- Never invent numbers. Missing data is "Unknown" plus an Open questions entry.
-- Label estimates "Estimate" with a confidence level.
+- App documents (everything under `apps/<app-slug>/`, including `research/`) are written entirely in Persian: section headings, table header cells, row labels, captions and narrative. Translate each template heading into Persian when you copy it; well-known framework names (SWOT, PESTLE) may stay in parentheses. Keep in English only: software and product names, environment variables, commands, code, file paths, URLs, and the `Status` row label with its values (Draft, In review, Approved, Rejected), which the repository check reads. Write the tags in Persian: Verified → تأییدشده, Assumed → فرضی, Unknown → نامشخص, Estimate → تخمینی. Templates and skills stay in English.
+- Never invent numbers. Missing data is «نامشخص» (Unknown) plus an Open questions entry.
+- Label estimates «تخمینی» (Estimate) with a confidence level.
 - Do not promise "free" or "unlimited" in positioning when the value depends on third-party free tiers or personal subscriptions.
 
 ## Done when

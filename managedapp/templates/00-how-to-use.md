@@ -27,14 +27,14 @@ Overview:
 - **Facts and estimates.** Every number has a source and a date. Estimates are labelled "Estimate" with a confidence level: High, Medium or Low.
 - **Verified and Assumed.** In the technical specification, every value is marked Verified (read from upstream files or tested in staging) or Assumed.
 - **Category before software.** The Market Validation Brief describes the product category. Specific software is named only in its Software selection section, and the choice must follow from the scoring there.
-- **Language.** Write narrative text in Persian. Keep software names, environment variables, commands and code in English.
+- **Language.** App documents (everything under `apps/<app-slug>/`, including `research/`) are written entirely in Persian: section headings, table header cells, row labels, captions and narrative. Translate each template heading into Persian when you copy it; well-known framework names (SWOT, PESTLE) may stay in parentheses. Keep in English only: software and product names, environment variables, commands, code, file paths, URLs, and the `Status` row label with its values (Draft, In review, Approved, Rejected), which the repository check reads. Write the tags in Persian: Verified → تأییدشده, Assumed → فرضی, Unknown → نامشخص, Estimate → تخمینی. Templates and skills stay in English.
 - **Status values:** Draft, In review, Approved, Rejected.
 
 ## Using these templates with an AI model
 
 To have an AI model complete a document, give it the template tab together with the instruction block below. The same text can be used as the body of a reusable skill.
 
-> **Instructions for the AI model.** You are completing an Iranserver managed app document. Keep every heading, in order. Replace every placeholder. Follow each Guidance block, then delete it. Do not invent data: each figure comes from a tool result or a cited source, with its date. When data is missing, write "Unknown" and add the item to Open questions. Keep facts and estimates apart. Before starting, ask the user for any input listed under Approved inputs or Inputs required that you do not have. Write the final text in Persian, except names, variables and code.
+> **Instructions for the AI model.** You are completing an Iranserver managed app document. Keep every section, in order, with its heading translated into Persian. Replace every placeholder. Follow each Guidance block, then delete it. Do not invent data: each figure comes from a tool result or a cited source, with its date. When data is missing, write «نامشخص» (Unknown) and add the item to Open questions. Keep facts and estimates apart. Before starting, ask the user for any input listed under Approved inputs or Inputs required that you do not have. Write the whole document in Persian, including headings and table labels, except names, variables, code and the Status field.
 
 Recommended research path:
 
