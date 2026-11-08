@@ -633,7 +633,8 @@ function usersTab() {
 }
 
 function rulesTab() {
-  return `<h3>قوانین ثابت پروتوتایپ</h3><p class="muted">این قوانین را فقط ادمین کل تغییر می‌دهد و ایجنت همیشه آنها را رعایت می‌کند.</p>
+  return `<div class="row"><button class="b" data-act="fontcheck">بررسی فونت</button></div>${S.fontcheck ? `<div class="log ltr">${esc(S.fontcheck)}</div>` : ''}
+    <h3>قوانین ثابت پروتوتایپ</h3><p class="muted">این قوانین را فقط ادمین کل تغییر می‌دهد و ایجنت همیشه آنها را رعایت می‌کند.</p>
     <ol>${RULES.map(r => `<li>${esc(r)}</li>`).join('')}</ol>
     <h3>نقش‌ها</h3><ol>
     <li><b>ادمین کل:</b> هسته، کاربران و دسترسی‌ها؛ همه‌ی صفحه‌ها.</li>
@@ -647,6 +648,24 @@ function rulesTab() {
 function setHash(route, pid) { location.hash = route + (pid ? '@' + pid : ''); }
 
 const ACT = {
+  // Reports how the Peyda faces load in this view (the viewer may block some font sources).
+  async fontcheck() {
+    const out = [location.origin + location.pathname];
+    for (const u of ['fonts.css', '/_blob/317ed09fa69e6bed9873328799d7dec6', 'fonts/PeydaWeb-Regular.woff2']) {
+      try { const r = await fetch(u); out.push(u + ' -> ' + r.status + ' ' + r.headers.get('content-type') + ' ' + (await r.blob()).size); } catch (e) { out.push(u + ' -> ' + e); }
+    }
+    for (const src of ['url(/_blob/317ed09fa69e6bed9873328799d7dec6)', 'url(fonts/PeydaWeb-Regular.woff2)']) {
+      try { await new FontFace('t', src).load(); out.push('load ' + src + ' ok'); } catch (e) { out.push('load ' + src + ' ' + e); }
+    }
+    [...document.styleSheets].forEach(s => { let n = '?'; try { n = s.cssRules.length; } catch (e) {} out.push('sheet ' + (s.href || 'inline') + ' ' + (s.disabled ? 'off' : 'on') + ' rules=' + n); });
+    await Promise.all([...document.fonts].filter(f => /peyda/.test(f.family)).map(f => f.load().catch(e => { out.push('face ' + f.family + ' ' + f.weight + ' failed: ' + e); })));
+    out.push([...document.fonts].filter(f => /peyda/.test(f.family)).map(f => f.family + ' ' + f.weight + ' ' + f.status).join(', '));
+    const el = [...document.querySelectorAll('#root span, #root p, #root div')].find(e => e.childElementCount === 0 && e.textContent.trim().length > 3);
+    if (el) out.push('text "' + el.textContent.trim().slice(0, 20) + '" font: ' + getComputedStyle(el).fontFamily);
+    out.push('--font-sans: ' + getComputedStyle(document.documentElement).getPropertyValue('--font-sans') + ' | html font: ' + getComputedStyle(document.documentElement).fontFamily);
+    out.push('check peyda-fanum: ' + document.fonts.check('16px peyda-fanum', 'کاربر') + ' peyda: ' + document.fonts.check('16px peyda', 'کاربر'));
+    S.fontcheck = out.join('\n');
+  },
   open() { S.open = true; },
   close() { S.open = false; },
   tab(v) { S.tab = v; S.view = 'list'; },
@@ -750,7 +769,7 @@ shadow.addEventListener('click', async e => {
   e.preventDefault();
   const act = t.dataset.act;
   // editing actions re-check the role here; the interface only hides what a person cannot do
-  const needsUser = !['open', 'close', 'tab', 'login-view', 'cancel-login', 'login', 'show', 'back', 'rmfile', 'stop'].includes(act);
+  const needsUser = !['fontcheck', 'open', 'close', 'tab', 'login-view', 'cancel-login', 'login', 'show', 'back', 'rmfile', 'stop'].includes(act);
   if (needsUser && !S.user) { S.view = 'login'; ui(); return; }
   if (['saveuser', 'resetpw', 'deluser', 'adduser'].includes(act) && S.user.role !== 'admin') return;
   if (['accept', 'unaccept'].includes(act) && !fullAccess(S.user)) return;
