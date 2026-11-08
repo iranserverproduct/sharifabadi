@@ -1,113 +1,113 @@
-# new-api (QuantumNous/new-api): upstream facts for a K8s/ArgoCD managed-app spec
+# new-api (QuantumNous/new-api): یافته‌های upstream برای مشخصات استقرار روی Kubernetes
 
-Collected 2026-11-04. Source tree read: tarball of tag `v1.0.0-rc.48` (https://codeload.github.com/QuantumNous/new-api/tar.gz/refs/tags/v1.0.0-rc.48). Nothing was built or run. In this file, "src/" means that directory.
-"Unknown" means I did not find or read it upstream. Anything marked "(inference)" is my reading, not an upstream statement.
+گردآوری‌شده در 2026-11-04. درخت سورسی که خوانده شد: tarball تگ `v1.0.0-rc.48` (https://codeload.github.com/QuantumNous/new-api/tar.gz/refs/tags/v1.0.0-rc.48). هیچ چیزی build یا اجرا نشد. در این فایل، «src/» به همان پوشه اشاره دارد.
+«نامشخص» یعنی آن را در upstream پیدا نکردیم یا نخواندیم. هر چیزی که با «(برداشت ما)» مشخص شده، خوانش ما است، نه گفته‌ی upstream.
 
-## 1. Release, cadence, license, popularity
+## 1. نسخه، ریتم انتشار، مجوز، محبوبیت
 
-- **Latest release: `v1.0.0-rc.48`.** GitHub `releases/latest` returns it (`prerelease: false`). Published 2026-11-04T15:40:15Z. Tag commit `706144769e5bed5a47b78721e3bb11da3cf4c0b9`, committer date 2026-11-04T14:58:20Z, message "fix(auth): 校验 Redis 鉴权缓存完整性 (#8200)". Source: `GET /repos/QuantumNous/new-api/releases/latest`, `/tags`, `/commits/v1.0.0-rc.48`.
-  - Caveat: every release since 2026-04-28 is named `v1.0.0-rc.N` but is **not** marked prerelease. The last plain semver release is `v0.13.2` (2026-04-27). `v1.0.0-alpha.1` (2026-04-28) is the only one marked prerelease. Source: `GET /releases?per_page=100` (pages 1-3).
-  - `src/VERSION` is empty in the tarball. CI injects the version at build time (`src/Dockerfile` ldflags `-X common.Version=$(cat VERSION)`).
-  - Breaking-change note in the rc.48 release body: Redis user, token and session caches are now signed, and every node of a multi-node deployment must be upgraded together.
-- **Cadence (last 8 releases):** rc.48 2026-11-04, rc.47 2026-10-25, rc.46 2026-10-21, rc.45 2026-10-17, rc.44 2026-10-12, rc.43 2026-10-10, rc.42 2026-10-08, rc.41 2026-09-30. That is roughly one release every 2-10 days. All target `main`.
-- **License:** GNU AGPL v3.0 (`spdx_id: AGPL-3.0`), with additional terms under AGPLv3 Section 7 (see section 13). Sources: repo API `license`, `src/LICENSE`, `src/NOTICE`.
-- **Stars:** 51,365. Forks: 12,472. Not archived. Homepage https://www.newapi.ai. Source: `GET /repos/QuantumNous/new-api`.
+- **آخرین نسخه: `v1.0.0-rc.48`.** `releases/latest` در GitHub همین را برمی‌گرداند (`prerelease: false`). زمان انتشار 2026-11-04T15:40:15Z. کامیت تگ `706144769e5bed5a47b78721e3bb11da3cf4c0b9`، تاریخ committer برابر 2026-11-04T14:58:20Z، پیام "fix(auth): 校验 Redis 鉴权缓存完整性 (#8200)" (بررسی یکپارچگی کش احراز هویت Redis). منبع: `GET /repos/QuantumNous/new-api/releases/latest`، `/tags`، `/commits/v1.0.0-rc.48`.
+  - نکته‌ی احتیاط: همه‌ی نسخه‌ها از 2026-04-28 به بعد نام `v1.0.0-rc.N` دارند ولی به‌عنوان prerelease علامت **نخورده‌اند**. آخرین نسخه‌ی semver ساده `v0.13.2` (2026-04-27) است. `v1.0.0-alpha.1` (2026-04-28) تنها نسخه‌ای است که prerelease علامت خورده. منبع: `GET /releases?per_page=100` (صفحه‌های 1-3).
+  - `src/VERSION` در tarball خالی است. CI نسخه را هنگام build تزریق می‌کند (ldflags در `src/Dockerfile`: `-X common.Version=$(cat VERSION)`).
+  - یادداشت تغییر ناسازگار (breaking change) در متن release نسخه‌ی rc.48: کش‌های user، token و session در Redis اکنون امضا می‌شوند و همه‌ی نودهای یک استقرار چندنودی باید هم‌زمان ارتقا داده شوند.
+- **ریتم انتشار (8 نسخه‌ی آخر):** rc.48 در 2026-11-04، rc.47 در 2026-10-25، rc.46 در 2026-10-21، rc.45 در 2026-10-17، rc.44 در 2026-10-12، rc.43 در 2026-10-10، rc.42 در 2026-10-08، rc.41 در 2026-09-30. یعنی تقریباً هر 2-10 روز یک نسخه. همه روی شاخه‌ی `main` هستند.
+- **مجوز:** GNU AGPL v3.0 (`spdx_id: AGPL-3.0`)، به‌همراه شرایط افزوده طبق بخش 7 از AGPLv3 (بخش 13 همین سند را ببینید). منابع: فیلد `license` در API مخزن، `src/LICENSE`، `src/NOTICE`.
+- **ستاره‌ها:** 51,365. فورک‌ها: 12,472. بایگانی (archived) نشده. صفحه‌ی اصلی https://www.newapi.ai. منبع: `GET /repos/QuantumNous/new-api`.
 
-## 2. Container image
+## 2. ایمیج کانتینر
 
-- **Registry and tag:** Docker Hub `calciumion/new-api:v1.0.0-rc.48` (verified). CI pushes only to Docker Hub, with no GHCR. Per-arch tags `-amd64` and `-arm64` are combined into a multi-arch index. Images are cosign-signed, built with SBOM and provenance `mode=max`. Source: `src/.github/workflows/docker-build.yml`.
-  - `latest` is re-pointed on every tag push, rc tags included. README says to pin a version (`src/README.en.md` line 251).
-- **Index digest (v1.0.0-rc.48):** `sha256:51401a46510bf110ffafdf2cd7177e0b80bbcf02439e69b665c696f330e87ae5` (media type OCI image index). Pushed 2026-11-04T15:46:48Z.
-- **amd64 image digest:** `sha256:bb3e67e3c3f06278fcd801bef69499862e2de79db88c627816d0cd6277b5ed40`, compressed size 78,044,763 B (about 74.4 MiB).
-- **arm64 image digest:** `sha256:8b34b5101f42c5039249a08dfa8f6ed8bc15743996bd636a8895c7869d38fa37`, 75,664,967 B.
-- Digest sources: `https://hub.docker.com/v2/repositories/calciumion/new-api/tags?page_size=8&ordering=last_updated` and `/tags/v1.0.0-rc.48`.
+- **رجیستری و تگ:** Docker Hub `calciumion/new-api:v1.0.0-rc.48` (تأییدشده). CI فقط به Docker Hub پوش می‌کند و GHCR ندارد. تگ‌های هر معماری `-amd64` و `-arm64` در یک index چندمعماری ترکیب می‌شوند. ایمیج‌ها با cosign امضا شده‌اند و با SBOM و provenance `mode=max` ساخته می‌شوند. منبع: `src/.github/workflows/docker-build.yml`.
+  - `latest` با هر push تگ، از جمله تگ‌های rc، دوباره جابه‌جا می‌شود. README توصیه می‌کند نسخه را pin کنید (`src/README.en.md` خط 251).
+- **digest ایندکس (v1.0.0-rc.48):** `sha256:51401a46510bf110ffafdf2cd7177e0b80bbcf02439e69b665c696f330e87ae5` (media type از نوع OCI image index). زمان push برابر 2026-11-04T15:46:48Z.
+- **digest ایمیج amd64:** `sha256:bb3e67e3c3f06278fcd801bef69499862e2de79db88c627816d0cd6277b5ed40`، حجم فشرده 78,044,763 B (حدود 74.4 MiB).
+- **digest ایمیج arm64:** `sha256:8b34b5101f42c5039249a08dfa8f6ed8bc15743996bd636a8895c7869d38fa37`، حجم 75,664,967 B.
+- منابع digest: `https://hub.docker.com/v2/repositories/calciumion/new-api/tags?page_size=8&ordering=last_updated` و `/tags/v1.0.0-rc.48`.
 - **Dockerfile** (`src/Dockerfile`):
-  - Stages: `oven/bun:1.4.4@sha256:1d22…` builds the web UI, then `golang:1.26.10-alpine@sha256:9ce2…` builds the Go binary (`CGO_ENABLED=0`), then the runtime stage.
-  - Runtime base: **`debian:bookworm-slim@sha256:f06537653ac770703bc45b4b113475bd402f451e85223f0f2837acbf89ab020a`**.
-  - apt packages: `ca-certificates tzdata libasan8 wget`.
-  - Binary path: `/new-api`. Licences are copied to `/licenses/`.
+  - مراحل (stages): `oven/bun:1.4.4@sha256:1d22…` رابط وب را build می‌کند، سپس `golang:1.26.10-alpine@sha256:9ce2…` باینری Go را build می‌کند (`CGO_ENABLED=0`)، و بعد مرحله‌ی runtime می‌آید.
+  - ایمیج پایه‌ی runtime: **`debian:bookworm-slim@sha256:f06537653ac770703bc45b4b113475bd402f451e85223f0f2837acbf89ab020a`**.
+  - بسته‌های apt: `ca-certificates tzdata libasan8 wget`.
+  - مسیر باینری: `/new-api`. فایل‌های مجوز در `/licenses/` کپی می‌شوند.
   - `EXPOSE 3000`
   - `WORKDIR /data`
-  - `ENTRYPOINT ["/new-api"]`, with **no CMD**
-  - **No `USER` instruction, so the container runs as root (UID 0) by default.** No non-root UID is defined upstream.
-  - **No `VOLUME`**
-  - **No `ENV`** in the runtime stage
-  - **No `HEALTHCHECK`.** The compose file defines one (section 7).
-- **CLI flags** (`src/common/init.go`): `--port` (default 3000; the `PORT` env var overrides it, see `src/main.go`), `--log-dir` (default `./logs`), `--version`, `--help`.
-- **Paths the process writes (from code):**
-  - SQLite DB `one-api.db`, relative to the working directory. That resolves to `/data/one-api.db`, plus WAL and SHM files.
-  - Log dir `./logs`, which resolves to `/data/logs`. The process creates it with `os.Mkdir(..., 0777)`.
-  - `os.TempDir()` (`/tmp`) for the disk body cache (`common/disk_cache.go`, used only when enabled; `DiskCacheEnabled` defaults to false) and for temp files (`relay/channel/dify/relay-dify.go`, `common/utils.go`).
-  - `./pprof/` only when `ENABLE_PPROF=true`.
-  - Non-root and `readOnlyRootFilesystem` viability (inference): a writable PVC at `/data` plus an emptyDir at `/tmp` should be enough. **Not tested.**
+  - `ENTRYPOINT ["/new-api"]`، **بدون CMD**
+  - **دستور `USER` وجود ندارد، پس کانتینر به‌طور پیش‌فرض با root (UID 0) اجرا می‌شود.** هیچ UID غیر root در upstream تعریف نشده است.
+  - **بدون `VOLUME`**
+  - **بدون `ENV`** در مرحله‌ی runtime
+  - **بدون `HEALTHCHECK`.** فایل compose یک healthcheck تعریف می‌کند (بخش 7).
+- **فلگ‌های CLI** (`src/common/init.go`): `--port` (پیش‌فرض 3000؛ متغیر محیطی `PORT` آن را override می‌کند، `src/main.go` را ببینید)، `--log-dir` (پیش‌فرض `./logs`)، `--version`، `--help`.
+- **مسیرهایی که پروسه در آن‌ها می‌نویسد (بر اساس کد):**
+  - پایگاه‌داده‌ی SQLite با نام `one-api.db`، نسبت به پوشه‌ی کاری. یعنی `/data/one-api.db`، به‌علاوه‌ی فایل‌های WAL و SHM.
+  - پوشه‌ی لاگ `./logs` که به `/data/logs` می‌رسد. پروسه آن را با `os.Mkdir(..., 0777)` می‌سازد.
+  - `os.TempDir()` (`/tmp`) برای کش بدنه‌ی درخواست روی دیسک (`common/disk_cache.go`، فقط وقتی فعال باشد؛ پیش‌فرض `DiskCacheEnabled` برابر false است) و برای فایل‌های موقت (`relay/channel/dify/relay-dify.go`، `common/utils.go`).
+  - `./pprof/` فقط وقتی `ENABLE_PPROF=true` باشد.
+  - امکان اجرای non-root و `readOnlyRootFilesystem` (برداشت ما): یک PVC قابل‌نوشتن در `/data` به‌علاوه‌ی یک emptyDir در `/tmp` باید کافی باشد. **آزمایش نشده است.**
 
-## 3. Helm chart / Kubernetes manifests
+## 3. Helm chart / manifestهای Kubernetes
 
-- **None upstream.** No `Chart.yaml`, no `kind: Deployment|StatefulSet|Service`, no k8s directory in the tag tree.
-- Upstream deployment artifacts: `src/docker-compose.yml`, `src/docker-compose.dev.yml`, a systemd unit `src/new-api.service`, and a BaoTa panel guide `src/docs/installation/BT.md`.
+- **در upstream وجود ندارد.** نه `Chart.yaml`، نه `kind: Deployment|StatefulSet|Service`، و نه پوشه‌ی k8s در درخت تگ.
+- فایل‌های استقرار موجود در upstream: `src/docker-compose.yml`، `src/docker-compose.dev.yml`، یک systemd unit به نام `src/new-api.service`، و راهنمای پنل BaoTa در `src/docs/installation/BT.md`.
 
-## 4. docker-compose and databases
+## 4. docker-compose و پایگاه‌داده‌ها
 
-- **`src/docker-compose.yml` services:**
-  - `new-api`: `calciumion/new-api:latest`, `command: --log-dir /app/logs`, volumes `./data:/data` and `./logs:/app/logs`, port 3000.
+- **سرویس‌های `src/docker-compose.yml`:**
+  - `new-api`: `calciumion/new-api:latest`، `command: --log-dir /app/logs`، volumeهای `./data:/data` و `./logs:/app/logs`، پورت 3000.
   - `redis`: `redis:latest --requirepass 123456`
-  - `postgres`: `postgres:15`, user root, password 123456
-  - Commented-out alternatives: `mysql:8.2` and `clickhouse/clickhouse-server:24.8` (logs only).
-- **External services are optional.** `SQL_DSN` unset means SQLite (README table: "Main database | SQLite, MySQL ≥ 5.7.8, or PostgreSQL ≥ 9.6"; "Cache | Optional Redis plus in-memory caching"). Code agrees: `src/model/main.go` `chooseDB()` falls back to SQLite when `SQL_DSN` is empty or starts with `local`. `src/common/redis.go` disables Redis when `REDIS_CONN_STRING` is empty.
-- **SQLite for production:** README presents SQLite in the quick start as "a single instance with SQLite" and lists it as a supported main DB. **No upstream statement endorses or forbids SQLite for production.** Unknown beyond that.
-  - The code sets WAL, `busy_timeout(30000)` and `_txlock=immediate` for concurrency (`src/common/database.go` comment on `SQLitePath`).
-  - Driver: pure-Go `github.com/glebarez/sqlite` (modernc).
-- **SQLite file location:**
-  - Default DSN: `one-api.db?_pragma=busy_timeout(30000)&_pragma=journal_mode(WAL)&_txlock=immediate`, relative to the working directory, so `/data/one-api.db`.
-  - Override: `SQLITE_PATH` (`src/common/init.go`). The value replaces the whole DSN, so a custom value loses those pragmas unless you re-add them (inference from the code).
-- **Log dir:**
-  - Default `./logs`, which is `/data/logs` in the image, so on the data PVC.
-  - Compose uses `--log-dir /app/logs`.
-  - An empty `--log-dir` disables file logging (`if *LogDir != ""` in `src/logger/logger.go` and `src/common/init.go`).
-- **Multi-node:** all nodes share the main DB, `SESSION_SECRET`, and `CRYPTO_SECRET` when they share Redis (`src/docs/authentication.md`, `src/README.en.md`). A slave node uses `NODE_TYPE=slave`.
+  - `postgres`: `postgres:15`، کاربر root، رمز عبور 123456
+  - گزینه‌های جایگزینِ کامنت‌شده: `mysql:8.2` و `clickhouse/clickhouse-server:24.8` (فقط برای لاگ‌ها).
+- **سرویس‌های خارجی اختیاری‌اند.** اگر `SQL_DSN` تنظیم نشده باشد از SQLite استفاده می‌شود (جدول README: "Main database | SQLite, MySQL ≥ 5.7.8, or PostgreSQL ≥ 9.6"؛ "Cache | Optional Redis plus in-memory caching"). کد هم با این هم‌خوان است: `chooseDB()` در `src/model/main.go` وقتی `SQL_DSN` خالی باشد یا با `local` شروع شود به SQLite برمی‌گردد. `src/common/redis.go` وقتی `REDIS_CONN_STRING` خالی باشد Redis را غیرفعال می‌کند.
+- **SQLite برای production:** README در بخش quick start، SQLite را به‌صورت "a single instance with SQLite" (یک نمونه‌ی تکی با SQLite) معرفی می‌کند و آن را جزو پایگاه‌داده‌های اصلی پشتیبانی‌شده فهرست می‌کند. **هیچ گفته‌ای در upstream استفاده از SQLite در production را تأیید یا منع نمی‌کند.** فراتر از این: نامشخص.
+  - کد برای هم‌زمانی، WAL، `busy_timeout(30000)` و `_txlock=immediate` را تنظیم می‌کند (کامنت روی `SQLitePath` در `src/common/database.go`).
+  - درایور: `github.com/glebarez/sqlite` که تماماً با Go نوشته شده (modernc).
+- **محل فایل SQLite:**
+  - DSN پیش‌فرض: `one-api.db?_pragma=busy_timeout(30000)&_pragma=journal_mode(WAL)&_txlock=immediate`، نسبت به پوشه‌ی کاری، پس `/data/one-api.db`.
+  - تغییر مسیر: `SQLITE_PATH` (`src/common/init.go`). این مقدار کل DSN را جایگزین می‌کند، پس یک مقدار سفارشی آن pragmaها را از دست می‌دهد مگر اینکه دوباره اضافه‌شان کنید (برداشت ما از کد).
+- **پوشه‌ی لاگ:**
+  - پیش‌فرض `./logs` که در ایمیج برابر `/data/logs` است، یعنی روی PVC داده.
+  - compose از `--log-dir /app/logs` استفاده می‌کند.
+  - مقدار خالی برای `--log-dir` لاگ‌نویسی در فایل را غیرفعال می‌کند (`if *LogDir != ""` در `src/logger/logger.go` و `src/common/init.go`).
+- **چندنودی:** همه‌ی نودها پایگاه‌داده‌ی اصلی، `SESSION_SECRET` و `CRYPTO_SECRET` را مشترک دارند، وقتی Redis مشترک داشته باشند (`src/docs/authentication.md`، `src/README.en.md`). نود slave از `NODE_TYPE=slave` استفاده می‌کند.
 
-## 5. Environment variables
+## 5. متغیرهای محیطی
 
-Sources: `src/common/init.go`, `src/common/redis.go`, `src/model/main.go`, `src/main.go`, `src/.env.example`, `src/docker-compose.yml`, `src/README.en.md`.
+منابع: `src/common/init.go`، `src/common/redis.go`، `src/model/main.go`، `src/main.go`، `src/.env.example`، `src/docker-compose.yml`، `src/README.en.md`.
 
-| Var | Default (code) | Notes / flags |
+| متغیر | پیش‌فرض (در کد) | توضیحات / نکته‌ها |
 |---|---|---|
-| `PORT` | 3000 (via `--port`) | |
-| `SQL_DSN` | unset, so SQLite | `postgres://`/`postgresql://` selects PG. `local*` selects SQLite. ClickHouse is rejected for the main DB. Anything else is treated as MySQL (`parseTime=true` is appended). |
-| `LOG_SQL_DSN` | unset, so the main DB | Can be ClickHouse. `LOG_SQL_CLICKHOUSE_TTL_DAYS` (0 means no deletion). |
-| `SQLITE_PATH` | see section 4 | |
+| `PORT` | 3000 (از طریق `--port`) | |
+| `SQL_DSN` | تنظیم‌نشده، پس SQLite | `postgres://`/`postgresql://` پایگاه‌داده‌ی PG را انتخاب می‌کند. `local*` پایگاه‌داده‌ی SQLite را انتخاب می‌کند. ClickHouse برای پایگاه‌داده‌ی اصلی پذیرفته نمی‌شود. هر مقدار دیگری MySQL در نظر گرفته می‌شود (`parseTime=true` به آن اضافه می‌شود). |
+| `LOG_SQL_DSN` | تنظیم‌نشده، پس همان پایگاه‌داده‌ی اصلی | می‌تواند ClickHouse باشد. `LOG_SQL_CLICKHOUSE_TTL_DAYS` (0 یعنی بدون حذف). |
+| `SQLITE_PATH` | بخش 4 را ببینید | |
 | `SQL_MAX_IDLE_CONNS` / `SQL_MAX_OPEN_CONNS` / `SQL_MAX_LIFETIME` | 100 / 1000 / 60 s | |
-| `REDIS_CONN_STRING` | unset, so Redis is off | Redis on forces `MEMORY_CACHE_ENABLED=true` (`src/main.go` line 82-85). `REDIS_POOL_SIZE` default 10. |
-| `SESSION_SECRET` | **random UUID per process start** (`src/common/constants.go:35`) | Unset means every restart invalidates logins, temporary auth flows and security proofs. The literal `random_string` makes the process exit with a fatal error. README: "set a persistent random `SESSION_SECRET` (generate one with `openssl rand -hex 32`)". |
-| `CRYPTO_SECRET` | = `SESSION_SECRET` | Used for auth-cache integrity MACs and task-artifact capability URLs. Rotating it invalidates issued artifact URLs (`src/docs/plugin-api/README.md`). |
-| `NODE_TYPE` | master (anything but `slave`) | |
+| `REDIS_CONN_STRING` | تنظیم‌نشده، پس Redis خاموش است | روشن بودن Redis، `MEMORY_CACHE_ENABLED=true` را اجباری می‌کند (`src/main.go` خط 82-85). پیش‌فرض `REDIS_POOL_SIZE` برابر 10 است. |
+| `SESSION_SECRET` | **یک UUID تصادفی در هر بار شروع پروسه** (`src/common/constants.go:35`) | اگر تنظیم نشود، هر ری‌استارت لاگین‌ها، جریان‌های احراز هویت موقت و security proofها را باطل می‌کند. مقدار تحت‌اللفظی `random_string` باعث می‌شود پروسه با خطای fatal خارج شود. README: "set a persistent random `SESSION_SECRET` (generate one with `openssl rand -hex 32`)". |
+| `CRYPTO_SECRET` | = `SESSION_SECRET` | برای MACهای یکپارچگی کش احراز هویت و URLهای capability مربوط به task-artifact استفاده می‌شود. چرخاندن (rotate) آن، URLهای artifact صادرشده را باطل می‌کند (`src/docs/plugin-api/README.md`). |
+| `NODE_TYPE` | master (هر مقداری غیر از `slave`) | |
 | `SYNC_FREQUENCY` | 60 s | |
-| `MEMORY_CACHE_ENABLED` | false (true if Redis is enabled) | |
-| `BATCH_UPDATE_ENABLED` / `BATCH_UPDATE_INTERVAL` | false / 5 s | Compose sets true. |
-| `TZ` | image default (Unknown) | Compose and README use `Asia/Shanghai`. tzdata is installed. |
-| `DEFAULT_LANGUAGE` | en | en, zh-CN or zh-TW, for logs, emails and notifications. |
-| `ERROR_LOG_ENABLED` | false | Compose sets true. |
-| `TRUSTED_PROXIES` | unset, so loopback, RFC1918 and fc00::/7 are trusted, with a startup warning | See section 8. |
-| `SESSION_COOKIE_SECURE` | false | **Insecure default for HTTPS.** false disables the refresh/logout OriginGuard and is "仅用于本地 HTTP" (local HTTP only). Set true. |
-| `SESSION_COOKIE_TRUSTED_URL` | unset | Required when Secure=true: exact HTTPS origins, no wildcards. |
+| `MEMORY_CACHE_ENABLED` | false (اگر Redis فعال باشد true) | |
+| `BATCH_UPDATE_ENABLED` / `BATCH_UPDATE_INTERVAL` | false / 5 s | compose آن را true می‌کند. |
+| `TZ` | پیش‌فرض ایمیج (نامشخص) | compose و README از `Asia/Shanghai` استفاده می‌کنند. tzdata نصب است. |
+| `DEFAULT_LANGUAGE` | en | en، zh-CN یا zh-TW، برای لاگ‌ها، ایمیل‌ها و اعلان‌ها. |
+| `ERROR_LOG_ENABLED` | false | compose آن را true می‌کند. |
+| `TRUSTED_PROXIES` | تنظیم‌نشده، پس loopback، RFC1918 و fc00::/7 مورد اعتمادند، همراه با یک هشدار هنگام شروع | بخش 8 را ببینید. |
+| `SESSION_COOKIE_SECURE` | false | **پیش‌فرض ناامن برای HTTPS.** مقدار false، OriginGuard مربوط به refresh/logout را غیرفعال می‌کند و "仅用于本地 HTTP" (فقط برای HTTP محلی) است. آن را true کنید. |
+| `SESSION_COOKIE_TRUSTED_URL` | تنظیم‌نشده | وقتی Secure=true باشد لازم است: originهای دقیق HTTPS، بدون wildcard. |
 | `PASSWORD_LOGIN_ENCRYPTION_ENABLED` | false | |
-| `ACCOUNT_PASSWORD_HASH_ALGORITHM` | Unknown (example shows argon2id; the comment describes bcrypt-to-argon2id migration) | |
-| `USER_SESSION_ACTIVE_LIMIT` / `_ISSUANCE_LIMIT` / `_ISSUANCE_WINDOW_SECONDS` / `_REVOKED_RETENTION_DAYS` / `_HOURLY_ALERT_THRESHOLD` | 50 / 100 / 86400 / 7 / 5000 (per compose and .env.example comments) | |
-| `TLS_INSECURE_SKIP_VERIFY` | false | Global outbound TLS skip if true. |
+| `ACCOUNT_PASSWORD_HASH_ALGORITHM` | نامشخص (نمونه argon2id را نشان می‌دهد؛ کامنت، مهاجرت از bcrypt به argon2id را توضیح می‌دهد) | |
+| `USER_SESSION_ACTIVE_LIMIT` / `_ISSUANCE_LIMIT` / `_ISSUANCE_WINDOW_SECONDS` / `_REVOKED_RETENTION_DAYS` / `_HOURLY_ALERT_THRESHOLD` | 50 / 100 / 86400 / 7 / 5000 (طبق کامنت‌های compose و .env.example) | |
+| `TLS_INSECURE_SKIP_VERIFY` | false | اگر true باشد، بررسی TLS برای همه‌ی ارتباطات خروجی نادیده گرفته می‌شود. |
 | `SMTP_STARTTLS_ENABLE` / `SMTP_INSECURE_SKIP_VERIFY` | false / false | |
-| `ENABLE_PPROF` | false | If true, **pprof listens on 0.0.0.0:8005 without auth** (`src/main.go`). |
+| `ENABLE_PPROF` | false | اگر true باشد، **pprof بدون احراز هویت روی 0.0.0.0:8005 گوش می‌دهد** (`src/main.go`). |
 | `DEBUG` | false | |
-| `RELAY_TIMEOUT` | 0 (unlimited) | |
-| `STREAMING_TIMEOUT` | 300 s | Compose comment says "default 120s". Code says 300. |
+| `RELAY_TIMEOUT` | 0 (نامحدود) | |
+| `STREAMING_TIMEOUT` | 300 s | کامنت compose می‌گوید "default 120s". کد می‌گوید 300. |
 | `RELAY_RESPONSE_HEADER_TIMEOUT` | 1800 s | |
 | `RELAY_IDLE_CONN_TIMEOUT` | 90 | |
-| `RELAY_HTTP2_PING_IDLE_TIMEOUT` / `_PING_TIMEOUT` | 0 (off) / 15 | |
+| `RELAY_HTTP2_PING_IDLE_TIMEOUT` / `_PING_TIMEOUT` | 0 (خاموش) / 15 | |
 | `RELAY_MAX_IDLE_CONNS` / `_PER_HOST` | 500 / 100 | |
 | `MAX_REQUEST_BODY_MB` | 128 | |
 | `ANONYMOUS_REQUEST_BODY_LIMIT_KB` | 512 | |
 | `MAX_FILE_DOWNLOAD_MB` | 64 | |
 | `STREAM_SCANNER_MAX_BUFFER_MB` | 128 | |
-| `SHUTDOWN_TIMEOUT_SECONDS` | 120 | Graceful drain for SSE, so set `terminationGracePeriodSeconds` to at least this. |
+| `SHUTDOWN_TIMEOUT_SECONDS` | 120 | تخلیه‌ی آرام (graceful drain) برای SSE؛ پس `terminationGracePeriodSeconds` را دست‌کم برابر این مقدار بگذارید. |
 | `GLOBAL_API_RATE_LIMIT_ENABLE` / `_NUM` / `_DURATION` | true / 360 / 180 s | |
 | `GLOBAL_WEB_RATE_LIMIT_*` | true / 120 / 180 s | |
 | `CRITICAL_RATE_LIMIT_*` | true / 20 / 1200 s | |
@@ -121,151 +121,151 @@ Sources: `src/common/init.go`, `src/common/redis.go`, `src/model/main.go`, `src/
 | `GEMINI_SAFETY_SETTING` / `COHERE_SAFETY_SETTING` | BLOCK_NONE / NONE | |
 | `DIFY_DEBUG` | true | |
 | `FORCE_STREAM_OPTION` | true | |
-| `FRONTEND_BASE_URL` | unset | |
-| `NODE_NAME` | Unknown default | Audit-log node identity. |
-| `TRUSTED_REDIRECT_DOMAINS` | unset | Payment success/cancel redirect allowlist. |
-| `GOOGLE_ANALYTICS_ID` / `UMAMI_WEBSITE_ID` / `UMAMI_SCRIPT_URL` | unset | They inject third-party scripts into the UI. |
-| `PYROSCOPE_*` | unset | |
-| `LINUX_DO_TOKEN_ENDPOINT` / `LINUX_DO_USER_ENDPOINT` | set (uncommented) in `.env.example` | |
+| `FRONTEND_BASE_URL` | تنظیم‌نشده | |
+| `NODE_NAME` | پیش‌فرض نامشخص | شناسه‌ی نود در audit log. |
+| `TRUSTED_REDIRECT_DOMAINS` | تنظیم‌نشده | فهرست مجاز (allowlist) ریدایرکت پس از موفقیت/لغو پرداخت. |
+| `GOOGLE_ANALYTICS_ID` / `UMAMI_WEBSITE_ID` / `UMAMI_SCRIPT_URL` | تنظیم‌نشده | اسکریپت‌های شخص ثالث را به UI تزریق می‌کنند. |
+| `PYROSCOPE_*` | تنظیم‌نشده | |
+| `LINUX_DO_TOKEN_ENDPOINT` / `LINUX_DO_USER_ENDPOINT` | در `.env.example` تنظیم شده (کامنت نشده) | |
 
-**First admin account:**
-- **There is no default root/123456 at this tag.** `createRootAccountIfNeed()` (which creates root/123456) still exists in `src/model/main.go` but nothing calls it (grep shows only its definition).
-- Instead, a setup wizard runs: unauthenticated `GET/POST /api/setup` (`src/router/api-router.go` line 26-27, `src/controller/setup.go`). The POST creates the root user from the username and password provided (username at most 12 characters), plus `SelfUseModeEnabled` and `DemoSiteEnabled`. It is refused once setup is complete (`constant.Setup`).
-- **Risk: on a fresh instance, whoever reaches `/api/setup` first becomes root.** Complete setup before the ingress is public, or block `/api/setup` at the ingress (inference).
+**اولین حساب ادمین:**
+- **در این تگ هیچ root/123456 پیش‌فرضی وجود ندارد.** `createRootAccountIfNeed()` (که root/123456 را می‌سازد) هنوز در `src/model/main.go` هست ولی هیچ‌جا فراخوانی نمی‌شود (grep فقط تعریف آن را نشان می‌دهد).
+- به‌جای آن، یک ویزارد راه‌اندازی اجرا می‌شود: `GET/POST /api/setup` بدون احراز هویت (`src/router/api-router.go` خط 26-27، `src/controller/setup.go`). درخواست POST کاربر root را با نام کاربری و رمز عبور داده‌شده می‌سازد (نام کاربری حداکثر 12 کاراکتر)، به‌علاوه‌ی `SelfUseModeEnabled` و `DemoSiteEnabled`. پس از کامل شدن راه‌اندازی (`constant.Setup`) این درخواست رد می‌شود.
+- **ریسک: روی یک نمونه‌ی تازه، هر کسی که اول به `/api/setup` برسد root می‌شود.** راه‌اندازی را پیش از عمومی شدن ingress کامل کنید، یا `/api/setup` را در ingress مسدود کنید (برداشت ما).
 
-**Other insecure or example defaults:**
-- Compose passwords are `123456` for Postgres, Redis, MySQL and ClickHouse.
-- `SESSION_SECRET` is ephemeral when unset.
-- `SESSION_COOKIE_SECURE` is false.
-- `TRUSTED_PROXIES` trusts all private ranges.
-- Registration is open (section 8).
+**سایر پیش‌فرض‌های ناامن یا نمونه:**
+- رمزهای عبور compose برای Postgres، Redis، MySQL و ClickHouse برابر `123456` است.
+- `SESSION_SECRET` وقتی تنظیم نشده باشد موقت (ephemeral) است.
+- `SESSION_COOKIE_SECURE` برابر false است.
+- `TRUSTED_PROXIES` به همه‌ی بازه‌های خصوصی اعتماد می‌کند.
+- ثبت‌نام باز است (بخش 8).
 
-## 6. Memory / CPU guidance
+## 6. راهنمای حافظه / CPU
 
-- **Unknown. No memory, CPU or replica sizing guidance was found** in the README files, `docs/`, or `.env.example`.
-- Indirect knobs only: `MAX_REQUEST_BODY_MB=128`, `STREAM_SCANNER_MAX_BUFFER_MB=128`, `MAX_FILE_DOWNLOAD_MB=64`, the disk cache in `setting/performance_setting/config.go`, and `SQL_MAX_OPEN_CONNS=1000`.
+- **نامشخص. هیچ راهنمایی درباره‌ی اندازه‌ی حافظه، CPU یا تعداد replica** در فایل‌های README، `docs/` یا `.env.example` پیدا نشد.
+- فقط تنظیمات غیرمستقیم: `MAX_REQUEST_BODY_MB=128`، `STREAM_SCANNER_MAX_BUFFER_MB=128`، `MAX_FILE_DOWNLOAD_MB=64`، کش دیسک در `setting/performance_setting/config.go`، و `SQL_MAX_OPEN_CONNS=1000`.
 
-## 7. Health, metrics, logs
+## 7. سلامت، متریک‌ها، لاگ‌ها
 
-- **Health:** `GET /api/status` is public (`src/router/api-router.go:28`).
-  - The handler (`src/controller/misc.go` `GetStatus`) builds the response from in-memory options with **no DB or Redis call**. It returns `{"success": true, ...}`, so it shows the process is alive but does not prove the database is ready.
-  - Compose healthcheck: `wget -q -O - http://localhost:3000/api/status | grep -o '"success":\s*true'`.
-  - `GET /api/uptime/status` is also public (Uptime-Kuma status).
-  - `GET /api/status/test` requires admin.
-- **Metrics: no Prometheus `/metrics` endpoint is served by the app.** `prometheus/common` is only used to scrape upstream inference servers (`src/controller/channel_inference.go`).
-  - pprof is available on `:8005` only with `ENABLE_PPROF=true`.
-  - Pyroscope push is optional.
-  - `/api/perf-metrics` is an app-level model performance JSON, gated by a UI module setting.
-- **Log format:** plain text, not JSON.
-  - App lines: `[LEVEL] 2006/01/02 - 15:04:05 | <request-id or SYSTEM> | msg` (`src/logger/logger.go`).
-  - Access lines: `[GIN] ... | status | latency | ip | method path` (`src/middleware/logger.go`).
-- **Log file:** logs go to stdout/stderr **and** to `<log-dir>/oneapi-YYYYMMDDHHMMSS.log`. The default log-dir is `./logs`, which is **`/data/logs`, i.e. on the data volume**.
-  - A new file starts after about 1,000,000 log lines (`maxLogCount`).
-  - Upstream does not delete old files automatically. An admin API can delete them (`DELETE /api/performance/logs`, `controller/performance.go`).
-  - To keep logs off the PVC, pass `--log-dir=` (empty) or point it at an emptyDir.
-- Request and usage logs are also stored in the DB (main DB or `LOG_SQL_DSN`).
+- **سلامت (Health):** `GET /api/status` عمومی است (`src/router/api-router.go:28`).
+  - handler آن (`GetStatus` در `src/controller/misc.go`) پاسخ را از تنظیمات درون حافظه می‌سازد و **هیچ فراخوانی DB یا Redis ندارد**. مقدار `{"success": true, ...}` را برمی‌گرداند، پس نشان می‌دهد پروسه زنده است ولی آماده بودن پایگاه‌داده را ثابت نمی‌کند.
+  - healthcheck در compose: `wget -q -O - http://localhost:3000/api/status | grep -o '"success":\s*true'`.
+  - `GET /api/uptime/status` هم عمومی است (وضعیت Uptime-Kuma).
+  - `GET /api/status/test` نیاز به دسترسی ادمین دارد.
+- **متریک‌ها: اپلیکیشن هیچ endpoint ‏Prometheus `/metrics` ارائه نمی‌دهد.** `prometheus/common` فقط برای scrape کردن سرورهای inference در upstream استفاده می‌شود (`src/controller/channel_inference.go`).
+  - pprof فقط با `ENABLE_PPROF=true` روی `:8005` در دسترس است.
+  - push به Pyroscope اختیاری است.
+  - `/api/perf-metrics` یک JSON از عملکرد مدل‌ها در سطح اپلیکیشن است که با یک تنظیم ماژول UI کنترل می‌شود.
+- **فرمت لاگ:** متن ساده، نه JSON.
+  - خطوط اپلیکیشن: `[LEVEL] 2006/01/02 - 15:04:05 | <request-id or SYSTEM> | msg` (`src/logger/logger.go`).
+  - خطوط دسترسی (access): `[GIN] ... | status | latency | ip | method path` (`src/middleware/logger.go`).
+- **فایل لاگ:** لاگ‌ها به stdout/stderr **و همچنین** به `<log-dir>/oneapi-YYYYMMDDHHMMSS.log` می‌روند. log-dir پیش‌فرض `./logs` است که همان **`/data/logs`، یعنی روی volume داده** است.
+  - پس از حدود 1,000,000 خط لاگ، فایل جدیدی شروع می‌شود (`maxLogCount`).
+  - upstream فایل‌های قدیمی را خودکار حذف نمی‌کند. یک API ادمین می‌تواند آن‌ها را حذف کند (`DELETE /api/performance/logs`، `controller/performance.go`).
+  - برای اینکه لاگ‌ها روی PVC نروند، `--log-dir=` (خالی) بدهید یا آن را به یک emptyDir اشاره دهید.
+- لاگ‌های درخواست و مصرف هم در DB ذخیره می‌شوند (DB اصلی یا `LOG_SQL_DSN`).
 
-## 8. Auth model and header trust
+## 8. مدل احراز هویت و اعتماد به هدرها
 
-- **Roles:** guest 0, common 1, admin 10, root 100 (`src/common/constants.go:202-205`).
-- **Admin login:** username and password. Optional 2FA (TOTP and backup codes), passkeys (WebAuthn), and a "secure verification" step-up for sensitive actions.
-- **Sessions:** server-side `user_sessions`, an access token plus a refresh cookie (`src/docs/authentication.md`). Personal access tokens are also supported (`/api/user/self/access_tokens`).
-- **API keys:**
-  - `Token` rows, presented as `sk-<key>` (`src/model/token.go`).
-  - Per-key fields: status, expiry (`-1` means never), `remain_quota`, `unlimited_quota`, model allowlist, `allow_ips`, group, cross-group retry, `allow_user_quota_query`.
-- **Billing / quota:**
-  - Each user has a quota. New users get `QuotaForNewUser = 0`.
-  - Admins set model pricing and ratios, groups, redemption codes and subscriptions.
-  - Top-up and payments: Stripe, Creem, Waffo, Waffo Pancake, Epay (`src/controller/topup_*.go`, `subscription_payment_*.go`).
-- **Registration is open by default:** `RegisterEnabled=true`, `PasswordRegisterEnabled=true`, `EmailVerificationEnabled=false`, `TurnstileCheckEnabled=false` (`src/common/constants.go:67-76`). These are changeable in the admin UI and persisted in the DB options table.
-- **Login options** (`src/oauth/` and router):
-  - Email verification and password reset (SMTP)
-  - GitHub, Discord, OIDC, LinuxDO and Telegram OAuth
-  - Generic custom OAuth providers (`/api/custom-oauth-provider`)
-  - WeChat (via an external WeChat auth server)
+- **نقش‌ها:** guest 0، common 1، admin 10، root 100 (`src/common/constants.go:202-205`).
+- **ورود ادمین:** نام کاربری و رمز عبور. اختیاری: 2FA (TOTP و کدهای پشتیبان)، passkey (WebAuthn)، و یک مرحله‌ی تأیید تکمیلی "secure verification" برای عملیات حساس.
+- **نشست‌ها (Sessions):** جدول `user_sessions` سمت سرور، یک access token به‌همراه یک کوکی refresh (`src/docs/authentication.md`). توکن‌های دسترسی شخصی هم پشتیبانی می‌شوند (`/api/user/self/access_tokens`).
+- **کلیدهای API:**
+  - رکوردهای `Token` که به‌صورت `sk-<key>` ارائه می‌شوند (`src/model/token.go`).
+  - فیلدهای هر کلید: وضعیت، تاریخ انقضا (`-1` یعنی هرگز)، `remain_quota`، `unlimited_quota`، فهرست مجاز مدل‌ها، `allow_ips`، گروه، retry بین گروه‌ها، `allow_user_quota_query`.
+- **صورتحساب / سهمیه (Billing / quota):**
+  - هر کاربر یک سهمیه دارد. کاربران جدید `QuotaForNewUser = 0` می‌گیرند.
+  - ادمین‌ها قیمت‌گذاری و ضرایب مدل‌ها، گروه‌ها، کدهای redemption و اشتراک‌ها را تنظیم می‌کنند.
+  - شارژ حساب و پرداخت: Stripe، Creem، Waffo، Waffo Pancake، Epay (`src/controller/topup_*.go`، `subscription_payment_*.go`).
+- **ثبت‌نام به‌طور پیش‌فرض باز است:** `RegisterEnabled=true`، `PasswordRegisterEnabled=true`، `EmailVerificationEnabled=false`، `TurnstileCheckEnabled=false` (`src/common/constants.go:67-76`). این‌ها در UI ادمین قابل تغییرند و در جدول options پایگاه‌داده ذخیره می‌شوند.
+- **گزینه‌های ورود** (`src/oauth/` و router):
+  - تأیید ایمیل و بازنشانی رمز عبور (SMTP)
+  - OAuth از طریق GitHub، Discord، OIDC، LinuxDO و Telegram
+  - ارائه‌دهندگان OAuth سفارشی عمومی (`/api/custom-oauth-provider`)
+  - WeChat (از طریق یک سرور احراز هویت WeChat خارجی)
   - Cloudflare Turnstile
-- **Header trust** (`src/common/trusted_proxies.go`, `src/middleware/trusted_proxies.go`, `src/docs/authentication.md` "可信代理与 IP 限流"):
-  - Uses gin `SetTrustedProxies`. With gin's default `RemoteIPHeaders`, `X-Forwarded-For` and `X-Real-IP` are honoured only from trusted peers. Upstream does not override gin's defaults.
-  - **Default when unset: trust `127.0.0.0/8`, `::1`, `10.0.0.0/8`, `172.16.0.0/12`, `192.168.0.0/16`, `fc00::/7`.** The docs acknowledge the residual risk that any host or container on the same private network can spoof the headers.
-  - In Kubernetes this means any pod in a 10.x or 172.16/12 pod CIDR (inference). Set `TRUSTED_PROXIES` to the ingress-nginx pod CIDR or IPs, or to `none`. A `100.64.0.0/10` CNI range must be listed explicitly (the docs say so).
-  - Client IP drives rate limits, token `allow_ips`, and session and audit records.
-  - Secure-mode OriginGuard does not trust a client-sent `X-Forwarded-Proto`.
-- **Loopback trust:** only loopback as part of the default proxy list above. No loopback auth bypass was found. Unknown beyond the grep of `IsLoopback`/`IsPrivate` (used only in IP utility and SSRF code).
+- **اعتماد به هدرها** (`src/common/trusted_proxies.go`، `src/middleware/trusted_proxies.go`، `src/docs/authentication.md` بخش "可信代理与 IP 限流" (پراکسی‌های مورد اعتماد و محدودسازی نرخ بر اساس IP)):
+  - از `SetTrustedProxies` در gin استفاده می‌کند. با `RemoteIPHeaders` پیش‌فرض gin، هدرهای `X-Forwarded-For` و `X-Real-IP` فقط از peerهای مورد اعتماد پذیرفته می‌شوند. upstream پیش‌فرض‌های gin را override نمی‌کند.
+  - **پیش‌فرض در صورت تنظیم نشدن: اعتماد به `127.0.0.0/8`، `::1`، `10.0.0.0/8`، `172.16.0.0/12`، `192.168.0.0/16`، `fc00::/7`.** مستندات به ریسک باقی‌مانده اذعان می‌کنند: هر میزبان یا کانتینری در همان شبکه‌ی خصوصی می‌تواند این هدرها را جعل کند.
+  - در Kubernetes این یعنی هر podی در یک pod CIDR از بازه‌ی 10.x یا 172.16/12 (برداشت ما). `TRUSTED_PROXIES` را روی CIDR یا IPهای podهای ingress-nginx، یا روی `none` تنظیم کنید. بازه‌ی CNI ‏`100.64.0.0/10` باید صریحاً فهرست شود (مستندات این را می‌گویند).
+  - IP کلاینت مبنای rate limitها، `allow_ips` توکن‌ها، و رکوردهای نشست و audit است.
+  - OriginGuard در حالت secure به هدر `X-Forwarded-Proto` ارسالی از کلاینت اعتماد نمی‌کند.
+- **اعتماد به loopback:** فقط loopback به‌عنوان بخشی از فهرست پراکسی پیش‌فرض بالا. هیچ راه دور زدن احراز هویت از طریق loopback پیدا نشد. فراتر از grep روی `IsLoopback`/`IsPrivate` (که فقط در ابزارهای IP و کد SSRF استفاده می‌شوند): نامشخص.
 
-## 9. Risky features
+## 9. قابلیت‌های پرریسک
 
-- **Channel base URLs: SSRF surface, admin/root controlled.**
-  - The relay client deliberately does **not** apply SSRF protection to provider base URLs. Comment in `src/service/http_client.go` `GetHttpClient`: provider base URLs are root/operator-managed and "may legitimately point at private networks". Only redirects are checked (`checkRedirect`).
-  - Per-channel proxies (http/socks) are supported.
-  - Effect: a tenant admin can make the pod call cluster-internal addresses. Egress NetworkPolicy is needed (inference).
-- **User-supplied URL fetches** (image, file or video URLs in requests, webhooks, Bark/Gotify notifications, downloads) go through the SSRF-protected client (`src/service/protected_fetch_client.go`, `download.go`, `webhook.go`, `user_notify.go`).
-  - `fetch_setting` defaults: protection on, private IPs blocked (the 0.0.0.0/8 and 100.64/10 lists are in `src/common/ssrf_protection.go`), allowed ports 80, 443, 8080 and 8443, IP filter applied to domains.
-  - Admins can relax or disable these settings in the UI.
-  - Worker mode (`DoWorkerRequest`) proxies through an external worker.
-- **Outbound webhooks:** user notification webhook with a secret (`src/service/webhook.go`).
-- **Inbound unauthenticated webhooks:** `POST /api/stripe/webhook`, `/api/creem/webhook`, `/api/waffo/webhook`, `/api/waffo-pancake/webhook/:env`, each with the anonymous body limit.
-- **Payments:** Stripe, Creem, Waffo, Waffo Pancake, Epay.
-- **Task plugins: uploadable JavaScript executed in-process** (embedded JS engine `github.com/Calcium-Ion/moejs`).
-  - Upload and activation are root-only (`/api/plugin/task`, `middleware.RootAuth()`).
-  - The marketplace fetches from `https://www.newapi.ai/api/v1/plugins/index.json` or `https://raw.githubusercontent.com/QuantumNous/new-api-plugins/main/index.json`, and sources are configurable (`src/setting/task_plugin.go`).
-  - The host validates plugin-built URLs against the channel host (`src/docs/plugin-api/README.md`).
-  - JS sandbox strength: Unknown (not audited).
-- **Process spawning:** only `xdg-open`/`open` in `common/utils.go` (an `OpenBrowser` helper). Whether the server path calls it: Unknown (assumed desktop/Electron use). No other `os/exec` use.
-- **File uploads:** no multipart `FormFile` handlers in `controller/`. Request bodies of up to 128 MB are accepted for relay. Dify uploads go to temp files.
-- **Other outbound calls by default:** `api.github.com/repos/openai/codex/releases/latest` (`service/codex_models.go`), GitHub OAuth endpoints, the plugin marketplace index, and Umami/GA scripts if configured. A full list of default phone-home calls: Unknown.
-- **Analytics injection:** `UMAMI_*` and `GOOGLE_ANALYTICS_ID` inject scripts into `index.html`. The HTML always gets the comment marker `<!--Umami QuantumNous-->`.
+- **Base URL کانال‌ها: سطح حمله‌ی SSRF، تحت کنترل admin/root.**
+  - کلاینت relay عمداً محافظت SSRF را روی base URLهای provider اعمال **نمی‌کند**. کامنت در `GetHttpClient` در `src/service/http_client.go`: base URLهای provider توسط root/اپراتور مدیریت می‌شوند و "may legitimately point at private networks" (ممکن است به‌طور مشروع به شبکه‌های خصوصی اشاره کنند). فقط ریدایرکت‌ها بررسی می‌شوند (`checkRedirect`).
+  - پراکسی جداگانه برای هر کانال (http/socks) پشتیبانی می‌شود.
+  - نتیجه: یک ادمین tenant می‌تواند pod را وادار کند آدرس‌های داخلی کلاستر را فراخوانی کند. NetworkPolicy برای egress لازم است (برداشت ما).
+- **دریافت URLهای ارائه‌شده توسط کاربر** (URLهای تصویر، فایل یا ویدیو در درخواست‌ها، webhookها، اعلان‌های Bark/Gotify، دانلودها) از کلاینت محافظت‌شده در برابر SSRF عبور می‌کنند (`src/service/protected_fetch_client.go`، `download.go`، `webhook.go`، `user_notify.go`).
+  - پیش‌فرض‌های `fetch_setting`: محافظت روشن، IPهای خصوصی مسدود (فهرست‌های 0.0.0.0/8 و 100.64/10 در `src/common/ssrf_protection.go` هستند)، پورت‌های مجاز 80، 443، 8080 و 8443، و فیلتر IP روی دامنه‌ها هم اعمال می‌شود.
+  - ادمین‌ها می‌توانند این تنظیمات را در UI شل یا غیرفعال کنند.
+  - حالت worker (`DoWorkerRequest`) درخواست‌ها را از طریق یک worker خارجی پراکسی می‌کند.
+- **webhookهای خروجی:** webhook اعلان کاربر همراه با secret (`src/service/webhook.go`).
+- **webhookهای ورودی بدون احراز هویت:** `POST /api/stripe/webhook`، `/api/creem/webhook`، `/api/waffo/webhook`، `/api/waffo-pancake/webhook/:env`، هر کدام با محدودیت بدنه‌ی درخواست ناشناس.
+- **پرداخت‌ها:** Stripe، Creem، Waffo، Waffo Pancake، Epay.
+- **پلاگین‌های task: کد JavaScript قابل آپلود که درون همان پروسه اجرا می‌شود** (موتور JS تعبیه‌شده `github.com/Calcium-Ion/moejs`).
+  - آپلود و فعال‌سازی فقط برای root مجاز است (`/api/plugin/task`، `middleware.RootAuth()`).
+  - marketplace از `https://www.newapi.ai/api/v1/plugins/index.json` یا `https://raw.githubusercontent.com/QuantumNous/new-api-plugins/main/index.json` دریافت می‌کند، و منابع قابل پیکربندی‌اند (`src/setting/task_plugin.go`).
+  - میزبان، URLهایی را که پلاگین می‌سازد در برابر میزبان کانال اعتبارسنجی می‌کند (`src/docs/plugin-api/README.md`).
+  - استحکام sandbox جاوااسکریپت: نامشخص (ممیزی نشده).
+- **ایجاد پروسه:** فقط `xdg-open`/`open` در `common/utils.go` (یک helper به نام `OpenBrowser`). اینکه مسیر سرور آن را فراخوانی می‌کند یا نه: نامشخص (فرض بر استفاده در دسکتاپ/Electron). هیچ استفاده‌ی دیگری از `os/exec` نیست.
+- **آپلود فایل:** هیچ handler از نوع multipart با `FormFile` در `controller/` وجود ندارد. بدنه‌های درخواست تا 128 MB برای relay پذیرفته می‌شوند. آپلودهای Dify به فایل‌های موقت می‌روند.
+- **سایر فراخوانی‌های خروجی پیش‌فرض:** `api.github.com/repos/openai/codex/releases/latest` (`service/codex_models.go`)، endpointهای OAuth در GitHub، ایندکس marketplace پلاگین‌ها، و اسکریپت‌های Umami/GA در صورت پیکربندی. فهرست کامل فراخوانی‌های phone-home پیش‌فرض: نامشخص.
+- **تزریق analytics:** `UMAMI_*` و `GOOGLE_ANALYTICS_ID` اسکریپت‌ها را به `index.html` تزریق می‌کنند. HTML همیشه نشانگر کامنت `<!--Umami QuantumNous-->` را دریافت می‌کند.
 
 ## 10. Streaming / ingress
 
-- SSE responses set `Content-Type: text/event-stream`, `Cache-Control: no-cache`, `Connection: keep-alive` and `X-Accel-Buffering: no`, and send keep-alive pings (`src/relay/helper/common.go`).
-- gzip is deliberately not applied globally because "This will cause SSE not to work!!!" (`src/main.go`). It is applied only to `/api`.
-- WebSocket upgrades: `GET /v1/realtime` and `GET /v1/responses` (README feature table).
-- README: "configure your reverse proxy for streaming and WebSocket upgrades".
-- **No nginx or ingress config is shipped in the repo.** The external docs site (docs.newapi.ai) was not read: Unknown.
-- Relevant app timeouts: `STREAMING_TIMEOUT` 300 s, `RELAY_RESPONSE_HEADER_TIMEOUT` 1800 s, `SHUTDOWN_TIMEOUT_SECONDS` 120 s. Ingress read and send timeouts should exceed these (inference).
-- TLS: README says to put the console behind HTTPS and set `SESSION_COOKIE_SECURE=true` and `SESSION_COOKIE_TRUSTED_URL=https://<public-origin>`.
+- پاسخ‌های SSE هدرهای `Content-Type: text/event-stream`، `Cache-Control: no-cache`، `Connection: keep-alive` و `X-Accel-Buffering: no` را تنظیم می‌کنند و پینگ keep-alive می‌فرستند (`src/relay/helper/common.go`).
+- gzip عمداً به‌صورت سراسری اعمال نمی‌شود چون "This will cause SSE not to work!!!" (این کار باعث می‌شود SSE کار نکند) (`src/main.go`). فقط روی `/api` اعمال می‌شود.
+- ارتقای اتصال به WebSocket: `GET /v1/realtime` و `GET /v1/responses` (جدول قابلیت‌های README).
+- README: "configure your reverse proxy for streaming and WebSocket upgrades" (reverse proxy را برای streaming و ارتقای WebSocket پیکربندی کنید).
+- **هیچ پیکربندی nginx یا ingress در مخزن ارائه نشده است.** سایت مستندات خارجی (docs.newapi.ai) خوانده نشد: نامشخص.
+- timeoutهای مرتبط اپلیکیشن: `STREAMING_TIMEOUT` برابر 300 s، `RELAY_RESPONSE_HEADER_TIMEOUT` برابر 1800 s، `SHUTDOWN_TIMEOUT_SECONDS` برابر 120 s. timeoutهای read و send در ingress باید از این‌ها بیشتر باشند (برداشت ما).
+- TLS: README می‌گوید کنسول را پشت HTTPS قرار دهید و `SESSION_COOKIE_SECURE=true` و `SESSION_COOKIE_TRUSTED_URL=https://<public-origin>` را تنظیم کنید.
 
-## 11. Security advisories
+## 11. هشدارهای امنیتی (Security advisories)
 
-Sources: `GET /repos/QuantumNous/new-api/security-advisories?state=published&per_page=100` (15 entries) and `GET /advisories?affects=github.com/QuantumNous/new-api` (14 entries; ecosystem `go`, same 14).
+منابع: `GET /repos/QuantumNous/new-api/security-advisories?state=published&per_page=100` (15 مورد) و `GET /advisories?affects=github.com/QuantumNous/new-api` (14 مورد؛ اکوسیستم `go`، همان 14 مورد).
 
-| GHSA | CVE | Sev | Published (repo) | Vulnerable | Patched | Summary | Affects rc.48? |
+| GHSA | CVE | شدت | تاریخ انتشار (در repo) | نسخه‌های آسیب‌پذیر | نسخه‌ی اصلاح‌شده | خلاصه | آیا rc.48 را درگیر می‌کند؟ |
 |---|---|---|---|---|---|---|---|
-| GHSA-xxv6-m6fx-vfhh | CVE-2025-59146 | high | 2025-10-09 | <= v0.9.0.4 | v0.9.0.5 | Authenticated SSRF | No (not in global DB) |
-| GHSA-9f46-w24h-69w4 | CVE-2025-62155 | high | 2025-11-23 | <= v0.9.5 | v0.9.6 | SSRF bypass | No |
-| GHSA-299v-8pq9-5gjq | CVE-2026-25802 | high | 2026-02-22 | <= v0.10.8-alpha.8 | v0.10.8-alpha.9 | XSS in MarkdownRenderer | No |
-| GHSA-w6x6-9fp7-fqm4 | CVE-2026-25591 | high | 2026-02-22 | <= v0.10.8-alpha.9 | v0.10.8-alpha.10 | SQL LIKE wildcard DoS in token search | No |
-| GHSA-f35r-v9x5-r8mc | CVE-2026-30886 | medium | 2026-03-23 | <= v0.11.4-alpha.1 | v0.11.4-alpha.2 | IDOR in VideoProxy | No |
-| GHSA-5353-f8fq-65vc | CVE-2026-32879 | medium (4.9) | 2026-03-23 | repo: `>= v0.10.0`, no patched version; global: `>= 0.10.0, <= 0.11.9-alpha.1` | none listed | Passkey step-up bypass exposing root-only channel secrets | Not by the global range. The repo advisory still lists no fix. In rc.48 code, `/api/verify` rejects method `passkey` with `ErrVerificationFlowRequired` and the passkey path runs `wa.ValidateLogin` (`src/service/security_verification.go:611`, `src/controller/passkey.go`), so it looks fixed (my code reading) |
-| GHSA-xff3-5c9p-2mr4 | CVE-2026-41432 | high | 2026-04-22 | < v0.12.10 | v0.12.10 | Stripe webhook signature bypass via empty secret | No |
-| GHSA-v5c3-6wvc-pc2q | CVE-2026-42339 | high | 2026-05-06 | <= v0.11.9-alpha.1 | none listed | SSRF filter bypass via 0.0.0.0 | No by range. rc.48 `privateIPv4Nets` includes 0.0.0.0/8 |
-| GHSA-6x2c-phff-wx57 | CVE-2026-64859 | **critical** | 2026-07-03 | < v1.0.0-rc.7 | v1.0.0-rc.7 | User list API leaks root access token, privilege escalation | No |
-| GHSA-26v7-h57m-gh9m | CVE-2026-44342 | medium | 2026-07-03 | < v0.12.0-alpha.1 | v0.12.0-alpha.1 | CSRF in email binding | No |
-| GHSA-6qcr-qxgr-m7fv | CVE-2026-33655 | high | 2026-07-03 | < v0.12.0-alpha.1 | v0.12.0-alpha.1 | SSRF bypass via unresolved hostname in notification URLs | No |
-| GHSA-v828-m3pf-vq9q | CVE-2026-64868 | high | 2026-07-03 | < v1.0.0-rc.11 | v1.0.0-rc.11 | Unauthenticated payment webhooks: memory and disk DoS | No |
-| GHSA-p845-629j-rcj6 | CVE-2026-64866 | medium | 2026-07-03 | >= v0.9.1.3, < v1.0.0-rc.7 | v1.0.0-rc.7 | Admin can reset passkeys of equal or higher-privileged users | No |
-| GHSA-8r8v-xf7q-rcpr | CVE-2026-71479 | **critical** | 2026-07-09 | <= 1.0.0-rc.17 | 1.0.0-rc.18 | Integer overflow in quota billing gives negative charges (self-crediting) | No |
-| GHSA-j6gc-4893-qwmp | CVE-2026-64865 | high (repo) / medium (global) | 2026-08-07 | <= v1.0.0-rc.15 | v1.0.0-rc.16 | Redis user quota cache overwrite via PUT /api/user/self | No |
+| GHSA-xxv6-m6fx-vfhh | CVE-2025-59146 | بالا | 2025-10-09 | <= v0.9.0.4 | v0.9.0.5 | SSRF با کاربر احرازهویت‌شده | خیر (در پایگاه‌داده‌ی global نیست) |
+| GHSA-9f46-w24h-69w4 | CVE-2025-62155 | بالا | 2025-11-23 | <= v0.9.5 | v0.9.6 | دور زدن محافظت SSRF | خیر |
+| GHSA-299v-8pq9-5gjq | CVE-2026-25802 | بالا | 2026-02-22 | <= v0.10.8-alpha.8 | v0.10.8-alpha.9 | XSS در MarkdownRenderer | خیر |
+| GHSA-w6x6-9fp7-fqm4 | CVE-2026-25591 | بالا | 2026-02-22 | <= v0.10.8-alpha.9 | v0.10.8-alpha.10 | DoS با wildcard در SQL LIKE هنگام جستجوی توکن | خیر |
+| GHSA-f35r-v9x5-r8mc | CVE-2026-30886 | متوسط | 2026-03-23 | <= v0.11.4-alpha.1 | v0.11.4-alpha.2 | IDOR در VideoProxy | خیر |
+| GHSA-5353-f8fq-65vc | CVE-2026-32879 | متوسط (4.9) | 2026-03-23 | repo: `>= v0.10.0`، بدون نسخه‌ی اصلاح‌شده؛ global: `>= 0.10.0, <= 0.11.9-alpha.1` | اعلام نشده | دور زدن مرحله‌ی تأیید تکمیلی passkey که secretهای کانال مخصوص root را افشا می‌کند | طبق بازه‌ی global، خیر. advisory مخزن هنوز اصلاحی اعلام نمی‌کند. در کد rc.48، `/api/verify` روش `passkey` را با `ErrVerificationFlowRequired` رد می‌کند و مسیر passkey تابع `wa.ValidateLogin` را اجرا می‌کند (`src/service/security_verification.go:611`، `src/controller/passkey.go`)، پس به نظر اصلاح شده است (برداشت ما از کد) |
+| GHSA-xff3-5c9p-2mr4 | CVE-2026-41432 | بالا | 2026-04-22 | < v0.12.10 | v0.12.10 | دور زدن بررسی امضای webhook در Stripe با secret خالی | خیر |
+| GHSA-v5c3-6wvc-pc2q | CVE-2026-42339 | بالا | 2026-05-06 | <= v0.11.9-alpha.1 | اعلام نشده | دور زدن فیلتر SSRF با 0.0.0.0 | طبق بازه، خیر. `privateIPv4Nets` در rc.48 شامل 0.0.0.0/8 است |
+| GHSA-6x2c-phff-wx57 | CVE-2026-64859 | **بحرانی** | 2026-07-03 | < v1.0.0-rc.7 | v1.0.0-rc.7 | API فهرست کاربران access token کاربر root را افشا می‌کند؛ ارتقای سطح دسترسی | خیر |
+| GHSA-26v7-h57m-gh9m | CVE-2026-44342 | متوسط | 2026-07-03 | < v0.12.0-alpha.1 | v0.12.0-alpha.1 | CSRF در اتصال ایمیل به حساب | خیر |
+| GHSA-6qcr-qxgr-m7fv | CVE-2026-33655 | بالا | 2026-07-03 | < v0.12.0-alpha.1 | v0.12.0-alpha.1 | دور زدن SSRF با hostname حل‌نشده در URLهای اعلان | خیر |
+| GHSA-v828-m3pf-vq9q | CVE-2026-64868 | بالا | 2026-07-03 | < v1.0.0-rc.11 | v1.0.0-rc.11 | webhookهای پرداخت بدون احراز هویت: DoS حافظه و دیسک | خیر |
+| GHSA-p845-629j-rcj6 | CVE-2026-64866 | متوسط | 2026-07-03 | >= v0.9.1.3, < v1.0.0-rc.7 | v1.0.0-rc.7 | ادمین می‌تواند passkey کاربران هم‌سطح یا با دسترسی بالاتر را بازنشانی کند | خیر |
+| GHSA-8r8v-xf7q-rcpr | CVE-2026-71479 | **بحرانی** | 2026-07-09 | <= 1.0.0-rc.17 | 1.0.0-rc.18 | سرریز عدد صحیح در محاسبه‌ی هزینه‌ی سهمیه که هزینه‌ی منفی ایجاد می‌کند (افزایش اعتبار به نفع خود) | خیر |
+| GHSA-j6gc-4893-qwmp | CVE-2026-64865 | بالا (repo) / متوسط (global) | 2026-08-07 | <= v1.0.0-rc.15 | v1.0.0-rc.16 | بازنویسی کش سهمیه‌ی کاربر در Redis از طریق PUT /api/user/self | خیر |
 
-- **No published advisory has a vulnerable range that includes v1.0.0-rc.48.**
-- Pattern: 15 advisories in about 13 months, including 2 critical in the v1.0.0-rc line (billing and privilege escalation). Several hit billing and quota, which matters directly for a resale product.
+- **هیچ advisory منتشرشده‌ای بازه‌ی آسیب‌پذیری‌ای ندارد که v1.0.0-rc.48 را شامل شود.**
+- الگو: 15 advisory در حدود 13 ماه، از جمله 2 مورد بحرانی در خط v1.0.0-rc (صورتحساب و ارتقای سطح دسترسی). چند مورد به صورتحساب و سهمیه مربوط‌اند، که مستقیماً برای یک محصول فروش مجدد (resale) اهمیت دارد.
 
-## 12. UI languages
+## 12. زبان‌های رابط کاربری
 
-- Web UI (`src/web/src/i18n/config.ts` `supportedLngs`): `en`, `zhCN`, `fr`, `ru`, `ja`, `vi`, `zhTW`. Locale files are in `src/web/src/i18n/locales/`.
-- Backend messages (`src/i18n/locales/`): `en`, `zh-CN`, `zh-TW`.
-- **Persian (fa) is not present.** No RTL support was found (not searched exhaustively).
+- رابط وب (`supportedLngs` در `src/web/src/i18n/config.ts`): `en`، `zhCN`، `fr`، `ru`، `ja`، `vi`، `zhTW`. فایل‌های locale در `src/web/src/i18n/locales/` هستند.
+- پیام‌های بک‌اند (`src/i18n/locales/`): `en`، `zh-CN`، `zh-TW`.
+- **فارسی (fa) وجود ندارد.** پشتیبانی RTL پیدا نشد (جستجو جامع نبود).
 
-## 13. License terms beyond plain AGPL
+## 13. شرایط مجوز فراتر از AGPL ساده
 
-From `src/NOTICE` and the `src/README.en.md` License section:
+از `src/NOTICE` و بخش License در `src/README.en.md`:
 
-- **AGPLv3 §7(b) additional terms:**
-  - Modified versions must preserve the notice "Frontend design and development by New API contributors." in the Appropriate Legal Notices **and in any prominent about, legal, footer, or attribution location in the UI**.
-  - UI-presenting modified versions must keep a **visible link to https://github.com/QuantumNous/new-api**.
-  - They must not misrepresent the software's origin and must mark changes per §7(c).
-- NOTICE asks that it be preserved with Docker images and binaries. The image ships `/licenses/LICENSE`, `/licenses/NOTICE` and `/licenses/THIRD-PARTY-LICENSES.md`.
-- README offers commercial licensing: "If your organization's policies do not permit the use of AGPLv3-licensed software, or if you wish to avoid the open-source obligations of AGPLv3, please contact us at support@quantumnous.com".
-- The project is based on One API (MIT).
-- README compliance note: public generative-AI service operators must meet their jurisdiction's filing, licensing, content-safety, real-name, log-retention, tax and upstream-authorization obligations, and must lawfully obtain upstream keys.
-- AGPL network clause (§13): offering a modified version over a network requires offering its source to users. This is a general AGPL fact, not an extra upstream statement.
+- **شرایط افزوده‌ی AGPLv3 §7(b):**
+  - نسخه‌های تغییریافته باید عبارت "Frontend design and development by New API contributors." را در Appropriate Legal Notices **و در هر محل برجسته‌ی about، legal، footer یا attribution در UI** حفظ کنند.
+  - نسخه‌های تغییریافته‌ای که UI ارائه می‌دهند باید یک **لینک قابل‌مشاهده به https://github.com/QuantumNous/new-api** نگه دارند.
+  - نباید منشأ نرم‌افزار را نادرست معرفی کنند و باید تغییرات را طبق §7(c) علامت‌گذاری کنند.
+- NOTICE درخواست می‌کند که همراه با ایمیج‌های Docker و باینری‌ها حفظ شود. ایمیج فایل‌های `/licenses/LICENSE`، `/licenses/NOTICE` و `/licenses/THIRD-PARTY-LICENSES.md` را همراه دارد.
+- README مجوز تجاری پیشنهاد می‌دهد: "If your organization's policies do not permit the use of AGPLv3-licensed software, or if you wish to avoid the open-source obligations of AGPLv3, please contact us at support@quantumnous.com".
+- پروژه بر پایه‌ی One API (MIT) است.
+- نکته‌ی انطباق در README: اپراتورهای سرویس‌های عمومی هوش مصنوعی مولد باید تعهدات حوزه‌ی قضایی خود در زمینه‌ی ثبت، مجوز، ایمنی محتوا، احراز هویت با نام واقعی، نگهداری لاگ، مالیات و مجوز upstream را رعایت کنند و کلیدهای upstream را به‌طور قانونی تهیه کنند.
+- بند شبکه‌ای AGPL (§13): ارائه‌ی یک نسخه‌ی تغییریافته روی شبکه مستلزم ارائه‌ی سورس آن به کاربران است. این یک واقعیت کلی AGPL است، نه گفته‌ی اضافه‌ای از upstream.
