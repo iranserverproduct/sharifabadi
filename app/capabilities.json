@@ -1,0 +1,14 @@
+{
+  "assets": { "upload": "interact" },
+  "db": {},
+  "downloads": {},
+  "sample": { "images": true },
+  "user": { "scopes": ["profile"] },
+  "mcp": {
+    "servers": [
+      { "server": "Figma", "tools": ["get_metadata", "get_design_context", "get_screenshot"] },
+      { "server": "Google Drive", "tools": ["create_file"] },
+      { "server": "host:claude_browser", "tools": ["preview_start", "navigate", "get_page_text"] }
+    ]
+  }
+}
