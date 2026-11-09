@@ -1,0 +1,505 @@
+<title>دستیار PRD ایران‌سرور</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700&display=swap">
+<style>
+/* Layout: one quiet chat column, composer pinned to the bottom, the PRD appears as a document card inside the conversation */
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --ink: #161a2e;
+  --muted: #5d6380;
+  --line: #e3e6f0;
+  --accent: #2f3fd6;
+  --accent-ink: #ffffff;
+  --accent-soft: #eceefe;
+  --ok: #157a4a;
+  --warn: #9a5b00;
+  --err: #b42318;
+  --font: "Vazirmatn", "Tahoma", "Segoe UI", system-ui, sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1220; --surface: #171b2e; --ink: #e8eaf5; --muted: #a0a6c3; --line: #2a3050;
+    --accent: #8f9bff; --accent-ink: #0f1220; --accent-soft: #232a52; --ok: #5bd39a; --warn: #f0b456; --err: #ff8a80;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1220; --surface: #171b2e; --ink: #e8eaf5; --muted: #a0a6c3; --line: #2a3050;
+  --accent: #8f9bff; --accent-ink: #0f1220; --accent-soft: #232a52; --ok: #5bd39a; --warn: #f0b456; --err: #ff8a80;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 15px; line-height: 1.85; }
+* { box-sizing: border-box; }
+button, textarea { font: inherit; color: inherit; }
+.app { height: 100%; display: flex; flex-direction: column; direction: rtl; }
+.top {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-block: 10px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--line); background: var(--bg);
+}
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.mark { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 700; font-size: 13px; flex: none; }
+.brand h1 { font-size: 15px; margin: 0; font-weight: 700; }
+.meter { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.meter .bar { width: 72px; height: 5px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.meter .bar i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .4s; }
+.ghost { background: none; border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; font-size: 13px; color: var(--muted); cursor: pointer; }
+.ghost:hover { color: var(--ink); border-color: var(--muted); }
+.feed { flex: 1; overflow-y: auto; padding-block: 18px 8px; }
+.col { max-width: 780px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 14px; }
+.msg { display: flex; flex-direction: column; gap: 8px; max-width: 100%; min-width: 0; }
+.msg.user { align-items: flex-start; }
+.msg.ai { align-items: flex-end; }
+.bubble { padding: 10px 14px; border-radius: 14px; white-space: pre-wrap; overflow-wrap: anywhere; max-width: 88%; }
+.user .bubble { background: var(--accent); color: var(--accent-ink); border-bottom-right-radius: 4px; }
+.ai .bubble { background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.bubble.err { border-color: var(--err); color: var(--err); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; max-width: 88%; }
+.chip { border: 1px solid var(--accent); color: var(--accent); background: var(--surface); border-radius: 999px; padding: 3px 12px; font-size: 13px; cursor: pointer; }
+.chip:hover { background: var(--accent-soft); }
+.typing { display: inline-flex; gap: 4px; padding: 14px; }
+.typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: blink 1.2s infinite; }
+.typing span:nth-child(2) { animation-delay: .2s; } .typing span:nth-child(3) { animation-delay: .4s; }
+@keyframes blink { 0%, 80%, 100% { opacity: .25; } 40% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .typing span { animation: none; opacity: .6; } .meter .bar i { transition: none; } }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; width: 100%; min-width: 0; }
+.card h3 { margin: 0 0 8px; font-size: 14px; }
+.brief { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; font-size: 13.5px; margin: 0; }
+.brief dt { color: var(--muted); }
+.brief dd { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; min-width: 0; }
+.brief dd.gap { color: var(--warn); }
+.row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.btn { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: 7px 16px; font-weight: 500; cursor: pointer; }
+.btn.sec { background: var(--accent-soft); color: var(--accent); }
+.btn:disabled { opacity: .55; cursor: default; }
+.btn:focus-visible, .chip:focus-visible, .ghost:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13.5px; }
+.steps li::before { content: "○"; margin-left: 8px; color: var(--muted); }
+.steps li.run::before { content: "◐"; color: var(--accent); }
+.steps li.done::before { content: "●"; color: var(--ok); }
+.steps li.fail::before { content: "×"; color: var(--err); }
+.note { font-size: 13px; color: var(--muted); margin-top: 8px; }
+.note.ok { color: var(--ok); } .note.err { color: var(--err); }
+.note a { color: var(--accent); }
+.doc { max-height: 62vh; overflow: auto; border: 1px solid var(--line); border-radius: 10px; padding: 8px 18px 18px; background: var(--bg); }
+.doc.open { max-height: none; }
+.doc h1 { font-size: 20px; margin: 12px 0 8px; text-wrap: balance; }
+.doc h2 { font-size: 17px; margin: 22px 0 6px; padding-top: 10px; border-top: 1px solid var(--line); text-wrap: balance; }
+.doc h3 { font-size: 15px; margin: 14px 0 4px; }
+.doc h4 { font-size: 14px; margin: 12px 0 4px; }
+.doc p, .doc li { font-size: 14px; }
+.doc table { border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 13px; }
+.doc .tw { overflow-x: auto; }
+.doc th, .doc td { border: 1px solid var(--line); padding: 5px 8px; text-align: right; vertical-align: top; }
+.doc th { background: var(--accent-soft); }
+.doc code { font-family: var(--mono); font-size: 12.5px; direction: ltr; unicode-bidi: isolate; }
+.composer { border-top: 1px solid var(--line); background: var(--bg); padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px)); }
+.composer .col { flex-direction: row; align-items: flex-end; gap: 8px; }
+.composer textarea { flex: 1; min-width: 0; resize: none; max-height: 180px; border: 1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 9px 12px; line-height: 1.7; }
+.composer .btn { padding: 9px 16px; }
+.hint { font-size: 12px; color: var(--muted); text-align: center; padding-top: 4px; }
+@media (max-width: 480px) { .meter .label { display: none; } .bubble, .chips { max-width: 96%; } }
+</style>
+
+<div class="app" id="app">
+  <header class="top">
+    <div class="brand"><div class="mark">PRD</div><h1>دستیار PRD ایران‌سرور</h1></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="meter" title="میزان کامل بودن اطلاعات"><span class="label">اطلاعات</span><span class="bar"><i id="meterBar"></i></span><span id="meterVal">۰٪</span></div>
+      <button class="ghost" id="resetBtn" type="button">سند جدید</button>
+    </div>
+  </header>
+  <main class="feed" id="feed"><div class="col" id="msgs"></div></main>
+  <footer class="composer">
+    <div class="col">
+      <textarea id="input" rows="1" placeholder="درباره قابلیتی که می‌خواهید برایش PRD بنویسید بگویید..." aria-label="پیام"></textarea>
+      <button class="btn" id="sendBtn" type="button">ارسال</button>
+    </div>
+    <div class="hint" id="hint">Enter برای ارسال، Shift+Enter برای خط جدید</div>
+  </footer>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---------- Knowledge: brief fields and the team's PRD template ----------
+  const FIELDS = [
+    ["title", "عنوان قابلیت", true],
+    ["problem", "مشکل و دلیل", true],
+    ["background", "وضع فعلی", false],
+    ["audience", "مخاطب و سگمنت‌ها", true],
+    ["scope_in", "محدوده این نسخه", true],
+    ["scope_out", "خارج از محدوده", false],
+    ["flow", "مسیر کاربر", true],
+    ["requirements", "نیازمندی‌های کلیدی", false],
+    ["success", "معیار موفقیت", true],
+    ["pricing", "قواعد مالی", false],
+    ["lifecycle", "نگه‌داری و چرخه عمر", false],
+    ["states", "وضعیت‌ها و خطاها", false],
+    ["constraints", "محدودیت‌های فنی", false],
+    ["competitors", "رقبا", false],
+    ["team", "تیم سند", false],
+    ["links", "لینک‌ها و مستندات", false]
+  ];
+
+  const INTERVIEW_RULES = `You are the interviewer of an Iranserver PRD agent. You talk with a product manager in Persian and collect what is needed to write a PRD in the team's fixed format. Ask questions until the brief is complete, then let them start writing.
+
+Brief fields (JSON keys): title (feature name), problem (what is wrong today and why it matters), background (how it works today, current flow, related products), audience (who uses it, customer segments and jobs to be done), scope_in (what is in this version), scope_out (what is deliberately out, and why), flow (the customer's steps in order), requirements (key features), success (how success is measured, with numbers if known), pricing (billing rules and formulas, or "ندارد"), lifecycle (retention and lifecycle rules, or "ندارد"), states (service states and error cases), constraints (technical constraints and dependencies), competitors (competitor patterns, or "ندارد"), team (owner, designer, developers, QA, stakeholders), links (related docs and links).
+Required before writing: title, problem, audience, scope_in, flow, success.
+
+Rules:
+- Ask ONE question per turn (two only if they are tightly related). Short, plain Persian. Start with a one-line acknowledgement of what you understood, then the question.
+- Ask the most important missing thing first: required fields, then pricing, states, lifecycle, constraints, competitors, team.
+- Extract everything the user already said into the brief, in Persian, concise but complete. Merge with the existing brief; never drop facts the user gave. Do not rewrite the user's facts into something else.
+- Never invent facts, numbers, names or competitor details. If the user does not know or skips, store "[نیازمند تصمیم]" for that field and move on. If a field does not apply, store "ندارد".
+- Offer 2-4 short quick-reply choices when the answer is likely one of a few options (always include a skip option like "فعلاً نمی‌دانم" for optional fields). Otherwise return an empty array.
+- Do not ask about something the user already answered. Do not ask more than about 12 questions in total; after that, fill gaps with "[نیازمند تصمیم]".
+- Set ready=true when all required fields are filled and every optional field has an answer, "ندارد" or "[نیازمند تصمیم]", or when the user asks to start writing. When ready, the reply says the information is complete and they can press the write button or add anything else.
+- complete is 0-100: how complete the brief is for writing a good PRD.
+
+Reply with only this JSON object:
+{"brief": {<all fields that have content>}, "reply": "<Persian message>", "choices": ["..."], "complete": 0, "ready": false}`;
+
+  const COMMON_WRITE = `You write part of an Iranserver PRD in Persian, in the team's fixed format. Write fully in Persian; keep English only for product names, technical terms the team uses in English (Volume, Snapshot, API, flavor, WHMCS), code, paths, IDs (FR-01, KR1) and the priorities Must, Should, Could.
+Rules:
+- Use exactly the headings given below, in that order. Do not add sections, subsections or table columns that are not listed.
+- Base everything on the brief and the conversation. Never invent facts, people, baselines, numbers or competitor details. Where something is unknown write [نیازمند تصمیم] in place. For unknown competitor cells write [تکمیل شود].
+- Be concise: a section with little to say gets one or two lines. Do not repeat what other sections already say.
+- Output HTML using only these tags: h2 h3 h4 p ul ol li table tr th td b strong code br. No attributes, no CSS, no markdown, no code fences.
+- Start each top-level section with a line containing only its marker, exactly like @@1@@, then that section's HTML.`;
+
+  const GROUPS = [
+    { label: "خلاصه مدیریتی، مسئله و تعریف موفقیت", ids: ["1", "2", "3"], spec: `
+@@1@@ <h2>-----1. خلاصه مدیریتی (TLDR)</h2> What we offer, to whom, and the main rules, in a few short paragraphs. If there are independent concepts, name them as bullets with a bold lead. If pricing is in scope, put the formula in <b> on its own paragraph, then the key billing and cancellation rules as bullets.
+@@2@@ <h2>-----2. تعریف مشکل و مسئله</h2> then <h3>2.1 پیش‌زمینه</h3> (how it works today and why it is not enough; competitor patterns as a short list only if they shaped the decision) and <h3>2.2 مشکل یا مسئله</h3> (bullets, one problem each).
+@@3@@ <h2>-----3. تعریف موفقیت</h2> then <h3>هدف اصلی</h3> (one paragraph), <h3>ارزش برای کسب‌وکار و مشتری</h3> (three bullets starting <b>برای مشتری:</b>, <b>برای کسب‌وکار:</b>, <b>برای عملیات:</b>), <h3>نتایج کلیدی (Key Results)</h3> (table with header row: # | نتیجه کلیدی | خط مبنا | هدف اولیه | توضیح; rows KR1...; use "فاقد خط مبنا" when there is no baseline), <h3>شاخص‌های تکمیلی</h3> (bullets), <h3>موارد خارج از محدوده</h3> (bullets, each with a short why or when).` },
+    { label: "بخش بازار", ids: ["4"], spec: `
+@@4@@ <h2>-----4. بخش بازار (Market Segment)</h2> then <h3>4.1 پرسونای اصلی</h3> (one paragraph), <h3>4.2 سگمنت های بازار بر اساس Job-to-be-Done</h3> (table: زیرگروه | Job-to-be-Done | راه‌حل این فاز), <h3>4.3 نقشه سفر مشتری</h3> (table: مرحله | اقدام کاربر | سؤال یا نگرانی | پاسخ محصول).` },
+    { label: "راه‌حل", ids: ["5"], spec: `
+@@5@@ <h2>-----5. راه‌حل (Solution)</h2> then
+<h3>5.1 تجربه کاربری و مسیر کاربر (UX / Flows)</h3> with one <h4>مرحله ۱ — ...</h4> per step of the customer flow, in order, each with bullets (small tables only when comparing options).
+<h3>5.2 ویژگی‌های کلیدی و نیازمندی‌ها</h3> table: شناسه | نیازمندی | اولویت (FR-01..., Must/Should/Could).
+<h3>5.3 قواعد مالی و درآمدی</h3> ONLY if the feature has pricing: <h4>5.3.1 ...</h4> subsections, each formula in <b> on its own paragraph, rules as bullets. Prices come from the price catalog; the frontend only shows the breakdown the backend returns.
+<h3>5.4 قواعد نگه‌داری و چرخه عمر</h3> ONLY if there are retention or lifecycle rules: table موضوع | سیاست فاز اول.
+<h3>5.5 وضعیت‌ها، خطاها و حالت‌های لبه</h3> table وضعیت | معنی, then <p>قواعد خطا:</p> and bullets.
+<h3>5.6 محتوا و اعلان‌های ضروری UI</h3> for each message: <p><b>title</b></p> then the exact Persian copy the customer sees, with placeholders like {deadline}.
+Renumber 5.5 and 5.6 to keep numbers continuous if 5.3 or 5.4 is left out.` },
+    { label: "محدودیت‌ها، رقبا، پرسش‌ها و وایرفریم", ids: ["6", "7", "8", "9"], spec: `
+@@6@@ <h2>-----6. محدودیت های فنی</h2> then <h3>6.1 دامنه فنی و وابستگی‌ها</h3> (bullets: technical scope, platform constraints, dependencies).
+@@7@@ <h2>-----۷. تحلیل رفتار رقبای داخلی و خارجی در نحوه پلن‌بندی محصول</h2> table رقیب | الگوی اصلی | تصمیم ایران‌سرور, then <p>دلایل تصمیم:</p> and bullets. Only competitors the user named or that are clearly relevant; mark anything unverified with "پیش از تصویب تأیید شود". If no competitor information, one row with [تکمیل شود].
+@@8@@ <h2>-----۸. پرسش‌های متداول فنی و محصولی</h2> 6-10 likely questions from customers, support and developers, each as <h3>question؟</h3><p>short answer</p>, then <h3>مستندات فنی مرجع</h3> with the links from the brief (or [تکمیل شود]).
+@@9@@ <h2>-----9. وایرفریم</h2> <p>[وایرفریم‌ها توسط طراح تهیه و پیوست شود.]</p>` }
+  ];
+
+  const REVISE_RULES = `You revise an Iranserver PRD written in Persian in the team's fixed format. The user asks for a change or asks a question about the document.
+Rules: keep the fixed headings and structure; never add sections, subsections or table columns that the document format does not have; never invent facts; write in Persian with the same HTML tags (h2 h3 h4 p ul ol li table tr th td b strong code br, no attributes).
+Output: first a line @@REPLY@@ followed by a short Persian message to the user (what you changed, or the answer to their question, and any section it affects). Then, ONLY for sections you changed, a line with the section marker (@@1@@ ... @@9@@) followed by that section's complete new HTML. If nothing needs to change, output only the reply.`;
+
+  const NOTICE = "نکته مهم: لطفا هر موردی که در این سند در نظر گرفته نشده است و ابهام دارد را خواهشمند است در قالب کامنت اعلام بفرمایید تا در سند اعمال شود. همچنین در صورت عدم اعلام به معنای موافقت با سند در نظر گرفته میشود.";
+  const TOC = ["نگاه کلی", "1. خلاصه مدیریتی (TLDR)", "2. تعریف مشکل و مسئله", "3. تعریف موفقیت", "4. بخش بازار (Market Segment)", "5. راه‌حل (Solution)", "6. محدودیت های فنی", "۷. تحلیل رفتار رقبای داخلی و خارجی در نحوه پلن‌بندی محصول", "۸. پرسش‌های متداول فنی و محصولی", "9. وایرفریم"];
+
+  // ---------- State ----------
+  const KEY = "iranserver-prd-agent-v1";
+  const fresh = () => ({
+    stage: "interview", brief: {}, complete: 0, version: "0.1.0", doc: null,
+    turns: [{ role: "ai", text: "سلام! من سند PRD را با همان ساختار تیم می‌نویسم.\nاول چند سؤال می‌پرسم تا اطلاعات کامل شود، بعد سند را می‌نویسم.\n\nبرای شروع بگویید درباره چه قابلیتی است و چه مشکلی را حل می‌کند؟ هر چه می‌دانید بنویسید، لینک یا متن آماده هم بفرستید.", choices: ["بکاپ خودکار برای سرور ابری", "انتخاب زون در دیتاسنتر", "قابلیت دیگری دارم"] }]
+  });
+  let S = load() || fresh();
+  let busy = false;
+  let cap = { sample: undefined, mcp: undefined, downloads: undefined };
+
+  function load() { try { const v = JSON.parse(localStorage.getItem(KEY) || "null"); return v && v.turns ? v : null; } catch { return null; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch {} }
+
+  // ---------- Helpers ----------
+  const $ = (id) => document.getElementById(id);
+  const fa = (n) => String(n).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  const ALLOWED = new Set(["H1", "H2", "H3", "H4", "P", "UL", "OL", "LI", "TABLE", "THEAD", "TBODY", "TR", "TH", "TD", "B", "STRONG", "CODE", "BR", "EM", "I"]);
+
+  function clean(html) {
+    const doc = new DOMParser().parseFromString("<div>" + String(html || "").replace(/```[a-z]*\n?|```/gi, "") + "</div>", "text/html");
+    const walk = (node) => {
+      for (const ch of [...node.childNodes]) {
+        if (ch.nodeType === 1) {
+          if (!ALLOWED.has(ch.tagName)) { walk(ch); ch.replaceWith(...ch.childNodes); continue; }
+          for (const a of [...ch.attributes]) ch.removeAttribute(a.name);
+          walk(ch);
+        } else if (ch.nodeType !== 3) ch.remove();
+      }
+    };
+    const root = doc.body.firstChild; walk(root);
+    return root.innerHTML.trim();
+  }
+
+  function splitMarkers(text) {
+    const out = {}; const re = /@@\s*(REPLY|\d)\s*@@/g; let m, last = null, lastIdx = 0;
+    while ((m = re.exec(text))) { if (last) out[last] = text.slice(lastIdx, m.index).trim(); last = m[1]; lastIdx = re.lastIndex; }
+    if (last) out[last] = text.slice(lastIdx).trim();
+    return out;
+  }
+
+  const plain = (html) => { const d = document.createElement("div"); d.innerHTML = html; return d.textContent.replace(/\s+\n/g, "\n").trim(); };
+  const team = () => S.brief.team || "";
+
+  function headHtml() {
+    const t = S.brief.title || "سند محصول";
+    const rows = [["نسخه سند", S.version], ["وضعیت داکیومنت", "پیش‌نویس"], ["مالک", "[تکمیل شود]"], ["طراح", "[تکمیل شود]"], ["تیم توسعه", "[تکمیل شود]"], ["تضمین کیفیت", "[تکمیل شود]"], ["ذی نفعان سند", "[تکمیل شود]"], ["تاریخ تایید و انتشار", ""], ["مستندات تکمیلی", S.brief.links && !/^ندارد$/.test(S.brief.links) ? S.brief.links : ""]];
+    const teamNote = team() && !/نیازمند تصمیم|ندارد/.test(team()) ? `<p>تیم اعلام‌شده: ${esc(team())}</p>` : "";
+    return `<h1>${esc(t)}</h1><p><b>نگاه کلی</b></p><table>${rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join("")}</table>${teamNote}<p><b>${NOTICE}</b></p><ul>${TOC.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+  }
+
+  function docHtml() {
+    if (!S.doc) return "";
+    return headHtml() + ["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((id) => S.doc[id] || "").join("");
+  }
+
+  function exportHtml() {
+    let body = docHtml().replace(/<table>/g, '<table border="1" style="border-collapse:collapse">');
+    return `<html dir="rtl" lang="fa"><head><meta charset="utf-8"><title>${esc(S.brief.title || "PRD")}</title></head><body dir="rtl" style="font-family:Tahoma,Arial,sans-serif">${body}</body></html>`;
+  }
+
+  function transcript(maxChars) {
+    const lines = S.turns.filter((t) => t.role === "user" || (t.role === "ai" && !t.kind)).map((t) => (t.role === "user" ? "کاربر: " : "ایجنت: ") + t.text);
+    let s = lines.join("\n"); if (s.length > maxChars) s = "…\n" + s.slice(-maxChars); return s;
+  }
+
+  // ---------- Rendering ----------
+  function render() {
+    const box = $("msgs"); box.textContent = "";
+    for (const t of S.turns) box.append(renderTurn(t));
+    if (busy && S.stage !== "writing") { const m = el("div", "msg ai"); const b = el("div", "bubble typing"); b.append(el("span"), el("span"), el("span")); m.append(b); box.append(m); }
+    $("meterBar").style.width = Math.max(0, Math.min(100, S.complete || 0)) + "%";
+    $("meterVal").textContent = fa(Math.round(S.complete || 0)) + "٪";
+    $("sendBtn").disabled = busy;
+    $("input").placeholder = S.doc ? "تغییری لازم است؟ مثلاً: «بخش ۵.۵ وضعیت معلق را هم داشته باشد»" : "پاسخ خود را بنویسید...";
+    requestAnimationFrame(() => { const f = $("feed"); f.scrollTop = f.scrollHeight; });
+  }
+
+  function renderTurn(t) {
+    const m = el("div", "msg " + (t.role === "user" ? "user" : "ai"));
+    if (t.kind === "ready") { m.append(readyCard()); return m; }
+    if (t.kind === "progress") { m.append(progressCard(t)); return m; }
+    if (t.kind === "doc") { m.append(docCard()); return m; }
+    const b = el("div", "bubble" + (t.err ? " err" : ""), t.text); m.append(b);
+    if (t.choices && t.choices.length && t === lastAi() && !busy && !S.doc) {
+      const c = el("div", "chips");
+      for (const ch of t.choices) { const x = el("button", "chip", ch); x.type = "button"; x.onclick = () => send(ch); c.append(x); }
+      m.append(c);
+    }
+    return m;
+  }
+  const lastAi = () => { for (let i = S.turns.length - 1; i >= 0; i--) if (S.turns[i].role === "ai") return S.turns[i]; return null; };
+
+  function readyCard() {
+    const c = el("div", "card"); c.append(el("h3", null, "خلاصه اطلاعات برای نوشتن سند"));
+    const dl = el("dl", "brief");
+    for (const [k, label] of FIELDS) {
+      const v = S.brief[k]; if (!v) continue;
+      dl.append(el("dt", null, label));
+      const dd = el("dd", /نیازمند تصمیم/.test(v) ? "gap" : null, v); dl.append(dd);
+    }
+    c.append(dl);
+    const row = el("div", "row");
+    const go = el("button", "btn", S.doc ? "بازنویسی کامل سند" : "نوشتن سند"); go.type = "button"; go.disabled = busy || S.stage === "writing"; go.onclick = writeDoc;
+    row.append(go); c.append(row);
+    c.append(el("div", "note", "اگر چیزی جا مانده یا اشتباه است، همین‌جا در پیام بنویسید تا اصلاح شود."));
+    return c;
+  }
+
+  function progressCard(t) {
+    const c = el("div", "card"); c.append(el("h3", null, "در حال نوشتن سند"));
+    const ul = el("ul", "steps");
+    GROUPS.forEach((g, i) => { const li = el("li", t.states?.[i] || "", g.label); ul.append(li); });
+    c.append(ul);
+    if (t.note) c.append(el("div", "note" + (t.err ? " err" : ""), t.note));
+    return c;
+  }
+
+  function docCard() {
+    const c = el("div", "card");
+    c.append(el("h3", null, "سند PRD — نسخه " + fa(S.version)));
+    const d = el("div", "doc"); d.innerHTML = docHtml();
+    for (const tb of d.querySelectorAll("table")) { const w = el("div", "tw"); tb.replaceWith(w); w.append(tb); }
+    c.append(d);
+    const row = el("div", "row");
+    const gd = el("button", "btn", "ساخت گوگل داکس"); gd.type = "button"; gd.onclick = () => toGoogleDoc(gd, status);
+    const dl = el("button", "btn sec", "دانلود فایل HTML"); dl.type = "button"; dl.onclick = () => download(status);
+    const cp = el("button", "btn sec", "کپی متن"); cp.type = "button"; cp.onclick = () => copyText(status, d);
+    const ex = el("button", "btn sec", "نمایش کامل"); ex.type = "button"; ex.onclick = () => { d.classList.toggle("open"); ex.textContent = d.classList.contains("open") ? "نمایش فشرده" : "نمایش کامل"; };
+    if (cap.mcp === null) gd.hidden = true;
+    if (cap.downloads === null) dl.hidden = true;
+    row.append(gd, dl, cp, ex); c.append(row);
+    const status = el("div", "note"); c.append(status);
+    if (S.gdoc) { status.className = "note ok"; status.innerHTML = `آخرین گوگل داکس: <a href="${esc(S.gdoc)}" target="_blank" rel="noopener">باز کردن سند</a>`; }
+    c.append(el("div", "note", "برای تغییر، در پیام بنویسید چه چیزی عوض شود. جاهای [نیازمند تصمیم] و [تکمیل شود] را قبل از انتشار پر کنید."));
+    return c;
+  }
+
+  // ---------- Claude calls ----------
+  async function getSample() {
+    if (cap.sample === undefined) cap.sample = await window.claude?.use?.("sample") ?? null;
+    return cap.sample;
+  }
+  function sampleErr(e) {
+    const c = e && e.code;
+    if (c === "not_granted") return "اجازه استفاده از Claude داده نشد. برای ادامه، صفحه را دوباره باز کنید و اجازه دهید.";
+    if (c === "sampling_disabled" || c === "capability_disabled" || c === "not_declared") return "Claude در این حساب یا این نما در دسترس نیست.";
+    if (c === "rate_limited") return "تعداد درخواست‌ها زیاد شد یا سهمیه استفاده پر شده. کمی بعد دوباره امتحان کنید.";
+    if (c === "session_expired") return "نشست شما منقضی شده. دوباره وارد claude.ai شوید.";
+    if (c === "prompt_too_large") return "متن گفتگو خیلی بلند شد. سند جدید شروع کنید یا خلاصه‌تر بنویسید.";
+    if (c === "invalid_json") return "پاسخ قابل خواندن نبود. همان پیام را دوباره بفرستید.";
+    if (c === "refused") return "Claude به این درخواست پاسخ نداد. آن را جور دیگری بنویسید.";
+    return "ارتباط با Claude قطع شد. دوباره امتحان کنید.";
+  }
+
+  async function send(textArg) {
+    const text = (textArg ?? $("input").value).trim();
+    if (!text || busy) return;
+    $("input").value = ""; autosize();
+    S.turns.push({ role: "user", text }); save();
+    if (S.doc) return revise(text);
+    return interview(text);
+  }
+
+  async function interview(text) {
+    const sample = await getSample();
+    if (!sample) { S.turns.push({ role: "ai", text: "این صفحه به Claude دسترسی ندارد. آن را داخل claude.ai باز کنید.", err: true }); save(); render(); return; }
+    busy = true; render();
+    try {
+      const prompt = INTERVIEW_RULES + "\n\nCurrent brief (JSON):\n" + JSON.stringify(S.brief) + "\n\nConversation so far:\n" + transcript(12000) + "\n\nThe user's newest message is the last 'کاربر' line above.";
+      const r = await sample.json(prompt, { cache: false });
+      if (r && typeof r === "object") {
+        if (r.brief && typeof r.brief === "object") for (const [k] of FIELDS) if (typeof r.brief[k] === "string" && r.brief[k].trim()) S.brief[k] = r.brief[k].trim();
+        if (typeof r.complete === "number") S.complete = r.complete;
+        const choices = Array.isArray(r.choices) ? r.choices.filter((x) => typeof x === "string").slice(0, 4) : [];
+        S.turns.push({ role: "ai", text: String(r.reply || "ادامه بدهید."), choices });
+        const missing = FIELDS.filter(([k, , req]) => req && !S.brief[k]);
+        if (r.ready && !missing.length) { S.stage = "ready"; S.complete = Math.max(S.complete, 90); S.turns = S.turns.filter((t) => t.kind !== "ready"); S.turns.push({ role: "ai", kind: "ready" }); }
+      }
+    } catch (e) {
+      S.turns.push({ role: "ai", text: sampleErr(e), err: true });
+    } finally { busy = false; save(); render(); }
+  }
+
+  async function writeDoc() {
+    if (busy) return;
+    const sample = await getSample(); if (!sample) return;
+    busy = true; S.stage = "writing";
+    if (S.doc) { const [a, b, c] = S.version.split(".").map(Number); S.version = `${a}.${b + 1}.0`; }
+    const prog = { role: "ai", kind: "progress", states: GROUPS.map(() => "") };
+    S.turns = S.turns.filter((t) => t.kind !== "doc");
+    S.turns.push(prog); render();
+    const out = {};
+    const ctx = "Brief (JSON):\n" + JSON.stringify(S.brief) + "\n\nConversation with the product manager:\n" + transcript(10000);
+    try {
+      for (let i = 0; i < GROUPS.length; i++) {
+        prog.states[i] = "run"; render();
+        const before = Object.keys(out).length ? "\n\nAlready written sections (do not repeat their content):\n" + plain(Object.values(out).join("")).slice(0, 7000) : "";
+        const { text, truncated } = await sample(COMMON_WRITE + "\n\nSections to write now:" + GROUPS[i].spec + "\n\n" + ctx + before, { modelTier: "default", cache: false });
+        const parts = splitMarkers(text);
+        let got = 0;
+        for (const id of GROUPS[i].ids) if (parts[id]) { out[id] = clean(parts[id]); got++; }
+        if (!got) throw { code: "format" };
+        prog.states[i] = "done";
+        if (truncated) prog.note = "بخشی از متن به سقف طول رسید و ممکن است ناقص باشد. در پیام بخواهید همان بخش کامل شود.";
+        render();
+      }
+      S.doc = out; S.stage = "doc"; S.gdoc = null;
+      S.turns = S.turns.filter((t) => t !== prog);
+      S.turns.push({ role: "ai", text: "سند نوشته شد. پایین ببینید، و هر تغییری لازم است در پیام بنویسید." });
+      S.turns.push({ role: "ai", kind: "doc" });
+    } catch (e) {
+      const i = prog.states.indexOf("run"); if (i >= 0) prog.states[i] = "fail";
+      prog.err = true; prog.note = e && e.code === "format" ? "خروجی با قالب سند جور نبود. دوباره «نوشتن سند» را بزنید." : sampleErr(e);
+      S.stage = S.doc ? "doc" : "ready";
+      if (!S.turns.some((t) => t.kind === "ready")) S.turns.push({ role: "ai", kind: "ready" });
+    } finally { busy = false; save(); render(); }
+  }
+
+  async function revise(text) {
+    const sample = await getSample(); if (!sample) return;
+    busy = true; render();
+    try {
+      const docText = ["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((id) => `@@${id}@@\n${S.doc[id] || ""}`).join("\n");
+      const prompt = REVISE_RULES + "\n\nBrief (JSON):\n" + JSON.stringify(S.brief) + "\n\nCurrent document sections:\n" + docText + "\n\nThe user's request:\n" + text;
+      const { text: outText } = await sample(prompt, { modelTier: "default", cache: false });
+      const parts = splitMarkers(outText);
+      const changed = Object.keys(parts).filter((k) => /^\d$/.test(k) && parts[k]);
+      if (changed.length) {
+        for (const id of changed) S.doc[id] = clean(parts[id]);
+        const [a, b] = S.version.split(".").map(Number); S.version = `${a}.${b + 1}.0`; S.gdoc = null;
+        S.turns = S.turns.filter((t) => t.kind !== "doc");
+        S.turns.push({ role: "ai", text: (parts.REPLY || "اعمال شد.") + "\n\nبخش‌های تغییرکرده: " + changed.map(fa).join("، ") });
+        S.turns.push({ role: "ai", kind: "doc" });
+      } else {
+        S.turns.push({ role: "ai", text: parts.REPLY || outText.trim() });
+      }
+    } catch (e) {
+      S.turns.push({ role: "ai", text: sampleErr(e), err: true });
+    } finally { busy = false; save(); render(); }
+  }
+
+  // ---------- Outputs ----------
+  async function toGoogleDoc(btn, status) {
+    if (cap.mcp === undefined) cap.mcp = await window.claude?.use?.("mcp") ?? null;
+    if (!cap.mcp) { status.className = "note err"; status.textContent = "اتصال گوگل درایو در این نما در دسترس نیست. از «دانلود فایل HTML» استفاده کنید."; btn.hidden = true; return; }
+    btn.disabled = true; status.className = "note"; status.textContent = "در حال ساخت سند در گوگل درایو...";
+    try {
+      const title = "PRD - " + (S.brief.title || "سند محصول") + " (نسخه " + S.version + ")";
+      const r = await cap.mcp.callTool("Google Drive", "create_file", { title, textContent: exportHtml(), contentMimeType: "text/html" });
+      const p = r && r.payload; const url = p && typeof p === "object" ? (p.viewUrl || p.webViewLink || (p.id ? "https://docs.google.com/document/d/" + p.id + "/edit" : "")) : "";
+      if (url) { S.gdoc = url; save(); status.className = "note ok"; status.innerHTML = `سند ساخته شد: <a href="${esc(url)}" target="_blank" rel="noopener">باز کردن در گوگل داکس</a>`; }
+      else { status.className = "note ok"; status.textContent = "سند در گوگل درایو شما ساخته شد."; }
+    } catch (e) {
+      const c = e && e.code; status.className = "note err";
+      if (c === "server_not_connected" || c === "selection_required") status.textContent = "گوگل درایو به حساب شما وصل نیست. آن را از claude.ai › Settings › Connectors اضافه کنید و دوباره بزنید.";
+      else if (c === "needs_reauth") status.textContent = "اتصال گوگل درایو منقضی شده. آن را در claude.ai › Settings › Connectors دوباره وصل کنید.";
+      else if (c === "not_in_manifest" || c === "approval_required" || c === "not_granted") status.textContent = "برای ساخت سند باید دسترسی به گوگل درایو را تأیید کنید. دوباره دکمه را بزنید و اجازه دهید.";
+      else if (c === "blocked_by_policy") status.textContent = "سیاست سازمان اجازه ساخت فایل در گوگل درایو را نمی‌دهد. از دانلود فایل استفاده کنید.";
+      else if (c === "tool_error") status.textContent = "گوگل درایو سند را نساخت: " + String(e.message || "").slice(0, 160);
+      else status.textContent = "معلوم نیست سند ساخته شد یا نه. قبل از زدن دوباره، گوگل درایو را نگاه کنید.";
+    } finally { btn.disabled = false; }
+  }
+
+  async function download(status) {
+    if (cap.downloads === undefined) cap.downloads = await window.claude?.use?.("downloads") ?? null;
+    if (!cap.downloads) { status.className = "note err"; status.textContent = "دانلود در این نما در دسترس نیست. از «کپی متن» استفاده کنید."; return; }
+    try {
+      const name = "PRD-" + (S.brief.title || "doc").replace(/[\\/:*?"<>|\n]+/g, " ").trim().slice(0, 60) + "-v" + S.version + ".html";
+      await cap.downloads.save({ filename: name, data: exportHtml() });
+      status.className = "note ok"; status.textContent = "فایل ذخیره شد. می‌توانید آن را در گوگل درایو آپلود کنید تا به گوگل داکس تبدیل شود.";
+    } catch (e) {
+      if (e && e.code === "declined") return;
+      status.className = "note err"; status.textContent = e && e.code === "rate_limited" ? "یک ذخیره دیگر در جریان است. کمی بعد دوباره بزنید." : "ذخیره فایل انجام نشد.";
+    }
+  }
+
+  async function copyText(status, docEl) {
+    const t = docEl.innerText;
+    try { await navigator.clipboard.writeText(t); status.className = "note ok"; status.textContent = "متن سند کپی شد."; }
+    catch { const r = document.createRange(); r.selectNodeContents(docEl); const s = getSelection(); s.removeAllRanges(); s.addRange(r); status.className = "note"; status.textContent = "متن انتخاب شد؛ با Ctrl+C کپی کنید."; }
+  }
+
+  // ---------- Wiring ----------
+  const ta = $("input");
+  function autosize() { ta.style.height = "auto"; ta.style.height = Math.min(ta.scrollHeight, 180) + "px"; }
+  ta.addEventListener("input", autosize);
+  ta.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); send(); } });
+  $("sendBtn").onclick = () => send();
+  let armed = false;
+  $("resetBtn").onclick = () => {
+    if (!armed && S.turns.length > 1) { armed = true; $("resetBtn").textContent = "مطمئنید؟ دوباره بزنید"; setTimeout(() => { armed = false; $("resetBtn").textContent = "سند جدید"; }, 3500); return; }
+    armed = false; $("resetBtn").textContent = "سند جدید"; S = fresh(); save(); render(); ta.focus();
+  };
+  if (S.stage === "writing") { S.stage = S.doc ? "doc" : "ready"; S.turns = S.turns.filter((t) => t.kind !== "progress"); if (!S.doc && !S.turns.some((t) => t.kind === "ready")) S.turns.push({ role: "ai", kind: "ready" }); }
+  render();
+  getSample().then((s) => { if (!s) { $("hint").textContent = "برای گفتگو، این صفحه را داخل claude.ai باز کنید."; } });
+})();
+</script>

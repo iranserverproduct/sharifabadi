@@ -1,0 +1,5 @@
+{
+  "sample": {},
+  "mcp": { "servers": [{ "server": "Google Drive", "tools": ["create_file"] }] },
+  "downloads": true
+}
