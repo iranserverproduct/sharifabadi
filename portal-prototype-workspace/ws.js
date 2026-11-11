@@ -419,10 +419,10 @@ async function missingCss(ops, pageCss, signal) {
   ops.forEach(o => { if (o.html) clean(o.html).querySelectorAll('[class]').forEach(e => e.classList.forEach(add)); if (o.op === 'attr' && o.name === 'class') String(o.value).split(/\s+/).forEach(add); });
   if (!want.size) return '';
   step('کلاس‌هایی که در استایل پورتال نیست: ' + [...want].slice(0, 12).join(' ') + (want.size > 12 ? ' …' : ''));
-  const { text } = await S.sample(
+  const { text } = await ask(
 `These class names appear in new HTML for the Iranserver portal prototype, but its stylesheet (Tailwind v4 + PrimeVue) does not define them: ${JSON.stringify([...want].slice(0, 120))}
 Write the CSS declarations each class means in Tailwind v4 (for a variant such as md:flex or hover:bg-x give the declarations of the base utility). Use the portal's color tokens where a color is meant: ${tokens()}
-Font is always peyda. Answer with only a JSON object: {"<class name>":"<declarations>", ...}`, { modelTier: 'default', signal, cache: false });
+Font is always peyda. Answer with only a JSON object: {"<class name>":"<declarations>", ...}`, { signal, cache: false });
   const rules = parseJson(text);
   return Object.entries(rules).map(([c, decl]) => {
     const parts = c.split(':'); parts.pop();
@@ -434,6 +434,34 @@ Font is always peyda. Answer with only a JSON object: {"<class name>":"<declarat
 }
 
 function step(t) { S.log += (S.log ? '\n' : '') + t; ui(); }
+
+// Every agent call runs on Opus 5.5 with low effort; the platform falls back to the tier if the model cannot answer.
+const MODEL = { model: 'claude-opus-5-5', modelTier: 'complex', effort: 'low' };
+
+// The viewer reports no token counts, so usage is estimated from text length (about 3.5 characters a token)
+// plus a flat amount per image, and kept per agent run.
+const IMAGE_TOKENS = 1600;
+const estTokens = s => Math.ceil(String(s || '').length / 3.5);
+let run = null;
+async function ask(text, opts) {
+  const r = await S.sample(text, { ...MODEL, ...opts });
+  if (run) {
+    run.calls++;
+    run.inTok += estTokens(text) + (opts.images ? [].concat(opts.images).length * IMAGE_TOKENS : 0);
+    run.outTok += estTokens(r.text);
+    run.model = r.modelApplied || 'tier:' + r.modelTierApplied;
+  }
+  if (!r.modelApplied) step('مدل Opus 5.5 در دسترس نبود؛ پاسخ با مدل جایگزین (' + r.modelTierApplied + ') ساخته شد.');
+  return r;
+}
+// the calendar day in Tehran, so a day's usage matches the team's day
+const day = t => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tehran' }).format(t);
+async function saveUsage(p, mode, ok) {
+  if (!run?.calls) return;
+  const now = Date.now();
+  await store.set('ws_usage', store.id(), { day: day(now), at: now, user: S.user.id, userName: S.user.name, route: p.route, pid: p.id,
+    title: p.title, mode: mode || 'build', ok, calls: run.calls, inTok: run.inTok, outTok: run.outTok, model: run.model }).catch(() => {});
+}
 
 // The html an old change inserted or set, so a rebase can make the same change on the new main design.
 function describe(p) {
@@ -448,6 +476,8 @@ async function runAgent(pid, feedback, mode) {
   const f = S.form;
   S.busy = new AbortController(); S.log = ''; S.error = ''; ui();
   const signal = S.busy.signal;
+  run = { calls: 0, inTok: 0, outTok: 0, model: '' };
+  let ok = false;
   try {
     const inputs = { desc: (f.desc || '').trim() };
     const images = mode === 'rebase' ? [] : [...S.files];
@@ -492,8 +522,8 @@ async function runAgent(pid, feedback, mode) {
       let text = prompt(args);
       if (bytes(text) > 240000) { inputs.figmaCode = trim(inputs.figmaCode, 20000); inputs.prdText = trim(inputs.prdText, 20000); text = prompt(args); }
       let shownText = false;
-      const { text: answer } = await S.sample(text, {
-        modelTier: 'complex', signal, images: images.length ? images : undefined, cache: false,
+      const { text: answer } = await ask(text, {
+        signal, images: images.length ? images : undefined, cache: false,
         onText: () => { if (!shownText) { shownText = true; step('ایجنت در حال نوشتن…'); } },
       });
       const r = parseJson(answer);
@@ -513,9 +543,12 @@ async function runAgent(pid, feedback, mode) {
     await saveVersion(pid, out, mode === 'rebase' ? 'به‌روزرسانی روی طرح اصلی نسخه‌ی ' + fa(baseVer) : feedback || inputs.desc || 'اجرای ایجنت');
     step('ذخیره شد.');
     S.form.feedback = '';
+    ok = true;
   } catch (e) {
     S.error = e?.code === 'cancelled' ? 'متوقف شد.' : errText(e);
   } finally {
+    await saveUsage(p, mode, ok);
+    run = null;
     S.busy = null; ui();
   }
 }
@@ -672,7 +705,7 @@ function panel() {
   const u = S.user;
   const q = queue().length;
   const tabs = [['page', 'این صفحه'], ...(u && (u.role === 'admin' || u.role === 'pm') ? [['queue', 'منتظر تأیید من' + (q ? ' (' + fa(q) + ')' : '')]] : []),
-    ['routes', 'همه‌ی روت‌ها'], ...(u?.role === 'admin' ? [['users', 'کاربران']] : []), ['rules', 'قوانین']];
+    ['routes', 'همه‌ی روت‌ها'], ...(u?.role === 'admin' ? [['users', 'کاربران'], ['usage', 'مصرف']] : []), ['rules', 'قوانین']];
   return `<div class="panel">
     <div class="top"><b>فضای کار پروتوتایپ</b><span class="sp"></span>
       ${u ? `<span class="who">${esc(u.name)} · ${ROLES[u.role]}</span><button class="b" data-act="logout">خروج</button>` : `<span class="who">مهمان (فقط مشاهده)</span><button class="b p" data-act="login-view">ورود</button>`}
@@ -681,7 +714,7 @@ function panel() {
     <div class="body">
       ${S.local ? `<div class="note">این نسخه بیرون از Claude باز شده؛ داده‌ها فقط در همین مرورگر ذخیره می‌شوند و ایجنت در دسترس نیست.</div>` : ''}
       ${S.error ? `<div class="err">${esc(S.error)}</div>` : ''}
-      ${S.view === 'login' ? loginView() : S.tab === 'page' ? pageTab() : S.tab === 'queue' ? queueTab() : S.tab === 'routes' ? routesTab() : S.tab === 'users' ? usersTab() : rulesTab()}
+      ${S.view === 'login' ? loginView() : S.tab === 'page' ? pageTab() : S.tab === 'queue' ? queueTab() : S.tab === 'routes' ? routesTab() : S.tab === 'users' ? usersTab() : S.tab === 'usage' ? usageTab() : rulesTab()}
     </div></div>`;
 }
 
@@ -865,6 +898,27 @@ function usersTab() {
     <div class="row" style="margin-top:8px"><button class="b p" data-act="adduser">افزودن</button></div>`;
 }
 
+// Agent usage per day (estimated tokens), newest day first, with each person's share.
+function usageTab() {
+  if (!S.usage) {
+    S.usage = { list: null };
+    store.list('ws_usage').then(l => { S.usage = { list: l }; ui(); }, fail);
+  }
+  if (!S.usage.list) return '<p class="muted">در حال بارگذاری…</p>';
+  const days = {};
+  S.usage.list.forEach(x => {
+    const d = days[x.day] = days[x.day] || { runs: 0, calls: 0, inTok: 0, outTok: 0, people: {} };
+    const pp = d.people[x.userName] = d.people[x.userName] || { runs: 0, tok: 0 };
+    d.runs++; d.calls += x.calls; d.inTok += x.inTok; d.outTok += x.outTok; pp.runs++; pp.tok += x.inTok + x.outTok;
+  });
+  const dayFa = k => new Date(k + 'T12:00:00Z').toLocaleDateString('fa-IR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  const rows = Object.keys(days).sort().reverse();
+  return `<div class="row"><p class="muted" style="flex:1">توکن‌ها تخمینی‌اند (از روی طول متن و تعداد تصویرها)؛ Claude عدد دقیق را به صفحه نمی‌دهد. مدل: Opus 5.5، تلاش کم.</p><button class="b" data-act="reloadusage">به‌روزرسانی</button></div>
+    ${rows.map(k => { const d = days[k]; return `<div class="card"><div class="row"><b>${dayFa(k)}</b><span class="sp"></span><span class="badge">${fa(d.inTok + d.outTok)} توکن</span></div>
+      <div class="muted">${fa(d.runs)} اجرای ایجنت · ${fa(d.calls)} درخواست · ورودی ${fa(d.inTok)} · خروجی ${fa(d.outTok)}</div>
+      ${Object.entries(d.people).sort((a, b) => b[1].tok - a[1].tok).map(([n, x]) => `<div class="row muted" style="margin-top:4px"><span>${esc(n)}</span><span class="sp"></span><span>${fa(x.runs)} اجرا · ${fa(x.tok)} توکن</span></div>`).join('')}</div>`; }).join('') || '<p class="muted">هنوز ایجنتی اجرا نشده.</p>'}`;
+}
+
 function rulesTab() {
   return `<h3>قوانین ثابت پروتوتایپ</h3><p class="muted">این قوانین را فقط ادمین کل تغییر می‌دهد و ایجنت همیشه آنها را رعایت می‌کند.</p>
     <ol>${RULES.map(r => `<li>${esc(r)}</li>`).join('')}</ol>
@@ -894,8 +948,9 @@ const ACT = {
     S.fontcheck = out.join('\n');
   },
   open() { S.open = true; },
+  reloadusage() { S.usage = null; },
   close() { S.open = false; },
-  tab(v) { S.tab = v; S.view = 'list'; },
+  tab(v) { S.tab = v; S.view = 'list'; if (v === 'usage') S.usage = null; },
   'login-view'() { S.view = 'login'; S.form.pw = S.form.pw2 = ''; },
   'cancel-login'() { S.view = 'list'; },
   async login() {
