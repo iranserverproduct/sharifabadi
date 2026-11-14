@@ -10,6 +10,8 @@
 | [02 DevOps Technical Specification](templates/02-devops-technical-spec.md) | هرچه DevOps برای بسته‌بندی و اجرای نرم‌افزار روی Kubernetes و ArgoCD لازم دارد | Product با DevOps |
 | [03 Landing Page Content Brief](templates/03-landing-page-content-brief.md) | محتوای صفحه فرود از روی داده‌های تأییدشده | Marketing و Content |
 
+شناسنامه‌ی محصول برنامه‌های آماده (پلن‌ها، پرسوناها، رقبا، فلوها و راهنمای کاربر و ادمین): [PRODUCT_PROFILE.md](PRODUCT_PROFILE.md)
+
 راهنمای کامل فرایند، دروازه‌ها و قراردادها: [templates/00-how-to-use.md](templates/00-how-to-use.md)
 
 ## ساختار پوشه
@@ -22,6 +24,7 @@ templates/            الگوهای خالی سه سند و راهنمای اس
 apps/<app-slug>/      سندهای هر برنامه و داده‌های خام تحقیق آن
 apps/README.md        فهرست برنامه‌ها و وضعیت سندها
 scripts/              چک خودکار سندها (در pull request اجرا می‌شود)
+PRODUCT_PROFILE.md    شناسنامه‌ی محصول برنامه‌های آماده
 PULL_REQUEST_TEMPLATE.md  متن پیشنهادی توضیح pull request
 ```
 
