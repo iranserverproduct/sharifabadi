@@ -324,7 +324,7 @@ const ELEMENTS = `TO MAKE THINGS CLICKABLE (the prototype has no scripts of its 
 - an element that should open another route: add data-ws-go="<route>" (for example data-ws-go="/my/panel/invoices").
 - a part that should open and close (a modal, a drawer, a dropdown): give it an id and the hidden attribute, and put data-ws-toggle="#<id>" on the button that opens it and on the one that closes it.`;
 
-function prompt({ route, which, view, inputs, current, feedback, desktop, pageCss, rebase }) {
+function prompt({ route, which, view, inputs, current, feedback, desktop, pageCss, rebase, kitText }) {
   const parts = [
 `You are the design agent of the Iranserver customer portal prototype. A product manager asks for a change on ONE page of the prototype. You answer with edit operations on that page's HTML.
 
@@ -357,6 +357,7 @@ Fill "checklist" first (empty without Figma): go through the Figma code and scre
   else if (current?.ops?.length) parts.push('CURRENT PROPOSAL (operations on the same numbering). Return the COMPLETE new list: it replaces this one. Keep what the product manager did not ask to change.\n' + JSON.stringify({ ops: current.ops, css: current.css }));
   if (feedback) parts.push('CHANGE REQUESTED ON THE CURRENT PROPOSAL:\n' + feedback);
   if (desktop) parts.push('This is the mobile layout of the same page. The desktop layout already got this change; make the equivalent change in the mobile layout\'s own structure and classes:\n' + desktop);
+  if (kitText) parts.push(kitText);
   if (pageCss) parts.push('CSS THIS PAGE ALREADY ADDS on top of the portal stylesheet (from earlier approved changes):\n' + pageCss);
   parts.push('THE PAGE (every element has k; svg contents and image data are elided):\n' + view);
   return parts.join('\n\n');
@@ -436,8 +437,12 @@ Font is always peyda. Answer with only a JSON object: {"<class name>":"<declarat
 
 function step(t) { S.log += (S.log ? '\n' : '') + t; ui(); }
 
-// Every agent call runs on Opus 5.5 with low effort; the platform falls back to the tier if the model cannot answer.
-const MODEL = { model: 'claude-opus-5-5', modelTier: 'complex', effort: 'low' };
+// Every agent call runs on Opus 5.5 with medium effort; the platform falls back to the tier if the model cannot answer.
+const MODEL = { model: 'claude-opus-5-5', modelTier: 'complex', effort: 'medium' };
+
+// The Iranserver design kit (Uikit-V3 tokens, component specs, portal patterns), given to the agent on every build.
+let kit = null;
+const loadKit = async () => kit ?? (kit = await fetch('kit/agent-kit.md').then(r => r.ok ? r.text() : '').catch(() => ''));
 
 // The viewer reports no token counts, so usage is estimated from text length (about 3.5 characters a token)
 // plus a flat amount per image, and kept per agent run.
@@ -520,7 +525,7 @@ async function runAgent(pid, feedback, mode) {
     for (const which of ['d']) {
       if (which === 'm' && base.mSame) continue;
       step('ساخت تغییر در نسخه‌ی دسکتاپ…');
-      const args = { route: p.route, which, view: agentView(base[which]), inputs, current: mode === 'refine' && p[which] ? { ops: p[which].ops, css: p.css } : null, feedback, desktop, pageCss: base.css, rebase };
+      const args = { route: p.route, which, view: agentView(base[which]), inputs, kitText: await loadKit(), current: mode === 'refine' && p[which] ? { ops: p[which].ops, css: p.css } : null, feedback, desktop, pageCss: base.css, rebase };
       let text = prompt(args);
       if (bytes(text) > 240000) { inputs.figmaCode = trim(inputs.figmaCode, 20000); inputs.prdText = trim(inputs.prdText, 20000); text = prompt(args); }
       let shownText = false;
@@ -917,7 +922,7 @@ function usageTab() {
   });
   const dayFa = k => new Date(k + 'T12:00:00Z').toLocaleDateString('fa-IR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
   const rows = Object.keys(days).sort().reverse();
-  return `<div class="row"><p class="muted" style="flex:1">توکن‌ها تخمینی‌اند (از روی طول متن و تعداد تصویرها)؛ Claude عدد دقیق را به صفحه نمی‌دهد. مدل: Opus 5.5، تلاش کم.</p><button class="b" data-act="reloadusage">به‌روزرسانی</button></div>
+  return `<div class="row"><p class="muted" style="flex:1">توکن‌ها تخمینی‌اند (از روی طول متن و تعداد تصویرها)؛ Claude عدد دقیق را به صفحه نمی‌دهد. مدل: Opus 5.5، تلاش متوسط.</p><button class="b" data-act="reloadusage">به‌روزرسانی</button></div>
     ${rows.map(k => { const d = days[k]; return `<div class="card"><div class="row"><b>${dayFa(k)}</b><span class="sp"></span><span class="badge">${fa(d.inTok + d.outTok)} توکن</span></div>
       <div class="muted">${fa(d.runs)} اجرای ایجنت · ${fa(d.calls)} درخواست · ورودی ${fa(d.inTok)} · خروجی ${fa(d.outTok)}</div>
       ${Object.entries(d.people).sort((a, b) => b[1].tok - a[1].tok).map(([n, x]) => `<div class="row muted" style="margin-top:4px"><span>${esc(n)}</span><span class="sp"></span><span>${fa(x.runs)} اجرا · ${fa(x.tok)} توکن</span></div>`).join('')}</div>`; }).join('') || '<p class="muted">هنوز ایجنتی اجرا نشده.</p>'}`;
