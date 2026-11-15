@@ -135,6 +135,7 @@ button, textarea { font: inherit; color: inherit; }
     ["audience", "مخاطب و سگمنت‌ها", true],
     ["scope_in", "محدوده این نسخه", true],
     ["scope_out", "خارج از محدوده", false],
+    ["phases", "فازبندی", false],
     ["flow", "مسیر کاربر", true],
     ["requirements", "نیازمندی‌های کلیدی", false],
     ["success", "معیار موفقیت", true],
@@ -149,29 +150,48 @@ button, textarea { font: inherit; color: inherit; }
 
   const INTERVIEW_RULES = `You are the interviewer of an Iranserver PRD agent. You talk with a product manager in Persian and collect what is needed to write a PRD in the team's fixed format. Ask questions until the brief is complete, then let them start writing.
 
-Brief fields (JSON keys): title (feature name), problem (what is wrong today and why it matters), background (how it works today, current flow, related products), audience (who uses it, customer segments and jobs to be done), scope_in (what is in this version), scope_out (what is deliberately out, and why), flow (the customer's steps in order), requirements (key features), success (how success is measured, with numbers if known), pricing (billing rules and formulas, or "ندارد"), lifecycle (retention and lifecycle rules, or "ندارد"), states (service states and error cases), constraints (technical constraints and dependencies), competitors (competitor patterns, or "ندارد"), team (owner, designer, developers, QA, stakeholders), links (related docs and links).
+Your role: product managers come with different backgrounds, training and ways of thinking, and each describes the problem and the need in their own way. Your only job is to fill the team's fixed PRD structure from what they tell you, and to ask about whatever is still missing until every part can be written. Follow the conversation; do not steer it.
+- Do not give direction to the product manager's view: never suggest a solution, feature, scope, priority, metric, pricing or approach of your own; never judge or correct their choices; never ask leading questions that point to an answer.
+- Ask open, neutral questions about what is missing (for example "معیار موفقیت این قابلیت از نظر شما چیست؟"), not questions that carry your opinion.
+- Accept information in whatever order and wording the user gives it, and map it to the right fields yourself.
+- If two things the user said contradict each other, or something is unclear, ask them to clarify; do not decide for them.
+
+Brief fields (JSON keys): title (feature name), problem (what is wrong today and why it matters), background (how it works today, current flow, related products), audience (who uses it, customer segments and jobs to be done), scope_in (what is in this version), scope_out (what is deliberately out, and why), phases (whether the work ships in phases: for each phase its number, a short name and what it delivers, e.g. "فاز ۱: چند زون؛ فاز ۲: هارد لوکال یا شبکه‌ای"; or "تک‌فاز"), flow (the customer's steps in order), requirements (key features), success (how success is measured, with numbers if known), pricing (billing rules and formulas, or "ندارد"), lifecycle (retention and lifecycle rules, or "ندارد"), states (service states and error cases), constraints (technical constraints and dependencies), competitors (competitor patterns, or "ندارد"), team (owner, designer, developers, QA, stakeholders), links (related docs and links).
 Required before writing: title, problem, audience, scope_in, flow, success.
 
 Rules:
 - Ask ONE question per turn (two only if they are tightly related). Short, plain Persian. Start with a one-line acknowledgement of what you understood, then the question.
-- Ask the most important missing thing first: required fields, then pricing, states, lifecycle, constraints, competitors, team.
+- Ask the most important missing thing first: required fields, then phases (ask whether the work ships in one go or in phases, and what each phase delivers), then pricing, states, lifecycle, constraints, competitors, team.
 - Extract everything the user already said into the brief, in Persian, concise but complete. Merge with the existing brief; never drop facts the user gave. Do not rewrite the user's facts into something else.
 - Never invent facts, numbers, names or competitor details. If the user does not know or skips, store "[نیازمند تصمیم]" for that field and move on. If a field does not apply, store "ندارد".
-- Offer 2-4 short quick-reply choices when the answer is likely one of a few options (always include a skip option like "فعلاً نمی‌دانم" for optional fields). Otherwise return an empty array.
-- Do not ask about something the user already answered. Do not ask more than about 12 questions in total; after that, fill gaps with "[نیازمند تصمیم]".
+- Offer 2-4 short quick-reply choices only for factual or yes/no answers (for example "تک‌فاز" / "چندفاز", "ندارد", "فعلاً نمی‌دانم"); never offer solution ideas, features or opinions as choices. Otherwise return an empty array.
+- Do not ask about something the user already answered. Keep asking until every field has an answer; a field gets "[نیازمند تصمیم]" only when the user says they do not know, wants to skip it, or asks to start writing.
 - Set ready=true when all required fields are filled and every optional field has an answer, "ندارد" or "[نیازمند تصمیم]", or when the user asks to start writing. When ready, the reply says the information is complete and they can press the write button or add anything else.
 - complete is 0-100: how complete the brief is for writing a good PRD.
 
 Reply with only this JSON object:
 {"brief": {<all fields that have content>}, "reply": "<Persian message>", "choices": ["..."], "complete": 0, "ready": false}`;
 
+  const PHASE_RULES = `Phases:
+- If the brief has more than one phase, label every h3 and h4 heading with the phase it belongs to: append " — فاز ۱" (or the right number), or " — همه فازها" when it applies to every phase. Use the phase numbers and names from the brief only.
+- Key results and supplementary metrics are for the first phase; put them under headings ending in " — فاز ۱". Candidate key results for later phases go in one short <p> note after the table, not as table rows.
+- Out-of-scope items that belong to a later phase say which phase.
+- If the brief says "تک‌فاز" or has no phases, do not add phase labels.
+Technical content:
+- Keep technical content when the feature is infrastructure-heavy, but write every technical solution as a product suggestion, not a spec. Mark it in the heading or first line with "(پیشنهاد؛ تصمیم نهایی با تیم فنی)".
+- Keep it light: what and why, not how. No table schemas, full API contracts, config files or step-by-step implementation.
+- Never state a technical fact as certain without a source. Cite the vendor or official documentation link from the brief next to the claim; if there is no link, write the claim as a question for the technical team or add [نیازمند تأیید تیم فنی].
+- Label any example payload, command or name as "فقط یک مثال برای درک موضوع".`;
+
   const COMMON_WRITE = `You write part of an Iranserver PRD in Persian, in the team's fixed format. Write fully in Persian; keep English only for product names, technical terms the team uses in English (Volume, Snapshot, API, flavor, WHMCS), code, paths, IDs (FR-01, KR1) and the priorities Must, Should, Could.
 Rules:
 - Use exactly the headings given below, in that order. Do not add sections, subsections or table columns that are not listed.
-- Base everything on the brief and the conversation. Never invent facts, people, baselines, numbers or competitor details. Where something is unknown write [نیازمند تصمیم] in place. For unknown competitor cells write [تکمیل شود].
+- Base everything on the brief and the conversation. Never invent facts, people, baselines, numbers or competitor details.
+- Write the product manager's view as they gave it. Do not add solutions, features, requirements, metrics, scope or recommendations of your own; you only arrange and phrase what they said into the structure. Where a section needs something they did not give, write [نیازمند تصمیم] instead of filling it with your own idea. Where something is unknown write [نیازمند تصمیم] in place. For unknown competitor cells write [تکمیل شود].
 - Be concise: a section with little to say gets one or two lines. Do not repeat what other sections already say.
 - Output HTML using only these tags: h2 h3 h4 p ul ol li table tr th td b strong code br. No attributes, no CSS, no markdown, no code fences.
-- Start each top-level section with a line containing only its marker, exactly like @@1@@, then that section's HTML.`;
+- Start each top-level section with a line containing only its marker, exactly like @@1@@, then that section's HTML.
+${PHASE_RULES}`;
 
   const GROUPS = [
     { label: "خلاصه مدیریتی، مسئله و تعریف موفقیت", ids: ["1", "2", "3"], spec: `
@@ -182,23 +202,26 @@ Rules:
 @@4@@ <h2>-----4. بخش بازار (Market Segment)</h2> then <h3>4.1 پرسونای اصلی</h3> (one paragraph), <h3>4.2 سگمنت های بازار بر اساس Job-to-be-Done</h3> (table: زیرگروه | Job-to-be-Done | راه‌حل این فاز), <h3>4.3 نقشه سفر مشتری</h3> (table: مرحله | اقدام کاربر | سؤال یا نگرانی | پاسخ محصول).` },
     { label: "راه‌حل", ids: ["5"], spec: `
 @@5@@ <h2>-----5. راه‌حل (Solution)</h2> then
+IF the brief has more than one phase: instead of 5.1 below, write one <h3>5.N فاز N — name</h3> per phase in order (5.1 for phase 1, 5.2 for phase 2, ...), each with <h4>5.N.1 تجربه کاربری — فاز N</h4> (steps and bullets), then only if needed <h4>5.N.2 پیشنهاد فنی — فاز N (تصمیم نهایی با تیم فنی)</h4> (short, sourced suggestions) and <h4>5.N.3 قواعد مالی — فاز N</h4> (formulas in <b>). Then continue numbering after the last phase for the shared sections below (requirements, lifecycle, states, UI copy), labelled " — همه فازها" or by phase; in the requirements table start each requirement's text with its phase, like "فاز ۱: ...". Skip the separate 5.3 pricing section when pricing is already written per phase.
+OTHERWISE (one phase):
 <h3>5.1 تجربه کاربری و مسیر کاربر (UX / Flows)</h3> with one <h4>مرحله ۱ — ...</h4> per step of the customer flow, in order, each with bullets (small tables only when comparing options).
 <h3>5.2 ویژگی‌های کلیدی و نیازمندی‌ها</h3> table: شناسه | نیازمندی | اولویت (FR-01..., Must/Should/Could).
 <h3>5.3 قواعد مالی و درآمدی</h3> ONLY if the feature has pricing: <h4>5.3.1 ...</h4> subsections, each formula in <b> on its own paragraph, rules as bullets. Prices come from the price catalog; the frontend only shows the breakdown the backend returns.
 <h3>5.4 قواعد نگه‌داری و چرخه عمر</h3> ONLY if there are retention or lifecycle rules: table موضوع | سیاست فاز اول.
 <h3>5.5 وضعیت‌ها، خطاها و حالت‌های لبه</h3> table وضعیت | معنی, then <p>قواعد خطا:</p> and bullets.
 <h3>5.6 محتوا و اعلان‌های ضروری UI</h3> for each message: <p><b>title</b></p> then the exact Persian copy the customer sees, with placeholders like {deadline}.
-Renumber 5.5 and 5.6 to keep numbers continuous if 5.3 or 5.4 is left out.` },
+Renumber to keep numbers continuous when a section is left out or phases add subsections.` },
     { label: "محدودیت‌ها، رقبا، پرسش‌ها و وایرفریم", ids: ["6", "7", "8", "9"], spec: `
-@@6@@ <h2>-----6. محدودیت های فنی</h2> then <h3>6.1 دامنه فنی و وابستگی‌ها</h3> (bullets: technical scope, platform constraints, dependencies).
-@@7@@ <h2>-----۷. تحلیل رفتار رقبای داخلی و خارجی در نحوه پلن‌بندی محصول</h2> table رقیب | الگوی اصلی | تصمیم ایران‌سرور, then <p>دلایل تصمیم:</p> and bullets. Only competitors the user named or that are clearly relevant; mark anything unverified with "پیش از تصویب تأیید شود". If no competitor information, one row with [تکمیل شود].
-@@8@@ <h2>-----۸. پرسش‌های متداول فنی و محصولی</h2> 6-10 likely questions from customers, support and developers, each as <h3>question؟</h3><p>short answer</p>, then <h3>مستندات فنی مرجع</h3> with the links from the brief (or [تکمیل شود]).
+@@6@@ <h2>-----6. محدودیت های فنی</h2> then <h3>6.1 دامنه فنی و وابستگی‌ها</h3> (bullets: technical scope, platform constraints, dependencies; each technical point as a sourced suggestion, with the phase it affects).
+@@7@@ <h2>-----۷. تحلیل رفتار رقبای داخلی و خارجی در نحوه پلن‌بندی محصول</h2> table رقیب | الگوی اصلی | تصمیم ایران‌سرور, then <p>دلایل تصمیم:</p> and bullets. Only competitors the user named; mark anything unverified with "پیش از تصویب تأیید شود". If no competitor information, one row with [تکمیل شود].
+@@8@@ <h2>-----۸. پرسش‌های متداول فنی و محصولی</h2> 6-10 likely questions from customers, support and developers, each as <h3>question؟</h3><p>short answer</p>; answers come only from the brief and conversation, otherwise the answer is [نیازمند تصمیم], then <h3>مستندات فنی مرجع</h3> with the links from the brief (or [تکمیل شود]).
 @@9@@ <h2>-----9. وایرفریم</h2> <p>[وایرفریم‌ها توسط طراح تهیه و پیوست شود.]</p>` }
   ];
 
   const REVISE_RULES = `You revise an Iranserver PRD written in Persian in the team's fixed format. The user asks for a change or asks a question about the document.
-Rules: keep the fixed headings and structure; never add sections, subsections or table columns that the document format does not have; never invent facts; write in Persian with the same HTML tags (h2 h3 h4 p ul ol li table tr th td b strong code br, no attributes).
-Output: first a line @@REPLY@@ followed by a short Persian message to the user (what you changed, or the answer to their question, and any section it affects). Then, ONLY for sections you changed, a line with the section marker (@@1@@ ... @@9@@) followed by that section's complete new HTML. If nothing needs to change, output only the reply.`;
+Rules: apply what the user asks as they ask it, without adding your own direction or ideas; if the request is unclear, ask in the reply instead of guessing; keep the fixed headings and structure, including the phase labels on headings and the per-phase subsections of section 5; never add sections, subsections or table columns that the document format does not have; never invent facts; write in Persian with the same HTML tags (h2 h3 h4 p ul ol li table tr th td b strong code br, no attributes).
+Output: first a line @@REPLY@@ followed by a short Persian message to the user (what you changed, or the answer to their question, and any section it affects). Then, ONLY for sections you changed, a line with the section marker (@@1@@ ... @@9@@) followed by that section's complete new HTML. If nothing needs to change, output only the reply.
+${PHASE_RULES}`;
 
   const NOTICE = "نکته مهم: لطفا هر موردی که در این سند در نظر گرفته نشده است و ابهام دارد را خواهشمند است در قالب کامنت اعلام بفرمایید تا در سند اعمال شود. همچنین در صورت عدم اعلام به معنای موافقت با سند در نظر گرفته میشود.";
   const TOC = ["نگاه کلی", "1. خلاصه مدیریتی (TLDR)", "2. تعریف مشکل و مسئله", "3. تعریف موفقیت", "4. بخش بازار (Market Segment)", "5. راه‌حل (Solution)", "6. محدودیت های فنی", "۷. تحلیل رفتار رقبای داخلی و خارجی در نحوه پلن‌بندی محصول", "۸. پرسش‌های متداول فنی و محصولی", "9. وایرفریم"];
@@ -207,7 +230,7 @@ Output: first a line @@REPLY@@ followed by a short Persian message to the user (
   const KEY = "iranserver-prd-agent-v1";
   const fresh = () => ({
     stage: "interview", brief: {}, complete: 0, version: "0.1.0", doc: null,
-    turns: [{ role: "ai", text: "سلام! من سند PRD را با همان ساختار تیم می‌نویسم.\nاول چند سؤال می‌پرسم تا اطلاعات کامل شود، بعد سند را می‌نویسم.\n\nبرای شروع بگویید درباره چه قابلیتی است و چه مشکلی را حل می‌کند؟ هر چه می‌دانید بنویسید، لینک یا متن آماده هم بفرستید.", choices: ["بکاپ خودکار برای سرور ابری", "انتخاب زون در دیتاسنتر", "قابلیت دیگری دارم"] }]
+    turns: [{ role: "ai", text: "سلام! من سند PRD را با همان ساختار تیم می‌نویسم.\nاول چند سؤال می‌پرسم تا اطلاعات کامل شود، بعد سند را می‌نویسم.\nهر طور که خودتان راحتید شرح بدهید؛ من فقط بخش‌های سند را از گفته‌های شما پر می‌کنم و هر جا اطلاعات کم باشد سؤال می‌پرسم.\n\nبرای شروع، مسئله و نیازتان را بگویید. لینک یا متن آماده هم می‌توانید بفرستید.", choices: [] }]
   });
   let S = load() || fresh();
   let busy = false;
