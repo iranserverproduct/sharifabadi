@@ -28,6 +28,10 @@ const CLOUD = [
     desc: 'پلتفرم پردازش گرافیکی به شما امکان می‌دهد پردازش‌های سنگین مانند هوش مصنوعی و رندر را بدون خرید سخت‌افزار گران‌قیمت اجرا کنید.' },
   { route: '/my/panel/cloud/apps', label: 'برنامه‌های آماده', icon: 'apps', buy: 'خرید برنامه‌ی آماده',
     desc: 'برنامه‌های آماده به شما امکان می‌دهند ابزارهایی مانند n8n را بدون درگیری با نصب و نگهداری، آماده و در چند دقیقه راه‌اندازی کنید.' },
+  // AIaaS: its list, configuration and service pages are built by core/aiaas.js
+  { route: '/my/panel/cloud/aiaas', label: 'AIaaS', icon: 'ai', buy: 'ساخت پروژه‌ی AI', buyRoute: '/my/panel/cloud/aiaas/configure',
+    desc: 'با AIaaS در پنل ایران‌سرور پروژه می‌سازید و با یک کلید و API سازگار با OpenAI به چند مدل هوش مصنوعی وصل می‌شوید؛ پرداخت ریالی و به ازای مصرف.',
+    match: r => /^\/my\/panel\/cloud\/aiaas(\/|$)/.test(r) || /^\/my\/panel\/service\/[^/]+\/aiaas(\/|$)/.test(r) },
 ];
 // Other product groups, in the Figma order.
 const GROUPS = [
@@ -49,7 +53,7 @@ function productPage(p) {
       <div class="nav-toolbar"><div class="nav-search"><span>جستجو در نام سرویس</span></div></div>
       <div class="ws-ct"><div class="ws-ct-head">${th('ws-th-name', 'نام سرویس')}${th('ws-th-period', 'دوره', 1)}${th('ws-th-date', 'تاریخ سررسید', 1)}${th('ws-th-status', 'وضعیت')}${th('ws-th-ops', 'عملیات')}</div>
         <div class="ws-empty">${EMPTY_ILL}<div class="ws-empty-content"><p class="ws-empty-title" dir="auto">شما تابحال از این سرویس استفاده نکرده‌اید</p>
-          <p class="ws-empty-desc" dir="auto">${p.desc}</p><button type="button" class="ws-empty-btn"><span dir="auto">${p.buy}</span></button></div></div></div>
+          <p class="ws-empty-desc" dir="auto">${p.desc}</p><button type="button" class="ws-empty-btn"${p.buyRoute ? ` data-ws-go="${p.buyRoute}"` : ''}><span dir="auto">${p.buy}</span></button></div></div></div>
     </div></div>`;
 }
 // Product group routes are ordinary prototype routes, so the workspace can propose changes on them too.
@@ -67,7 +71,7 @@ const RAIL_BOTTOM = [
   { route: '/my/panel/invoices', label: 'مالی', icon: 'wallet', match: r => /^\/my\/panel\/invoices|accounting|refund/.test(r) },
   { route: '/my/panel/support/tickets', label: 'پشتیبانی', icon: 'headphone', match: r => /^\/my\/panel\/support/.test(r) },
 ];
-const cloudMatch = (p, r) => r === p.route || (p.icon === 'cloud-server' && /^\/my\/panel\/service\/[^/]+\/server/.test(r));
+const cloudMatch = (p, r) => p.match ? p.match(r) : r === p.route || (p.icon === 'cloud-server' && /^\/my\/panel\/service\/[^/]+\/server/.test(r));
 
 let cloudOpen = true;
 try { cloudOpen = localStorage.getItem('nav_cloud') !== '0'; } catch (e) {}
@@ -145,6 +149,7 @@ function onClick(e) {
 }
 
 window.NAV = {
+  icon, productPage, product: route => CLOUD.find(p => p.route === route),
   // Called by the shell after each render: swap the captured header for the bar and rail (desktop only).
   apply(route, legacy) {
     const root = document.getElementById('root');
