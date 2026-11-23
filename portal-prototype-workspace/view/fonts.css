@@ -1,0 +1,18 @@
+/* Peyda, the prototype's only font. Loaded after the portal stylesheets so it replaces their copies.
+   The artifact viewer loads fonts only from the artifact's own asset store (/_blob/<id>, uploaded from fonts/);
+   the second source is for a local copy of this folder. peyda-fanum (Persian digits) is the portal's own file. */
+@font-face{font-family:peyda;font-style:normal;font-weight:100;font-display:swap;src:url(/_blob/addd3553f0d2a57cac40628207ee72f9) format("woff2"),url(fonts/PeydaWeb-Thin.woff2) format("woff2")}
+@font-face{font-family:peyda;font-style:normal;font-weight:200;font-display:swap;src:url(/_blob/1cb1f846ee83abc6c58f3773242eba07) format("woff2"),url(fonts/PeydaWeb-ExtraLight.woff2) format("woff2")}
+@font-face{font-family:peyda;font-style:normal;font-weight:300;font-display:swap;src:url(/_blob/8ce4194bd9f5ebdf32352c5c8eb38b43) format("woff2"),url(fonts/PeydaWeb-Light.woff2) format("woff2")}
+@font-face{font-family:peyda;font-style:normal;font-weight:400;font-display:swap;src:url(/_blob/175e9cdbb940331ee8d06aad46a07c13) format("woff2"),url(fonts/PeydaWeb-Regular.woff2) format("woff2")}
+@font-face{font-family:peyda;font-style:normal;font-weight:500;font-display:swap;src:url(/_blob/ef756a394cf0c00452f6a76899bfac65) format("woff2"),url(fonts/PeydaWeb-Medium.woff2) format("woff2")}
+@font-face{font-family:peyda;font-style:normal;font-weight:600;font-display:swap;src:url(/_blob/14904d2b5df14c6fbb5cd14d7fe409ba) format("woff2"),url(fonts/PeydaWeb-SemiBold.woff2) format("woff2")}
+@font-face{font-family:peyda;font-style:normal;font-weight:700;font-display:swap;src:url(/_blob/4e5f46baa0f217230258bb93f090ec99) format("woff2"),url(fonts/PeydaWeb-Bold.woff2) format("woff2")}
+@font-face{font-family:peyda;font-style:normal;font-weight:800;font-display:swap;src:url(/_blob/6d2210c2aca5e2370c05b01add6a36eb) format("woff2"),url(fonts/PeydaWeb-ExtraBold.woff2) format("woff2")}
+@font-face{font-family:peyda;font-style:normal;font-weight:900;font-display:swap;src:url(/_blob/4e9d5dc67f970cc8d897008e9315f664) format("woff2"),url(fonts/PeydaWeb-Black.woff2) format("woff2")}
+@font-face{font-family:peyda;font-style:normal;font-weight:950;font-display:swap;src:url(/_blob/0bde8bcfc723e648d8db02007d751040) format("woff2"),url(fonts/PeydaWeb-ExtraBlack.woff2) format("woff2")}
+@font-face{font-family:peyda-fanum;font-style:normal;font-weight:400;font-display:swap;src:url(/_blob/b8e7964527f13a308949a3ac24cfe368) format("woff2"),url(fonts/peyda-fanum_400.woff2) format("woff2")}
+@font-face{font-family:peyda-fanum;font-style:normal;font-weight:500;font-display:swap;src:url(/_blob/08b474341a46130187166d1724bf70fc) format("woff2"),url(fonts/peyda-fanum_500.woff2) format("woff2")}
+@font-face{font-family:peyda-fanum;font-style:normal;font-weight:700;font-display:swap;src:url(/_blob/50b2d26217da4b6519ad699c9d939d00) format("woff2"),url(fonts/peyda-fanum_700.woff2) format("woff2")}
+/* The artifact viewer's page skeleton sets a system font on body; the portal sets its font on html and lets body inherit it. */
+html body{font-family:inherit}
