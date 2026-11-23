@@ -5,7 +5,9 @@
   "role": "admin",
   "routes": [
    "/my/panel/cloud/aiaas/**",
-   "/my/panel/service/*/aiaas/**"
+   "/my/panel/service/*/aiaas/**",
+   "/my/panel/cloud/block-storage/**",
+   "/my/panel/service/*/block-storage/**"
   ],
   "hash": "",
   "salt": ""
