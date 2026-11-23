@@ -492,6 +492,7 @@ async function runAgent(pid, feedback, mode) {
       const prd = (f.prd || '').trim();
       if (gdocId(prd)) {
         step('خواندن PRD از گوگل داک…');
+        if (!S.mcp) throw new Error(NO_MCP);
         const r = await S.mcp.callTool('Google Docs', 'read_doc', { documentId: gdocId(prd) }, { signal });
         inputs.prdText = trim(docText(r.payload ?? r).join(''), 60000);
       } else if (/^https?:\/\/\S+$/.test(prd)) {
@@ -502,6 +503,7 @@ async function runAgent(pid, feedback, mode) {
         const ref = figmaRef(fig);
         if (!ref) throw new Error('لینک فیگما باید لینک یک بخش مشخص باشد (با node-id).');
         step('خواندن طراحی از فیگما…');
+        if (!S.mcp) throw new Error(NO_MCP);
         const r = await S.mcp.callTool('Figma', 'get_design_context', { ...ref, clientFrameworks: 'unknown', clientLanguages: 'html,css', forceCode: true }, { signal });
         inputs.figmaCode = trim(r.content.filter(b => b.type === 'text').map(b => b.text).join('\n'), 60000);
         r.content.filter(b => b.type === 'image' && b.data).forEach(b => images.push(b64Blob(b.data, b.mimeType || 'image/png')));
@@ -560,8 +562,10 @@ async function runAgent(pid, feedback, mode) {
   }
 }
 
+const NO_MCP = 'اتصال فیگما و گوگل داک برای این حساب در دسترس نیست؛ تصویر طرح را بکشید و رها کنید (یا Ctrl+V) و متن PRD را وارد کنید.';
 function errText(e) {
   const c = e && e.code;
+  if (c === 'revoked' || c === 'capability_disabled') return 'این حساب اجازه‌ی ذخیره در این پروتوتایپ را ندارد.';
   if (c === 'not_granted') return 'اجازه‌ی استفاده از Claude داده نشد.';
   if (c === 'rate_limited') return 'درخواست‌ها زیاد شده؛ کمی بعد دوباره امتحان کنید.';
   if (c === 'prompt_too_large') return 'ورودی‌ها خیلی بزرگ است؛ PRD یا بخش فیگما را کوچک‌تر کنید.';
@@ -812,14 +816,16 @@ function mainHistory() {
 function editor(p) {
   const f = S.form;
   const busy = !!S.busy;
-  const agent = !!S.sample && !!S.mcp;
+  // the agent needs Claude itself; Figma and Google Docs links also need the viewer's connectors
+  const agent = !!S.sample;
   const old = stale(p);
   return `<div class="row"><button class="b" data-act="back">← بازگشت</button><span class="sp"></span>${badge(p)}<span class="badge">نسخه‌ی ${fa(p.ver || 0)}</span></div>
     <h3>${esc(p.title)}</h3><div class="route">${esc(p.route)}</div>
     ${p.summary ? `<div class="card"><b>آخرین تغییر</b><div style="margin-top:4px">${esc(p.summary)}</div></div>` : ''}
     ${p.notes ? `<div class="note">${esc(p.notes)}</div>` : ''}
     ${p.status === 'pending' ? '<div class="note">این تغییر منتظر تأیید است. اگر نسخه‌ی جدیدی بسازید، از صف تأیید خارج می‌شود و باید دوباره ارسالش کنید.</div>' : ''}
-    ${!agent ? '<div class="err">ایجنت فقط وقتی پروتوتایپ داخل Claude باز است کار می‌کند.</div>' : ''}
+    ${!agent ? `<div class="err">${S.local ? 'ایجنت فقط وقتی پروتوتایپ داخل Claude باز است کار می‌کند.' : 'Claude برای این حساب در این پروتوتایپ در دسترس نیست. معمولاً یعنی این حساب عضو سازمان صاحب پروتوتایپ نیست، یا سازمانِ این حساب اجازه‌ی استفاده از Claude در آرتیفکت‌ها را نداده است.'}</div>` : ''}
+    ${agent && !S.mcp ? '<div class="note">اتصال فیگما و گوگل داک برای این حساب در دسترس نیست؛ به جای لینک، تصویر طرح و متن PRD را بدهید.</div>' : ''}
     ${old ? `<div class="note">طرح اصلی این صفحه بعد از ساخت این تغییر عوض شده (الان نسخه‌ی ${fa(mainVer(p.route))}). ایجنت همین تغییر را روی طرح اصلی جدید دوباره می‌سازد و یک نسخه‌ی جدید ثبت می‌کند.</div>
       <div class="row"><button class="b p" data-act="rebase" ${busy || !agent ? 'disabled' : ''}>به‌روزرسانی روی طرح اصلی جدید</button></div>` : ''}
     ${p.ver && !old ? `<h3>اصلاح همین تغییر</h3>
