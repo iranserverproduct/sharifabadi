@@ -1,0 +1,100 @@
+/* Core navigation: top app bar and right navigation rail (Portal Figma "Sidebar IA [03]"), desktop only.
+   Self-contained so it looks the same on new-portal and old-portal pages. */
+.nav-bar, .nav-rail, .nav-page { font-family: peyda-fanum, peyda, Tahoma, sans-serif; direction: rtl; box-sizing: border-box; }
+.nav-bar *, .nav-rail *, .nav-page * { box-sizing: border-box; }
+.nav-ic { display: block; flex-shrink: 0; }
+
+body.nav-on { background: #f4f4f5; }
+body.nav-on #root { padding-top: 72px; margin-right: 96px; }
+
+/* Top app bar: 72px, padding 16/24, bottom border Outline Variant 2 */
+.nav-bar { position: fixed; top: 0; left: 0; right: 0; height: 72px; z-index: 1000; display: flex; align-items: center; justify-content: space-between;
+  gap: 24px; padding: 16px 24px; background: #fff; border-bottom: 1px solid #f4f4f5; }
+.nav-logo { display: block; width: 96px; height: 18px; }
+.nav-logo .nav-ic { width: 96px; height: 18px; }
+.nav-actions { display: flex; align-items: center; gap: 16px; }
+.nav-vdiv { width: 1px; height: 24px; background: #e4e5e7; }
+.nav-phone { display: flex; align-items: center; gap: 4px; height: 32px; }
+.nav-phone-code { font-size: 14px; line-height: 28px; color: #95969d; }
+.nav-phone-num { font-size: 16px; line-height: 32px; font-weight: 700; color: #323234; }
+.nav-icons { display: flex; align-items: center; gap: 4px; }
+.nav-iconbtn, .nav-bell, .nav-account, .nav-cloud-head, .nav-new-btn { font: inherit; border: 0; cursor: pointer; padding: 0; background: none; }
+.nav-iconbtn { width: 36px; height: 36px; border-radius: 6px; background: #f4f4f5; display: flex; align-items: center; justify-content: center; }
+.nav-bell { width: 36px; height: 36px; position: relative; overflow: visible; }
+.nav-bell .nav-ic { width: 36px; height: 40px; position: absolute; left: 0; top: -4px; }
+.nav-account { display: flex; align-items: center; gap: 4px; height: 36px; padding: 4px 4px 4px 8px; border: 1px solid #f4f4f5; border-radius: 6px; background: #fff; }
+.nav-avatar { width: 26px; height: 26px; border-radius: 3.7px; background: #f4f4f5; display: flex; align-items: center; justify-content: center; }
+.nav-name { font-size: 12px; line-height: 24px; font-weight: 500; color: #323234; white-space: nowrap; }
+.nav-id { font-size: 12px; line-height: 24px; color: #323234; white-space: nowrap; }
+.nav-acc-chev { color: #323234; margin-right: 8px; }
+.nav-acc-chev path { stroke: #323234; }
+
+/* Navigation rail: 96px on the right, white, left border Outline */
+.nav-rail { position: fixed; top: 72px; right: 0; bottom: 0; width: 96px; z-index: 999; background: #fff; border-left: 1px solid #e4e5e7;
+  padding-top: 8px; overflow-y: auto; scrollbar-width: none; }
+.nav-rail::-webkit-scrollbar { display: none; }
+.nav-rail-col { width: 88px; min-height: 100%; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 8px; padding-bottom: 16px; }
+.nav-group { display: flex; flex-direction: column; gap: 4px; align-items: center; width: 100%; }
+.nav-spacer { flex: 1 0 24px; }
+.nav-item { width: 80px; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 4px; border-radius: 14px; text-decoration: none; }
+.nav-item span { font-size: 12px; line-height: 24px; font-weight: 500; color: #95969d; text-align: center; width: 100%; }
+.nav-item:hover { background: #fafafa; }
+.nav-item.on { background: #f2f7fd; border-radius: 6px; }
+.nav-divider { width: 88px; height: 1px; background: #e4e5e7; }
+.nav-new { width: 66px; height: 66px; display: flex; align-items: center; justify-content: center; }
+.nav-new-btn { width: 42px; height: 42px; border-radius: 8px; background: #dcebf9; display: flex; align-items: center; justify-content: center; }
+.nav-new-btn:hover { background: #2635d9; }
+.nav-new-btn:hover path { fill: #fff; }
+
+/* Cloud products: one tinted group inside the rail, set apart from the other product groups */
+.nav-cloud { width: 80px; margin: 2px 0; border-radius: 14px; background: linear-gradient(180deg, #f2f7fd 0%, #e9f3fb 100%); border: 1px solid #dcebf9; overflow: hidden; }
+.nav-cloud-head { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 4px 8px; position: relative; }
+.nav-cloud-head span { font-size: 12px; line-height: 20px; font-weight: 700; color: #2635d9; text-align: center; }
+.nav-cloud-chev { color: #2635d9; transition: transform .15s; }
+.nav-cloud-chev path { stroke: #2635d9; }
+.nav-cloud.open .nav-cloud-chev { transform: rotate(180deg); }
+.nav-cloud-list { display: none; flex-direction: column; gap: 2px; padding: 0 4px 6px; }
+.nav-cloud.open .nav-cloud-list { display: flex; }
+.nav-cloud-list::before { content: ""; display: block; height: 1px; margin: 0 8px 4px; background: #dcebf9; }
+.nav-sub { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 6px 2px; border-radius: 10px; text-decoration: none; }
+.nav-sub span { font-size: 11px; line-height: 16px; font-weight: 500; color: #62636a; text-align: center; }
+.nav-sub:hover { background: rgba(255, 255, 255, .7); }
+.nav-sub.on { background: #fff; box-shadow: 0 4px 12px rgba(37, 51, 203, .08); }
+.nav-sub.on span { color: #2635d9; }
+
+/* Product group page: breadcrumb above a white card (radius 8, padding 24), content 1440 */
+.nav-page { max-width: 1440px; margin: 0 auto; padding: 24px 24px 40px; display: flex; flex-direction: column; gap: 24px; }
+.nav-crumbs { display: flex; align-items: center; gap: 8px; height: 24px; font-size: 12px; line-height: 24px; }
+.nav-crumbs a { color: #95969d; text-decoration: none; }
+.nav-crumbs span { color: #2635d9; font-weight: 500; }
+.nav-crumb-sep { transform: rotate(90deg); color: #95969d; }
+.nav-crumb-sep path { stroke: #95969d; }
+.nav-card { background: #fff; border-radius: 8px; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+.nav-card-title { margin: 0; font-size: 16px; line-height: 28px; font-weight: 700; color: #0f1557; }
+.nav-toolbar { display: flex; align-items: center; justify-content: flex-start; }
+.nav-search { width: 270px; height: 42px; border: 1px solid #cacace; border-radius: 8px; padding: 8px 12px; display: flex; align-items: center; font-size: 14px; color: #95969d; }
+
+/* Empty service list (same as the cloud tabs on the services page) */
+.nav-page .ws-ct { display: flex; flex-direction: column; align-items: center; gap: 56px; width: 100%; height: 449px; padding: 1px; background: #fff; border: 1px solid #f4f4f5; border-radius: 8px; overflow: hidden; }
+.nav-page .ws-ct-head { display: flex; width: 100%; }
+.nav-page .ws-th { display: flex; align-items: center; justify-content: flex-start; gap: 4px; padding: 12px 20px; background: #fafafa; border-bottom: 1px solid #f4f4f5; flex-shrink: 0; }
+.nav-page .ws-th p { margin: 0; font-size: 14px; font-weight: 500; line-height: 28px; color: #323234; white-space: nowrap; }
+.nav-page .ws-th-name { flex: 1 1 532px; min-width: 0; border-top-right-radius: 8px; }
+.nav-page .ws-th-period { width: 200px; }
+.nav-page .ws-th-date { width: 300px; }
+.nav-page .ws-th-status { width: 200px; }
+.nav-page .ws-th-ops { width: 160px; justify-content: center; border-top-left-radius: 8px; }
+.nav-page .ws-th-icon path { stroke: #62636a; }
+.nav-page .ws-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+.nav-page .ws-empty-ill { width: 120px; height: 120px; flex-shrink: 0; }
+.nav-page .ws-empty-content { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.nav-page .ws-empty-title { margin: 0; width: 434px; max-width: 100%; font-size: 14px; font-weight: 700; line-height: 28px; color: #323234; text-align: center; }
+.nav-page .ws-empty-desc { margin: 0; width: 434px; max-width: 100%; font-size: 14px; line-height: 28px; color: #62636a; text-align: center; }
+.nav-page .ws-empty-btn { display: flex; align-items: center; justify-content: center; height: 42px; min-width: 116px; padding: 4px 16px; background: #2635d9; border: 0; border-radius: 8px;
+  cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 500; line-height: 28px; color: #fff; white-space: nowrap; }
+.nav-page .ws-empty-btn:hover { background: #172082; }
+
+@media (max-width: 991px) {
+  .nav-bar, .nav-rail { display: none; }
+  body.nav-on #root { padding-top: 0; margin-right: 0; }
+}
