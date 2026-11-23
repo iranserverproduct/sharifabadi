@@ -28,44 +28,6 @@ const LS = {
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
 };
 
-// ---------- cloud servers ----------
-const SRV_LIST = '/my/panel/cloud/server';
-const SERVERS = [
-  { id: 101, name: 'NGP-large120-MHD', host: 'demo-mashhad', ip: '185.10.20.31', dc: 'فردوسی', spec: '۴ هسته · ۱۶ گیگ رم · ۱۲۰ گیگ', os: 'Ubuntu 24.04', period: 'شش ماهه', due: '۱۴۰۵/۱۱/۱۹', status: 'active' },
-];
-const srv = id => SERVERS.find(s => s.id === +id);
-const srvRoute = (id, k) => `/my/panel/service/${id}/server${k ? '/' + k : ''}`;
-const SRV_SECTIONS = [
-  ['مدیریت سرویس', [['', 'اطلاعات کلی', 'info'], ['tickets', 'تیکت‌ها', 'ticket'], ['invoices', 'فاکتورهای مالی', 'invoice'], ['backups', 'مدیریت بکاپ', 'backup']]],
-  ['تنظیمات سرور', [['change-os', 'تغییر سیستم عامل', 'os'], ['addons', 'افزونه‌های دلخواه', 'addons']]],
-];
-const srvTag = s => s.status === 'active' ? tag('فعال', 'success') : tag('معلق', 'error');
-
-function serverList() {
-  const rows = SERVERS.map(s => `<tr data-sv="go" data-v="${srvRoute(s.id)}"><td><div class="ai-cell2"><b class="ltr">${esc(s.name)}</b><span class="ltr">IP: ${s.ip}</span></div></td>
-    <td>${s.spec}</td><td>${s.dc}</td><td>${s.period}</td><td>${s.due}</td><td>${srvTag(s)}</td>
-    <td><button type="button" class="ai-btn ai-btn-text" data-sv="go" data-v="${srvRoute(s.id)}">جزئیات</button></td></tr>`).join('');
-  return wrap(SRV_LIST, `${crumbs([['سرور ابری']])}
-    <div class="nav-card"><h1 class="nav-card-title">سرور ابری</h1>
-      <div class="ai-toolbar"><div class="nav-search"><span>جستجو در نام سرویس</span></div><span class="ai-sp"></span>${btn(ic.plus + 'خرید سرور ابری', 'toast', 'primary', 'data-v="خرید سرور ابری از مسیر فعلی سبد خرید انجام می‌شود (خارج از این پروتوتایپ)."')}</div>
-      <div class="ai-tabs"><button class="on">همه‌ی سرورها ${tag(fa(SERVERS.length) + ' سرویس فعال', 'primary')}</button></div>
-      <div class="ai-table-wrap"><table class="ai-table ai-rows"><thead><tr><th>نام سرویس</th><th>منابع</th><th>دیتاسنتر</th><th>دوره</th><th>تاریخ سررسید</th><th>وضعیت</th><th>عملیات</th></tr></thead><tbody>${rows}</tbody></table></div></div>`);
-}
-PAGES[SRV_LIST] = { title: 'سرور ابری', d: { get html() { return serverList(); }, body: '', legacy: false } };
-
-SIDE2.register(route => {
-  const m = route.match(/^\/my\/panel\/service\/(\d+)\/server(?:\/([\w-]+))?$/), s = m && srv(m[1]);
-  if (!s) return null;
-  const k = m[2] || '';
-  return {
-    title: 'سرور ابری', icon: NAV.icon('cloud-server', 24), bodyCls: 's2-notabs',
-    current: { name: s.name, tag: srvTag(s) },
-    services: SERVERS.map(x => ({ name: x.name, route: srvRoute(x.id, PAGES[srvRoute(x.id, k)] ? k : ''), on: x.id === s.id })),
-    allRoute: SRV_LIST, allLabel: 'همه‌ی سرورها',
-    groups: SRV_SECTIONS.map(([t, items]) => ({ title: t, items: items.map(([kk, label, icn]) => ({ label, route: srvRoute(s.id, kk), on: kk === k, icon: svg(I[icn]) })) })),
-  };
-});
-
 // ---------- block storage ----------
 const BS_LIST = '/my/panel/cloud/block-storage', BS_CFG = BS_LIST + '/configure';
 const bsRoute = (id, k) => `/my/panel/service/${id}/block-storage${k && k !== 'overview' ? '/' + k : ''}`;
@@ -114,7 +76,7 @@ PAGES[BS_LIST] = { title: 'بلاک استوریج', d: { get html() { return bs
 // ---------- purchase ----------
 let C = null;
 const cfgDraft = () => C || (C = { name: 'blockstorage-' + Math.floor(100 + Math.random() * 900), target: 'srv-101', period: 1, size: null, custom: 60 });
-const TARGETS = [['srv-101', 'فردوسی', 'NGP-large120-MHD'], ['dc-ferdowsi', 'فردوسی', 'بدون اتصال (بعداً متصل می‌کنم)'], ['dc-damavand', 'دماوند', 'بدون اتصال (بعداً متصل می‌کنم)']];
+const TARGETS = [['srv-101', 'فردوسی', 'NGP-large120-MHD'], ['srv-102', 'فردوسی', 'Flex6-SHRZ'], ['srv-105', 'دماوند', 'server-cloud-5647303'], ['dc-ferdowsi', 'فردوسی', 'بدون اتصال (بعداً متصل می‌کنم)'], ['dc-damavand', 'دماوند', 'بدون اتصال (بعداً متصل می‌کنم)']];
 const sizeOf = c => c.size === 'custom' ? +c.custom || 0 : c.size;
 function bsCfg() {
   const c = cfgDraft(), size = sizeOf(c), base = (size || 100) * PER_GB;
@@ -173,21 +135,9 @@ const BS = {
           <div><b>متصل به:</b>${attached(b)}</div></div></div>
         <div class="sv-box"><h3 class="sv-h">پیکربندی بلاک استوریج</h3><div class="ai-ck-row" data-sv="auto" data-v="${b.id}">${checkbox(b.auto)}<span>مونت خودکار (Auto-Mount Persistence)</span><span class="ai-muted" title="بعد از ری‌استارت سرور، دیسک خودکار دوباره مونت می‌شود.">${ic.info}</span></div></div></div>`;
   },
-  tickets(b) {
-    return `<div class="nav-card"><div class="ai-sec-tools"><h3 class="sv-h">تیکت‌های این سرویس</h3>${sb('ثبت تیکت جدید', 'go', 'tonal', '/my/panel/support/new-ticket')}</div>
-      ${tbl(['شماره', 'عنوان', 'دپارتمان', 'آخرین به‌روزرسانی', 'وضعیت'], [['۴۰۱۲۲۰', 'کندی خواندن و نوشتن روی دیسک', 'پشتیبانی فنی', '۱۴۰۴/۰۴/۱۸', tag('پاسخ داده شده', 'success')], ['۴۰۱۱۹۸', 'سؤال درباره‌ی مونت خودکار', 'پشتیبانی فنی', '۱۴۰۴/۰۴/۱۲', tag('بسته شده', 'gray')]].map(r => `<tr data-sv="go" data-v="/my/panel/support/tickets/401101" class="sv-click">${r.map(c => `<td>${c}</td>`).join('')}</tr>`))}</div>`;
-  },
-  invoices(b) {
-    const p = b.size * PER_GB;
-    return `<div class="nav-card"><h3 class="sv-h">فاکتورهای این سرویس</h3>
-      ${tbl(['شماره فاکتور', 'تاریخ صدور', 'شرح', 'مبلغ', 'وضعیت'], [['۳۰۱۱۰۱', b.next, 'تمدید بلاک استوریج', money(p) + ' تومان', tag('پرداخت نشده', 'warning')], ['۳۰۱۰۸۷', b.created, 'خرید بلاک استوریج', money(p) + ' تومان', tag('پرداخت شده', 'success')]].map(r => `<tr data-sv="go" data-v="/my/panel/invoices/301101" class="sv-click">${r.map(c => `<td>${c}</td>`).join('')}</tr>`))}</div>`;
-  },
-  backups(b) {
-    const rows = b.snaps.map((s, i) => `<tr><td class="ltr">${esc(s.name)}</td><td>${s.at}</td><td>${gb(s.size)}</td><td>${s.status === 'ready' ? tag('آماده', 'success') : tag('در حال ایجاد', 'info')}</td>
-      <td>${sb('بازگردانی', 'restore', 'text', i)}${sb('حذف', 'snapdel', 'text', i, 'ai-danger')}</td></tr>`);
-    return `<div class="nav-card"><div class="ai-sec-tools"><p class="ai-desc">از بلاک استوریج اسنپ‌شات بگیرید تا در صورت خطا، داده‌ها را به همان لحظه برگردانید. هزینه‌ی هر اسنپ‌شات به ازای حجم آن محاسبه می‌شود.</p>${sb(ic.plus + 'ایجاد اسنپ‌شات', 'snap', 'tonal', b.id)}</div>
-      ${rows.length ? tbl(['نام', 'تاریخ', 'حجم', 'وضعیت', ''], rows) : `<div class="ai-empty-s">${NAV.icon('block-storage', 40)}<p>هنوز اسنپ‌شاتی از این بلاک استوریج ندارید.</p></div>`}</div>`;
-  },
+  tickets: b => ticketsCard('این سرویس'),
+  invoices: b => invoicesCard([['۳۰۱۱۰۱', b.next, 'تمدید بلاک استوریج', money(b.size * PER_GB) + ' تومان', tag('پرداخت نشده', 'warning')], ['۳۰۱۰۸۷', b.created, 'خرید بلاک استوریج', money(b.size * PER_GB) + ' تومان', tag('پرداخت شده', 'success')]]),
+  backups: b => snapsCard(b, 'از بلاک استوریج اسنپ‌شات بگیرید تا در صورت خطا، داده‌ها را به همان لحظه برگردانید.', b.used),
   resize(b) {
     const r = RS(b), add = r.to - b.size, months = b.period, price = add * PER_GB * months;
     const card = (v, label) => `<div class="ai-rcard${r.pick === v ? ' on' : ''}" data-sv="rs" data-v="${v}"><div class="ai-rcard-t">${radio(r.pick === v)}<b>${label}</b></div>
@@ -227,6 +177,42 @@ SIDE2.register(route => {
   };
 });
 
+// ---------- cloud servers ----------
+// The service pages are built here in the same layout as block storage; the captured server pages are replaced.
+const SRV_LIST = '/my/panel/cloud/server';
+const SRV_SEED = [
+  { id: 101, name: 'NGP-large120-MHD', kind: 'سرور مجازی', host: 'demo-mashhad', ip: '185.10.20.31', ipv6: '2a05:ab80:300:10::20', ssh: 'root@185.10.20.31:22', dc: 'فردوسی', os: 'Ubuntu 24.04', cpu: 4, ram: 16, disk: 120,
+    plan: 'NGP-large120', period: 'شش ماهه', created: '۱۴۰۵/۰۲/۰۱', due: '۱۴۰۵/۱۱/۱۹', status: 'active', traffic: { base: 1500, extra: 300, carried: 200, used: 640, prev: 1210 },
+    backups: [{ name: 'before-upgrade', at: '۱۴۰۵/۰۸/۲۰ - ۰۹:۰۹', size: 120, os: 'Ubuntu 24.04', status: 'active' }], apps: [], addons: [], pass: 'Kd8!vR2qLm' },
+  { id: 102, name: 'Flex6-SHRZ', kind: 'سرور مجازی', host: 'shop-backend', ip: '185.10.20.47', ipv6: '2a05:ab80:300:10::47', ssh: 'root@185.10.20.47:22', dc: 'فردوسی', os: 'Debian 12', cpu: 6, ram: 12, disk: 100,
+    plan: 'Flex6', period: 'یک ماهه', created: '۱۴۰۵/۰۶/۱۲', due: '۱۴۰۵/۰۹/۱۲', status: 'active', traffic: { base: 800, extra: 200, carried: 0, used: 1000, prev: 760 },
+    backups: [], apps: [{ name: 'n8n', domain: 'n8n.shop.ir', status: 'active' }], addons: [{ k: 'ip', at: '۱۴۰۵/۰۹/۱۲' }], pass: 'Pq4@zN7wTe' },
+  { id: 105, name: 'server-cloud-5647303', kind: 'سرور مجازی', host: 'test-staging', ip: '45.10.115.18', ipv6: '2a05:ab80:300:12::18', ssh: 'Administrator@45.10.115.18:3389', dc: 'دماوند', os: 'Windows Server 2022', cpu: 2, ram: 4, disk: 60,
+    plan: 'NGP-small60', period: 'یک ماهه', created: '۱۴۰۵/۰۷/۰۲', due: '۱۴۰۵/۰۹/۰۲', status: 'suspended', traffic: { base: 500, extra: 0, carried: 0, used: 120, prev: 340 },
+    backups: [], apps: [], addons: [], pass: 'Wn3#hY6sBc' },
+];
+const SV = LS.get('srv_state2', null) || { servers: SRV_SEED };
+const saveSrv = () => LS.set('srv_state2', SV);
+const SERVERS = SV.servers;
+const srv = id => SERVERS.find(s => s.id === +id);
+const srvRoute = (id, k) => `/my/panel/service/${id}/server${k && k !== 'overview' ? '/' + k : ''}`;
+const srvTag = s => ({ active: tag('فعال', 'success'), off: tag('خاموش', 'gray'), paused: tag('متوقف', 'warning'), suspended: tag('معلق', 'error'), rescue: tag('حالت Rescue', 'warning') }[s.status]);
+const res = s => `${fa(s.cpu)} هسته · ${fa(s.ram)} گیگ رم · ${fa(s.disk)} گیگ`;
+// sections shared by the server and block storage pages
+const ticketsCard = what => `<div class="nav-card"><div class="ai-sec-tools"><h3 class="sv-h">تیکت‌های ${what}</h3>${sb('ثبت تیکت جدید', 'go', 'tonal', '/my/panel/support/new-ticket')}</div>
+  ${tbl(['شماره', 'عنوان', 'دپارتمان', 'آخرین به‌روزرسانی', 'وضعیت'], [['۴۰۱۲۲۰', 'کندی خواندن و نوشتن روی دیسک', 'پشتیبانی فنی', '۱۴۰۴/۰۴/۱۸', tag('پاسخ داده شده', 'success')], ['۴۰۱۱۹۸', 'سؤال درباره‌ی تنظیمات سرویس', 'پشتیبانی فنی', '۱۴۰۴/۰۴/۱۲', tag('بسته شده', 'gray')]].map(r => `<tr data-sv="go" data-v="/my/panel/support/tickets/401101" class="sv-click">${r.map(c => `<td>${c}</td>`).join('')}</tr>`))}</div>`;
+const invoicesCard = rows => `<div class="nav-card"><h3 class="sv-h">فاکتورهای این سرویس</h3>
+  ${tbl(['شماره فاکتور', 'تاریخ صدور', 'شرح', 'مبلغ', 'وضعیت'], rows.map(r => `<tr data-sv="go" data-v="/my/panel/invoices/301101" class="sv-click">${r.map(c => `<td>${c}</td>`).join('')}</tr>`))}</div>`;
+function snapsCard(x, desc, size) {
+  const rows = x.snaps.map((s, i) => `<tr><td class="ltr">${esc(s.name)}</td><td>${s.at}</td><td>${gb(s.size)}</td><td>${s.status === 'ready' ? tag('آماده', 'success') : tag('در حال ایجاد', 'info')}</td>
+    <td>${sb('بازگردانی', 'restore', 'text', i)}${sb('حذف', 'snapdel', 'text', i, 'ai-danger')}</td></tr>`);
+  return `<div class="nav-card"><div class="ai-sec-tools"><p class="ai-desc">${desc} هزینه‌ی هر اسنپ‌شات به ازای حجم آن محاسبه می‌شود.</p>${sb(ic.plus + 'ایجاد اسنپ‌شات', 'snap', 'tonal', '')}</div>
+    ${rows.length ? tbl(['نام', 'تاریخ', 'حجم', 'وضعیت', ''], rows) : `<div class="ai-empty-s">${NAV.icon('block-storage', 40)}<p>هنوز اسنپ‌شاتی ندارید.</p></div>`}</div>`;
+}
+
+// helpers for the cloud server pages (core/cloudserver.js)
+window.SVC = { wrap, sb, tbl, svg, I, LS, ticketsCard, invoicesCard, B, blk, bsRoute, bsTag, gb, BS_CFG, cfgDraft, SV, SERVERS, srv, srvRoute, saveSrv, srvTag, res, today, refresh: () => refresh() };
+
 // ---------- interactions ----------
 function refresh() {
   const el = document.getElementById('sv-root');
@@ -237,7 +223,9 @@ function refresh() {
   SIDE2.refresh();
 }
 const routeNow = () => document.getElementById('sv-root')?.dataset.route || '';
-const curBlock = () => blk((routeNow().match(/service\/(\d+)/) || [])[1]);
+const curBlock = () => /block-storage/.test(routeNow()) ? blk((routeNow().match(/service\/(\d+)/) || [])[1]) : null;
+const curSrv = () => /\/server/.test(routeNow()) ? srv((routeNow().match(/service\/(\d+)/) || [])[1]) : null;
+const saveAll = () => { save(); saveSrv(); };
 const num = v => +String(v).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[^\d]/g, '') || 0;
 const serverOptions = b => SERVERS.filter(s => s.dc === b.dc);
 
@@ -248,7 +236,7 @@ document.addEventListener('click', e => {
   const link = e.target.closest('a[href]');
   if (link && el.contains(link)) return;
   e.preventDefault(); e.stopPropagation();
-  const a = el.dataset.sv, v = el.dataset.v, b = blk(v) || curBlock(), c = cfgDraft();
+  const a = el.dataset.sv, v = el.dataset.v, b = blk(v) || curBlock(), s = srv(v) || curSrv(), x = curBlock() || curSrv(), c = cfgDraft();
   const A = {
     go() { closeAll(); go(v); },
     toast() { toast(v); },
@@ -269,7 +257,7 @@ document.addEventListener('click', e => {
     },
     pay() {
       const size = sizeOf(c), t = TARGETS.find(x => x[0] === c.target), id = Math.max(...B.blocks.map(x => x.id), 124849) + 1;
-      const nb = { id, name: c.name.trim() || 'blockstorage-' + id, status: 'creating', dc: t[1], size, used: 0, server: t[0] === 'srv-101' ? 101 : null, created: today(), period: c.period, next: later(c.period), auto: true, snaps: [] };
+      const nb = { id, name: c.name.trim() || 'blockstorage-' + id, status: 'creating', dc: t[1], size, used: 0, server: t[0].startsWith('srv-') ? +t[0].slice(4) : null, created: today(), period: c.period, next: later(c.period), auto: true, snaps: [] };
       B.blocks.push(nb); save(); registerBlock(id); C = null; closeAll(); go(bsRoute(id));
       toast('فاکتور پرداخت شد؛ بلاک استوریج در حال ایجاد است.');
       setTimeout(() => { nb.status = 'active'; save(); refresh(); }, 4000);
@@ -297,9 +285,9 @@ document.addEventListener('click', e => {
     'renew-ok'() { closeAll(); toast('سرویس تمدید شد.'); },
     delete() { modal('حذف سرویس', `<p class="ai-desc">بلاک استوریج <b class="ltr">${esc(b.name)}</b> و همه‌ی داده‌های آن حذف می‌شود. این کار برگشت‌پذیر نیست.</p>`, sb('حذف سرویس', 'delete-ok', 'primary', b.id, 'ai-btn-danger') + '<button type="button" class="ai-btn ai-btn-text" data-ai="close">انصراف</button>'); },
     'delete-ok'() { B.blocks = B.blocks.filter(x => x.id !== b.id); save(); closeAll(); MENU = null; go(BS_LIST); refresh(); toast('سرویس حذف شد.'); },
-    snap() { const s = { name: b.name + '-snap-' + (b.snaps.length + 1), at: today(), size: b.used, status: 'creating' }; b.snaps.push(s); save(); refresh(); setTimeout(() => { s.status = 'ready'; save(); refresh(); }, 3000); },
+    snap() { const n = { name: (x.host || x.name) + '-snap-' + (x.snaps.length + 1), at: today(), size: x.used ?? x.disk, status: 'creating' }; x.snaps.push(n); saveAll(); refresh(); setTimeout(() => { n.status = 'ready'; saveAll(); refresh(); }, 3000); },
     restore() { toast('بازگردانی از اسنپ‌شات شروع شد.'); },
-    snapdel() { b.snaps.splice(+v, 1); save(); refresh(); },
+    snapdel() { x.snaps.splice(+v, 1); saveAll(); refresh(); },
     rs() { if (e.target.closest('input, .ai-counter button')) return; RS(b).pick = v === 'custom' ? 'custom' : +v; refresh(); },
     rsc() { const r = RS(b); r.pick = 'custom'; r.custom = Math.min(2000, Math.max(b.size + 10, r.custom + +v)); refresh(); },
     rspay() { const r = RS(b), add = r.to - b.size; modal('پیش‌فاکتور افزایش حجم', `<div class="ai-dr-sum"><span>حجم فعلی</span><b>${gb(b.size)}</b><span>حجم جدید</span><b>${gb(r.to)}</b><span>مبلغ</span><b>${money(add * PER_GB * b.period)} تومان</b></div>`, sb('پرداخت فاکتور', 'rspay-ok', 'primary', b.id) + '<button type="button" class="ai-btn ai-btn-text" data-ai="close">انصراف</button>'); },

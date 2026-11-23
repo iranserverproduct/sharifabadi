@@ -49,3 +49,70 @@
 .sv-grid b { font-weight: 500; white-space: nowrap; }
 .sv-grid span { color: #62636a; }
 .sv-steps { margin: 0; padding-right: 20px; color: #323234; font-size: 14px; line-height: 30px; }
+
+/* cloud server details */
+.sv-meter { display: flex; flex-direction: column; gap: 4px; }
+.sv-meter-t { display: flex; justify-content: space-between; font-size: 13px; }
+.sv-meter small { font-size: 12px; color: #95969d; }
+.sv-ip { font-family: peyda, Tahoma, sans-serif; font-size: 13px; }
+.sv-sub { text-align: right; }
+.ai-rcard.sv-dis { opacity: .45; cursor: not-allowed; }
+.sv-quick .sv-qa { row-gap: 8px; }
+
+/* cloud server details (core/cloudserver.js), Portal Figma "Service Management" */
+.cs { display: flex; flex-direction: column; gap: 16px; }
+.cs-main { gap: 20px !important; }
+.cs-title { font-size: 16px !important; }
+.cs-qa { justify-content: space-between; }
+.cs-qa .ai-btn { padding: 0 4px; }
+.cs-qa .ai-btn:disabled { background: none; color: #cacace; }
+.cs-div { display: flex; align-items: center; gap: 16px; }
+.cs-div > i { flex: 1; height: 1px; background: #e4e5e7; }
+.cs-div .sv-h { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.cs-traffic { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+.cs-gauge { position: relative; min-width: 170px; display: flex; flex-direction: column; align-items: center; }
+.cs-gauge > b { position: absolute; top: 38px; font-size: 26px; font-weight: 700; color: #0f1557; }
+.cs-legend { display: flex; gap: 16px; font-size: 11px; color: #62636a; margin-top: 8px; white-space: nowrap; }
+.cs-legend span { display: flex; align-items: center; gap: 4px; }
+.cs-legend i { width: 10px; height: 10px; border-radius: 2px; background: #e4e5e7; }
+.cs-legend i.g { background: #1e7b22; }
+.cs-pills { flex: 1; min-width: 320px; display: flex; flex-direction: column; gap: 12px; }
+.cs-pill-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.cs-pill-row > .cs-pill { flex: 1 1 240px; }
+.cs-pill { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; border: 1px solid #e4e5e7; border-radius: 8px; padding: 8px 14px; font-size: 13px; color: #62636a; }
+.cs-pill svg { color: #2635d9; }
+.cs-pill-i { display: inline-flex; align-items: center; gap: 6px; }
+.cs-pill-i > i { width: 6px; height: 6px; border-radius: 50%; background: #2635d9; }
+.cs-pill-i b { color: #323234; font-weight: 500; }
+.cs-vr { width: 1px; height: 20px; background: #e4e5e7; }
+.cs-plus { color: #1e7b22; font-weight: 700; }
+.cs-os, .cs-app { width: 22px; height: 22px; border-radius: 6px; background: var(--c); color: #fff; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: peyda, Tahoma, sans-serif; }
+.cs-app { width: 28px; height: 28px; }
+.cs-grid3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.cs-grid4 { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.cs-bk { border: 1px solid #e4e5e7; border-radius: 8px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+.cs-bk-h { display: flex; align-items: center; gap: 8px; } .cs-bk-h svg { color: #2635d9; }
+.cs-bk-m { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #62636a; flex-wrap: wrap; }
+.cs-bk-m > i { width: 1px; height: 14px; background: #e4e5e7; }
+.cs-bk-f { display: flex; align-items: center; gap: 4px; }
+.cs-bk-f .ai-icon-btn:disabled { opacity: .35; cursor: not-allowed; }
+.cs-cur { flex-direction: row !important; align-items: center; flex-wrap: wrap; gap: 10px !important; font-size: 13px; }
+.cs-cur > i { width: 1px; height: 16px; background: #e4e5e7; }
+.cs-costbar { display: flex; justify-content: space-between; align-items: center; background: #f2f7fd; border-radius: 8px; padding: 12px 16px; font-size: 13px; }
+.cs-costbar span { display: flex; align-items: center; gap: 6px; }
+.cs-costbar b { color: #0f1557; }
+.cs .cs-dis, .ai-table tr.cs-dis td { opacity: .5; cursor: not-allowed; }
+.ai-table tr.cs-dis:hover td { background: none; }
+.cs-plug-f { display: flex; align-items: center; gap: 6px; color: #0f1557; }
+.cs-cat { display: flex; flex-direction: column; gap: 10px; }
+.cs-cat h4 { margin: 0; font-size: 13px; font-weight: 500; color: #62636a; }
+.cs-bar { position: sticky; bottom: 12px; z-index: 5; display: flex; align-items: center; gap: 12px; background: #0f1557; color: #fff; border-radius: 8px; padding: 10px 16px; font-size: 13px; }
+.cs-bar .ai-btn-text { color: #fff; }
+.cs-bar .ai-btn-text:hover { background: rgba(255, 255, 255, .12); }
+.cs-search { width: 240px; display: flex; gap: 8px; }
+.cs-q { margin: 0; font-size: 15px; line-height: 30px; color: #323234; }
+.cs-word { font-weight: 400 !important; font-size: 13px !important; }
+.cs-word b { color: #172082; }
+.cs-hr { width: 100%; border: 0; border-top: 1px solid #e4e5e7; margin: 4px 0; }
+.cs-disk p { flex: 1; }
+.ai-empty-s b { font-size: 14px; color: #323234; }
