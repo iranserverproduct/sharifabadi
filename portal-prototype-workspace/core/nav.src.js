@@ -18,7 +18,8 @@ const fa = n => String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
 const CLOUD = [
   { route: '/my/panel/cloud/server', label: 'سرور ابری', icon: 'cloud-server', buy: 'خرید سرور ابری',
     desc: 'سرور ابری به شما امکان می‌دهد در چند دقیقه سرور خود را با منابع دلخواه راه‌اندازی کنید و هر زمان که نیاز داشتید منابع آن را تغییر دهید.' },
-  { route: '/my/panel/cloud/block-storage', label: 'بلاک استوریج', icon: 'block-storage', buy: 'خرید بلاک استوریج',
+  { route: '/my/panel/cloud/block-storage', label: 'بلاک استوریج', icon: 'block-storage', buy: 'ایجاد بلاک استوریج جدید', buyRoute: '/my/panel/cloud/block-storage/configure',
+    match: r => /^\/my\/panel\/cloud\/block-storage(\/|$)/.test(r) || /^\/my\/panel\/service\/[^/]+\/block-storage(\/|$)/.test(r),
     desc: 'بلاک استوریج به شما امکان می‌دهد فضای ذخیره‌سازی سرور ابری خود را مستقل از سرور افزایش دهید و هر زمان که نیاز داشتید آن را جدا یا متصل کنید.' },
   { route: '/my/panel/cloud/object-storage', label: 'آبجکت استوریج', icon: 'object-storage', buy: 'خرید آبجکت استوریج',
     desc: 'آبجکت استوریج به شما امکان می‌دهد فایل‌ها و داده‌های خود را با هزینه کمتر و دسترسی همیشگی در فضایی امن و مقیاس‌پذیر نگهداری کنید.' },
@@ -156,6 +157,7 @@ window.NAV = {
     if (MOBILE.matches) {
       bar?.remove(); side?.remove();
       document.body.classList.remove('nav-on');
+      window.SIDE2?.apply(route);
       return;
     }
     ensure();
@@ -165,6 +167,7 @@ window.NAV = {
     if (notice) notice.style.display = 'none';
     side.innerHTML = rail(route);
     document.body.classList.add('nav-on');
+    window.SIDE2?.apply(route);
   },
 };
 })();

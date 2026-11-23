@@ -258,7 +258,6 @@ function detailPage(id, k) {
   if (!s) return wrap(svcRoute(id, k), `${head('', [['AIaaS', LIST], ['پروژه یافت نشد']])}<div class="nav-card">${alert('warning', 'این پروژه وجود ندارد یا حذف شده است.', btn('بازگشت به لیست', 'go', 'tonal', `data-v="${LIST}"`))}</div>`);
   const sec = SECTIONS.find(x => x.k === k) || SECTIONS[0];
   const st = S.wallet <= S.block && !s.demo ? 'suspended' : s.status;
-  const side = sidePanel(s, sec.k, st);
   const top = `<div class="nav-card ai-hero"><div class="ai-hero-t"><div><h1 class="ai-hero-name ltr">${esc(s.name)}</h1><span class="ai-muted">شناسه‌ی پروژه ${fa(s.id)}${s.demo ? ' · پروژه‌ی نمونه' : ''}</span></div>${status(st)}</div>
     <div class="ai-hero-info">
       <div><span>آدرس API</span><b class="ltr">${API}</b><button type="button" class="ai-icon-btn" data-ai="copy" data-v="${API}" title="کپی">${ic.copy}</button></div>
@@ -266,27 +265,25 @@ function detailPage(id, k) {
       <div><span>تاریخ ساخت</span><b>${date(s.created)}</b></div>
       <div><span>موجودی کیف پول</span><b>${money(S.wallet)} تومان</b></div></div>
     <div class="ai-hero-btns">${btn('شارژ کیف پول', 'drawer', 'primary', 'data-v="charge"')}${btn('ساخت کلید AI', 'drawer', 'outline', 'data-v="key"')}${btn('افزودن مدل', 'drawer', 'outline', 'data-v="model"')}${btn('ساخت پروژه‌ی جدید', 'go', 'outline', `data-v="${CFG}"`)}</div></div>`;
-  return wrap(svcRoute(s.id, sec.k), `${side}${head('', [['AIaaS', LIST], [s.name, svcRoute(s.id)], [sec.t]])}${walletAlert()}${top}
+  return wrap(svcRoute(s.id, sec.k), `${head('', [['AIaaS', LIST], [s.name, svcRoute(s.id)], [sec.t]])}${walletAlert()}${top}
     <div class="ai-main"><div class="nav-card"><div class="ai-card-head"><h2 class="nav-card-title">${sec.t}</h2>${ph(sec.ph)}</div>${SEC[sec.k](s)}</div></div>`);
 }
 
-// Second sidebar (service details only): full height beside the rail, like the host service's sidebar.
-// Top: product title and collapse button, then a dropdown to switch between the user's projects; then the actions by group and phase.
-let PICK = false;
+// Second sidebar (core/side2.js): the project's actions by group and phase, with a dropdown to switch projects.
 const projects = () => S.services.some(x => x.id === DEMO) ? S.services : [svc(DEMO), ...S.services];
-function sidePanel(s, k, st) {
-  const groups = GROUPS.map(([p, t, ks]) => `<div class="ai-side-g" data-ph="${p}"><div class="ai-side-h"><span>${t}</span>${ph(p)}</div>${ks.map(x => {
-    const it = SECTIONS.find(y => y.k === x);
-    return `<a class="ai-side-i${x === k ? ' on' : ''}" href="#${svcRoute(s.id, x)}">${sideIcon(x)}<span>${it.t}</span></a>`;
-  }).join('')}</div>`).join('');
-  const list = projects().map(x => `<button type="button" class="ai-pj-opt${x.id === s.id ? ' on' : ''}" data-ai="pick" data-v="${x.id}">${NAV.icon('ai', 20)}<span class="ai-pj-n ltr">${esc(x.name)}</span>${x.id === s.id ? '<i class="ai-pj-ck"></i>' : ''}</button>`).join('');
-  return `<aside class="ai-side2">
-    <div class="ai-side2-head"><b>AIaaS</b><button type="button" class="ai-icon-btn ai-side2-col" data-ai="side2" title="بستن">${NAV.icon('chevron-down', 18)}</button></div>
-    <div class="ai-pj${PICK ? ' open' : ''}"><button type="button" class="ai-pj-btn" data-ai="pj">${NAV.icon('ai', 24)}<span class="ai-pj-txt"><span class="ai-pj-n ltr">${esc(s.name)}</span>${status(st)}</span>${NAV.icon('chevron-down', 16, 'ai-pj-chev')}</button>
-      <div class="ai-pj-list">${list}<button type="button" class="ai-pj-opt ai-pj-new" data-ai="go" data-v="${CFG}">${ic.plus}<span>ساخت پروژه‌ی جدید</span></button><a class="ai-pj-all" href="#${LIST}">همه‌ی پروژه‌ها</a></div></div>
-    <nav class="ai-side2-nav">${groups}</nav></aside>
-    <button type="button" class="ai-side2-open" data-ai="side2" title="باز کردن منوی سرویس">${NAV.icon('chevron-down', 18)}</button>`;
-}
+SIDE2.register(route => {
+  const m = route.match(/^\/my\/panel\/service\/(\d+)\/aiaas(?:\/([\w-]+))?$/), s = m && svc(+m[1]);
+  if (!s) return null;
+  const k = m[2] || 'overview', st = S.wallet <= S.block && !s.demo ? 'suspended' : s.status;
+  return {
+    title: 'AIaaS', icon: NAV.icon('ai', 24), cls: 'ai', attrs: { 'data-show': S.phase },
+    current: { name: s.name, tag: status(st) },
+    services: projects().map(x => ({ name: x.name, route: svcRoute(x.id, k), on: x.id === s.id })),
+    newLabel: 'ساخت پروژه‌ی جدید', newRoute: CFG, allRoute: LIST, allLabel: 'همه‌ی پروژه‌ها',
+    groups: GROUPS.map(([p, t, ks]) => ({ title: t, tag: ph(p), attrs: `data-ph="${p}"`,
+      items: ks.map(x => ({ label: SECTIONS.find(y => y.k === x).t, route: svcRoute(s.id, x), on: x === k, icon: sideIcon(x) })) })),
+  };
+});
 
 const tbl = (heads, rows, empty) => rows.length ? `<div class="ai-table-wrap"><table class="ai-table"><thead><tr>${heads.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`
   : `<div class="ai-empty-s">${NAV.icon('ai', 40)}<p>${empty}</p></div>`;
@@ -476,6 +473,9 @@ function toast(t, type = 'success') {
 }
 function tx(d, a) { S.wallet += a; S.tx.push({ t: Date.now(), d, a, b: S.wallet }); }
 
+// shared portal UI helpers for the other core product pages (core/services.js)
+window.AIUI = { fa, money, esc, date, tag, btn, status, radio, checkbox, toggle, alert, crumbs, modal, toast, closeAll, ic };
+
 // ---------- page registration ----------
 function pageFor(route) {
   if (route === LIST) return listPage();
@@ -483,10 +483,10 @@ function pageFor(route) {
   const m = route.match(/^\/my\/panel\/service\/(\d+)\/aiaas(?:\/([\w-]+))?$/);
   return m ? detailPage(+m[1], m[2] || 'overview') : '';
 }
-function register(route, title, side) {
-  PAGES[route] = { title, d: { get html() { return pageFor(route); }, get body() { return side ? 'ai-side2-on' + (S.side2min ? ' ai-side2-min' : '') : ''; }, legacy: false } };
+function register(route, title) {
+  PAGES[route] = { title, d: { get html() { return pageFor(route); }, body: '', legacy: false } };
 }
-function registerService(id) { SECTIONS.forEach(x => register(svcRoute(id, x.k), 'AIaaS · ' + x.t, true)); }
+function registerService(id) { SECTIONS.forEach(x => register(svcRoute(id, x.k), 'AIaaS · ' + x.t)); }
 register(LIST, 'AIaaS');
 register(CFG, 'ساخت پروژه‌ی AI');
 registerService(DEMO);
@@ -498,6 +498,7 @@ function refresh() {
   const y = window.scrollY;
   el.outerHTML = pageFor(el.dataset.route);
   window.scrollTo(0, y);
+  SIDE2.refresh();
 }
 const routeNow = () => document.getElementById('ai-root')?.dataset.route || '';
 const sidNow = () => +(routeNow().match(/service\/(\d+)/) || [])[1] || DR.sid;
@@ -506,13 +507,10 @@ const parseNum = v => +String(v).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'
 // ---------- interactions (delegated) ----------
 document.addEventListener('click', e => {
   const el = e.target.closest('.ai [data-ai]');
-  if (!el) { if (e.target.classList?.contains('ai-mask')) closeAll(); if (PICK && !e.target.closest('.ai-pj')) { PICK = false; document.querySelector('.ai-pj')?.classList.remove('open'); } return; }
+  if (!el) { if (e.target.classList?.contains('ai-mask')) closeAll(); return; }
   e.preventDefault();
   const a = el.dataset.ai, v = el.dataset.v, d = draft(), s = svc(sidNow());
   const A = {
-    pj() { PICK = !PICK; el.closest('.ai-pj').classList.toggle('open', PICK); },
-    pick() { PICK = false; const k = (routeNow().match(/\/aiaas\/([\w-]+)$/) || [])[1]; go(svcRoute(+v, k)); },
-    side2() { S.side2min = !S.side2min; save(); document.body.classList.toggle('ai-side2-min', S.side2min); },
     phase() { S.phase = +v; save(); refresh(); if (document.getElementById('ai-drawer')) renderDrawer(); },
     go() { closeAll(); go(v); },
     open() { go(svcRoute(+v)); },
@@ -637,5 +635,5 @@ document.addEventListener('change', e => {
   if (el && !el.dataset.aiIn.startsWith('dr-')) refresh();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAll(); });
-window.addEventListener('hashchange', () => { closeAll(); PICK = false; });
+window.addEventListener('hashchange', closeAll);
 })();

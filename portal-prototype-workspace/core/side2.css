@@ -1,0 +1,55 @@
+/* Second sidebar (core/side2.js): full height beside the 96px rail; the page shifts by its width. */
+.s2, .s2 * { box-sizing: border-box; }
+.s2 { font-family: peyda-fanum, peyda, Tahoma, sans-serif; direction: rtl; color: #323234; font-size: 14px; line-height: 28px;
+  position: fixed; top: 72px; bottom: 0; right: 96px; width: 240px; z-index: 998; background: #fff; border-left: 1px solid #e4e5e7;
+  display: flex; flex-direction: column; gap: 12px; padding: 16px 12px; overflow-y: auto; scrollbar-width: thin; }
+body.nav-on.s2-on #root { margin-right: 336px; }
+body.nav-on.s2-on.s2-min #root { margin-right: 96px; }
+body.s2-min .s2 { display: none; }
+.s2-head { display: flex; align-items: center; justify-content: space-between; padding: 0 4px; }
+.s2-head b { font-size: 16px; font-weight: 700; color: #0f1557; }
+.s2-iconbtn { width: 32px; height: 32px; border: 0; border-radius: 8px; background: #f4f4f5; color: #62636a; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.s2-iconbtn:hover { color: #2635d9; }
+.s2-rot-r { transform: rotate(-90deg); }
+.s2-rot-l { transform: rotate(90deg); }
+.s2-open { display: none; position: fixed; top: 88px; right: 104px; z-index: 998; width: 32px; height: 32px; border: 1px solid #e4e5e7; border-radius: 8px; background: #fff;
+  align-items: center; justify-content: center; cursor: pointer; color: #62636a; }
+body.nav-on.s2-min .s2-open { display: flex; }
+body.nav-on.s2-min #root > .nav-page, body.nav-on.s2-min #root .nav-page { padding-right: 56px; }
+
+.s2-pj { position: relative; }
+.s2-pj-btn { width: 100%; display: flex; align-items: center; gap: 8px; padding: 10px 12px; background: #fafafa; border: 1px solid #e4e5e7; border-radius: 8px; cursor: pointer; text-align: right; font: inherit; }
+.s2-pj-btn > svg:first-child { flex-shrink: 0; }
+.s2-pj-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.s2-n { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; color: #323234; direction: ltr; text-align: right; font-family: peyda, Tahoma, sans-serif; }
+.s2-chev { color: #62636a; flex-shrink: 0; transition: transform .15s; }
+.s2-pj.open .s2-pj-chev { transform: rotate(180deg); }
+.s2-pj-list { display: none; position: absolute; top: calc(100% + 4px); right: 0; left: 0; z-index: 5; background: #fff; border: 1px solid #e4e5e7; border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(37, 51, 203, .08); padding: 6px; flex-direction: column; gap: 2px; max-height: 340px; overflow-y: auto; }
+.s2-pj.open .s2-pj-list { display: flex; }
+.s2-opt { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px; border-radius: 6px; text-decoration: none; font-size: 13px; color: #323234; }
+.s2-opt:hover { background: #fafafa; }
+.s2-opt.on { background: #f2f7fd; }
+.s2-opt .s2-n { flex: 1; }
+.s2-dot { width: 8px; height: 8px; border-radius: 50%; background: #2635d9; flex-shrink: 0; }
+.s2-new { color: #2635d9; border-top: 1px solid #f4f4f5; border-radius: 0 0 6px 6px; margin-top: 4px; }
+.s2-all { display: block; text-align: center; font-size: 12px; color: #62636a; padding: 4px; text-decoration: none; }
+
+.s2-nav { display: flex; flex-direction: column; gap: 8px; }
+.s2-g { display: flex; flex-direction: column; gap: 2px; padding-bottom: 8px; border-bottom: 1px solid #f4f4f5; }
+.s2-g:last-child { border-bottom: 0; padding-bottom: 0; }
+.s2-gh { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #95969d; padding: 4px 8px; }
+.s2-gh .ai-tag { height: 20px; line-height: 20px; font-size: 11px; }
+.s2-i { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; color: #323234; text-decoration: none; font-size: 14px; }
+.s2-i svg { color: #95969d; flex-shrink: 0; }
+.s2-i:hover { background: #fafafa; }
+.s2-i.on { background: #f2f7fd; color: #2635d9; font-weight: 500; }
+.s2-i.on svg { color: #2635d9; }
+
+/* captured service pages: the sidebar replaces the page's own tab bar */
+body.s2-notabs #root .p-tabs > .p-tablist { display: none; }
+
+@media (max-width: 991px) {
+  .s2 { position: static; width: auto; border: 0; border-radius: 8px; margin-bottom: 16px; }
+  .s2-iconbtn, .s2-open { display: none !important; }
+}
